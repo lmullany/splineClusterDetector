@@ -1,0 +1,24 @@
+Package: splineClusterDetector
+Type: Package
+Title: Utilities for cluster detection and significance classification using splines
+Version: 0.6.2
+Author: Howard Burkom, Luke Mullany
+Maintainer: Luke Mullany <luke.mullany@jhuapl.edu>
+Description: This package provides utilities for manipulating time series of 
+    location-based counts of events to detect clusters, and to determine the
+    significance of these clusters via spline approach.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Imports: 
+    cli,
+    data.table (>= 1.16.0),
+    geosphere,
+    ggplot2,
+    plotly
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    Rnssp,
+    sf
