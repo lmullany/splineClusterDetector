@@ -56,6 +56,10 @@ individual calculation if expected would otherwise be zero.
 number of cases in that location during the test interval. If "none", no
 adjustment is made.}
 
+\item{adj_constant}{numeric (default=1.0); this is the constant to be added
+if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
+'add_one'}}
+
 \item{min_clust_cases}{(default = 0); minimum number of cluster cases to
 retain before compression}
 
@@ -73,9 +77,6 @@ verson of the compress clusters function}
 
 \item{return_interim}{boolean (default = FALSE) - set to TRUE to return all
 interim objects of the find_clusters() function}
-
-\item{adj_contant}{numeric (default=1.0); this is the constant to be added if
-\code{baseline_adjustment == 'add_one'}}
 }
 \value{
 returns a list of two of two dataframes.

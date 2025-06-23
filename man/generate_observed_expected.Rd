@@ -19,9 +19,9 @@ generate_observed_expected(
 \item{adjust}{boolean default TRUE, set to \code{FALSE} to avoid adding
 one to the expected when it is zero. Could result in errors.}
 
-\item{adj_contant}{numeric (default=1.0); this is the constant to be added if
-\code{baseline_adjustment == 'add_one_global'} or \code{baseline_adjustment
-== 'add_one'}}
+\item{adj_constant}{numeric (default=1.0); this is the constant to be added
+if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
+'add_one'}}
 }
 \value{
 a dataframe of class `ObservedExpectedGrid`

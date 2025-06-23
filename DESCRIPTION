@@ -1,7 +1,7 @@
 Package: splineClusterDetector
 Type: Package
 Title: Utilities for cluster detection and significance classification using splines
-Version: 0.6.3
+Version: 0.6.4
 Author: Howard Burkom, Luke Mullany
 Maintainer: Luke Mullany <luke.mullany@jhuapl.edu>
 Description: This package provides utilities for manipulating time series of 
@@ -18,7 +18,7 @@ Imports:
     ggplot2,
     plotly
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)
 Suggests: 
     Rnssp,
     sf

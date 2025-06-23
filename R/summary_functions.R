@@ -508,8 +508,9 @@ generate_ggplot_time_series <- function(
 generate_plotly_time_series <- function(
     time_series_data,
     ...) {
+  
   time_series_plot <- plotly::plot_ly(
-    data = time_series_data,
+    data = time_series_data[order(date)],
     x = ~date,
     y = ~date_count,
     type = "scatter",

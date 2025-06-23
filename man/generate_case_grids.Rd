@@ -29,16 +29,16 @@ cluster, defaults to 7}
 interval and baseline}
 
 \item{baseline_adjustment}{one of three string options: "add_one" (default),
-"add_test", or "none".  All methods except for "none"
-will ensure that the log(obs/expected) is always defined (i.e. avoids
-expected =0). For the default, this will add 1 to the expected for any
-individual calculation if expected would otherwise be zero.
-For "add_test_interval", each location in the baseline is increased by the
-number of cases in that location during the test interval. If "none", no
-adjustment is made.}
+"add_test", or "none".  All methods except for "none" will ensure that the
+log(obs/expected) is always defined (i.e. avoids expected =0). For the
+default, this will add 1 to the expected for any individual calculation if
+expected would otherwise be zero. For "add_test_interval", each location in
+the baseline is increased by the number of cases in that location during
+the test interval. If "none", no adjustment is made.}
 
-\item{adj_contant}{numeric (default=1.0); this is the constant to be added if
-\code{baseline_adjustment == 'add_one_global'}}
+\item{adj_constant}{numeric (default=1.0); this is the constant to be added
+if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
+'add_one'}}
 }
 \value{
 an object of class `CaseGrids` contain a list of items
