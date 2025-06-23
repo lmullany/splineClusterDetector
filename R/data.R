@@ -37,3 +37,52 @@
 #' }
 #' @source unknown
 "zipcodes"
+
+#' Spline Lookup Table - 0.001
+#'
+#' Spline threshold lookup table, p-value = 0.001
+#'
+#' @format A data frame with 399 rows and 2 columns:
+#' \describe{
+#'   \item{observed}{number of observed in cluster}
+#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.001 level}
+#' }
+#' @source package authors
+"spline_001"
+
+#' Spline Lookup Table - 0.005
+#'
+#' Spline threshold lookup table, p-value = 0.005
+#'
+#' @format A data frame with 399 rows and 2 columns:
+#' \describe{
+#'   \item{observed}{number of observed in cluster}
+#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.005 level}
+#' }
+#' @source package authors
+"spline_005"
+
+#' Spline Lookup Table - 0.01
+#'
+#' Spline threshold lookup table, p-value = 0.01
+#'
+#' @format A data frame with 399 rows and 2 columns:
+#' \describe{
+#'   \item{observed}{number of observed in cluster}
+#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.01 level}
+#' }
+#' @source package authors
+
+"spline_01"
+
+#' Spline Lookup Table - 0.05
+#'
+#' Spline threshold lookup table, p-value = 0.05
+#'
+#' @format A data frame with 399 rows and 2 columns:
+#' \describe{
+#'   \item{observed}{number of observed in cluster}
+#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.05 level}
+#' }
+#' @source package authors
+"spline_05"

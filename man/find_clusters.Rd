@@ -7,8 +7,8 @@
 find_clusters(
   cases,
   distance_matrix,
-  spline_lookup,
   detect_date,
+  spline_lookup = NULL,
   baseline_length = 90,
   max_test_window_days = 7,
   guard_band = 0,
@@ -27,11 +27,14 @@ find_clusters(
 
 \item{distance_matrix}{a square distance matrix, named on both dimensions}
 
-\item{spline_lookup}{a two-column frame with observed values and spline
-detection threshold}
-
 \item{detect_date}{a date that indicates the end of the test window in which
 we are looking for clusters}
+
+\item{spline_lookup}{default NULL; either a spline lookup table, which is a
+data frame that has at least two columns: including "observed" and
+"spl_thresh", OR a string indicating to use one of the built in lookup
+tables: i.e. one of \code{"001", "005", "01", "05"}. If NULL, the default
+table will be 01 (i.e. \code{spline_01} dataset)}
 
 \item{baseline_length}{integer (default = 90) number of days in the baseline
 interval}
