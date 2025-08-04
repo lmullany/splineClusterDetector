@@ -50,7 +50,7 @@ cluster size. Note that the units of the value default (miles) should be
 the same unit as the values in the distance matrix}
 
 \item{baseline_adjustment}{one of four string options: "add_one" (default),
-"add_one_gloabl", "add_test", or "none".  All methods except for "none"
+"add_one_global", "add_test", or "none".  All methods except for "none"
 will ensure that the log(obs/expected) is always defined (i.e. avoids
 expected =0). For the default, this will add 1 to the expected for any
 individual calculation if expected would otherwise be zero.

@@ -45,7 +45,8 @@
 #' @format A data frame with 399 rows and 2 columns:
 #' \describe{
 #'   \item{observed}{number of observed in cluster}
-#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.001 level}
+#'   \item{spl_thresh}{log observed-over-expected above which cluster
+#'    is significant at the 0.001 level}
 #' }
 #' @source package authors
 "spline_001"
@@ -57,7 +58,8 @@
 #' @format A data frame with 399 rows and 2 columns:
 #' \describe{
 #'   \item{observed}{number of observed in cluster}
-#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.005 level}
+#'   \item{spl_thresh}{log observed-over-expected above which
+#'    cluster is significant at the 0.005 level}
 #' }
 #' @source package authors
 "spline_005"
@@ -69,7 +71,8 @@
 #' @format A data frame with 399 rows and 2 columns:
 #' \describe{
 #'   \item{observed}{number of observed in cluster}
-#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.01 level}
+#'   \item{spl_thresh}{log observed-over-expected above which
+#'   cluster is significant at the 0.01 level}
 #' }
 #' @source package authors
 
@@ -82,7 +85,8 @@
 #' @format A data frame with 399 rows and 2 columns:
 #' \describe{
 #'   \item{observed}{number of observed in cluster}
-#'   \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.05 level}
+#'   \item{spl_thresh}{log observed-over-expected above which
+#'   cluster is significant at the 0.05 level}
 #' }
 #' @source package authors
 "spline_05"

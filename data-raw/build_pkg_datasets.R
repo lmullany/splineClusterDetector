@@ -93,7 +93,10 @@ spline_005 <- sl[pval == "0.005", .(observed, spl_thresh)]
 spline_01 <- sl[pval == "0.01", .(observed, spl_thresh)]
 spline_05 <- sl[pval == "0.05", .(observed, spl_thresh)]
 
-usethis::use_data(spline_001, spline_005, spline_01, spline_05, overwrite = TRUE)
+usethis::use_data(
+  spline_001, spline_005, spline_01, spline_05,
+  overwrite = TRUE
+)
 
 
 # USE THIS AS INTERNAL DATASETS
@@ -104,4 +107,3 @@ usethis::use_data(
   internal = TRUE,
   overwrite = TRUE
 )
-

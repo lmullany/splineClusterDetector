@@ -8,7 +8,8 @@
 A data frame with 399 rows and 2 columns:
 \describe{
   \item{observed}{number of observed in cluster}
-  \item{spl_thresh}{log observed-over-expected above which cluster is significant at the 0.005 level}
+  \item{spl_thresh}{log observed-over-expected above which
+   cluster is significant at the 0.005 level}
 }
 }
 \source{
