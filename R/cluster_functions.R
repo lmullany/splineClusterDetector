@@ -972,6 +972,13 @@ find_clusters <- function(
       data.table::between(observed, min_clust_cases, max_clust_cases)
     ]
 
+  # If nrow is zero, this is not an error, just no clusters
+  if(nrow(obs_expected_frame_with_spline) == 0) {
+    cli::cli_alert_info("No clusters found")
+    if(return_interim == TRUE) return(interim_results)
+    else return(invisible())
+  }
+
   # 5. Compress Clusters
   if (use_fast) {
     compressed_clusters <- handle_try(
