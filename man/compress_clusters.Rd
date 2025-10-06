@@ -9,8 +9,8 @@ compress_clusters(cluster_alert_table, distance_matrix)
 \arguments{
 \item{cluster_alert_table}{an object of class `ClusterAlertTable`}
 
-\item{distance_matrix}{a distance matrix with named dimensions, where the
-names are the candidate locations used to generate ClusterAlertTable}
+\item{distance_matrix}{a square distance matrix, named on both dimensions or
+a list of distance vectors, one for each location}
 }
 \value{
 a list including a data.frame of clusters and another frame of

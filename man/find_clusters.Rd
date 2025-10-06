@@ -25,7 +25,8 @@ find_clusters(
 \arguments{
 \item{cases}{a frame of case counts by location and date}
 
-\item{distance_matrix}{a square distance matrix, named on both dimensions}
+\item{distance_matrix}{a square distance matrix, named on both dimensions or
+a list of distance vectors, one for each location}
 
 \item{detect_date}{a date that indicates the end of the test window in which
 we are looking for clusters}
@@ -75,8 +76,8 @@ require that any final clusters (post compression from candidate rows) have
 at least \code{post_cluster_min_count} cases, when aggregated over all
 locations within the identified cluster}
 
-\item{use_fast}{boolean (default = FALSE) - set to TRUE to use the fast
-verson of the compress clusters function}
+\item{use_fast}{boolean (default = TRUE) - set to TRUE to use the fast verson
+of the compress clusters function}
 
 \item{return_interim}{boolean (default = FALSE) - set to TRUE to return all
 interim objects of the find_clusters() function}

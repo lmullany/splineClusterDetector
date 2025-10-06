@@ -10,12 +10,14 @@ gen_nearby_case_info(cg, distance_matrix, distance_limit)
 \item{cg}{object of class `CaseGrids`, such as returned from the
 `generate_case_grids()`}
 
-\item{distance_matrix}{a square matrix of distances with diagonal zero and
-dimensions (colnames same as rownames) indicating locations}
+\item{distance_matrix}{a square distance matrix, named on both dimensions or
+a list of distance vectors, one for each location}
 
 \item{distance_limit}{numeric value indicating the distance threshold to
 define "near" locations; must be input in the same units as the distances
-in the `distance_matrix`}
+in the `distance_matrix`. Note that if passing the list version of
+distance_matrix, this limit has already been used in that construction and
+thus is ignored}
 }
 \value{
 an object of class `NearbyClusterGrids` which is list of two
