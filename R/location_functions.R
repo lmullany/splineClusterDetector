@@ -249,6 +249,11 @@ create_dist_list <- function(
   unit = match.arg(unit)
   factor = list("miles" = 1609, "kilometers" = 1000, "meters"=1)[[unit]]
 
+  # In case threshold is null, revert to default
+  if(is.null(threshold)) {
+    threshold = ifelse(level=="county", 50, 15)
+  }
+
   # convert within to meters
   threshold = threshold*factor
 
