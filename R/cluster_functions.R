@@ -754,7 +754,7 @@ add_location_counts <- function(cluster_list, cases) {
         date <= cluster_alert_table$detect_date[j] &
         location %in% clust_locs
     ] |>
-      _[, list(count = sum(count)), location][order(location)]
+      _[, list(count = sum(count),max_date = max(date)), location][order(location), max_date:=max(max_date)]
 
     zero_cl <- setdiff(clust_locs, unique(location_counts$location))
     if (length(zero_cl) > 0) {
@@ -762,29 +762,34 @@ add_location_counts <- function(cluster_list, cases) {
         location_counts,
         data.table::data.table(
           location = zero_cl,
-          count = 0
+          count = 0,
+          max_date = location_counts[["max_date"]][[1]]
         )
       )
     }
 
     # add the current cluster center location to this filtered table
     location_counts[, target := cluster_alert_table$target[j]]
-    data.table::setnames(location_counts, c("location", "count", "target"))
+    data.table::setnames(location_counts, c("location", "count", "max_date", "target"))
 
     # concatenate these rows to table for all cluster
     cluster_location_counts <- rbind(cluster_location_counts, location_counts)
   }
 
-  clusters <- list(
-    cluster_alert_table = cluster_alert_table,
-    cluster_location_counts = cluster_location_counts
+  # add the max date of each cluster to the main table
+  cluster_alert_table <- merge(
+    cluster_alert_table,
+    unique(cluster_location_counts[, .(target, max_date)]),
+    by = c("target"),
   )
+  cluster_location_counts[, max_date:=NULL]
 
   nr_locs <- NULL
 
   # check that nr_locations match
   s <- cluster_alert_table[, list(target, nr_locs)][order(target)]
   t <- cluster_location_counts[, list(nr_locs = .N), target][order(target)]
+  setkey(s, NULL) # this drops any key from s to make sure it is identical to t
   if (!identical(s, t)) {
     cli::cli_abort(
       paste0(
@@ -793,6 +798,13 @@ add_location_counts <- function(cluster_list, cases) {
       )
     )
   }
+
+  clusters <- list(
+    cluster_alert_table = cluster_alert_table,
+    cluster_location_counts = cluster_location_counts
+  )
+
+
 
   class(clusters) <- c(class(clusters), "clusters")
 
