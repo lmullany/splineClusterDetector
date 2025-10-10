@@ -30,5 +30,5 @@ those counties. leverages a built in dataset (`counties`).
 \examples{
 # example code
 county_distance_matrix("MD", source = "tigris")
-county_distance_matrix("CT", "kilometers", source = "tigris")
+county_distance_matrix("CT", "kilometers", source = "rnssp")
 }

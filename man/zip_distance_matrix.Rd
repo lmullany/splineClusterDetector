@@ -20,5 +20,4 @@ zipcodes to counties.
 \examples{
 # example code
 zip_distance_matrix("MD")
-zip_distance_matrix("TX", "kilometers")
 }

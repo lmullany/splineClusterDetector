@@ -20,6 +20,6 @@ Imports:
     geodist,
     sf
 Depends: 
-    R (>= 3.5)
+    R (>= 4.3)
 Suggests: 
     Rnssp
