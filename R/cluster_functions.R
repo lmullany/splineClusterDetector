@@ -752,7 +752,8 @@ add_location_counts <- function(cluster_list, cases) {
     location_counts <- cases[
       date >= cluster_alert_table$date[j] &
         date <= cluster_alert_table$detect_date[j] &
-        location %in% clust_locs
+        location %in% clust_locs &
+        count>0
     ] |>
       _[, list(count = sum(count),max_date = max(date)), location][order(location), max_date:=max(max_date)]
 
