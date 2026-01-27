@@ -1,7 +1,7 @@
 Package: splineClusterDetector
 Type: Package
 Title: Utilities for cluster detection and significance classification using splines
-Version: 0.8.2
+Version: 0.8.3
 Author: Howard Burkom, Luke Mullany
 Maintainer: Luke Mullany <luke.mullany@jhuapl.edu>
 Description: This package provides utilities for manipulating time series of 
@@ -10,7 +10,7 @@ Description: This package provides utilities for manipulating time series of
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: 
     cli,
     data.table (>= 1.16.0),

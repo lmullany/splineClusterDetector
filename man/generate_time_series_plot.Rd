@@ -8,6 +8,7 @@ generate_time_series_plot(
   time_series_data,
   end_date = NULL,
   plot_type = c("ggplot", "plotly"),
+  locations = "All Locations",
   ...
 )
 }
@@ -17,6 +18,8 @@ generate_time_series_plot(
 \item{end_date}{optional end date to truncate date}
 
 \item{plot_type}{string indicating either a "ggplot" or "plotly" result}
+
+\item{locations}{string indicating location name (defaults to "All Locations")}
 
 \item{...}{passed onto plotly}
 }
