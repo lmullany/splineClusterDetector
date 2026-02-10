@@ -44,7 +44,7 @@ zip_distance_matrix <- function(
   }
 
   # get distance matrix
-  distance_matrix <- geosphere::distm(x = mapping[, list(longitude, latitude)],)
+  distance_matrix <- geosphere::distm(x = mapping[, list(longitude, latitude)])
 
   # apply factor
   distance_matrix <- distance_matrix * unit_factors[unit]
