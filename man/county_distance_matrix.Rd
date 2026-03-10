@@ -7,21 +7,21 @@
 county_distance_matrix(
   st,
   unit = c("miles", "kilometers", "meters"),
-  source = c("rnssp", "tigris")
+  source = c("rnssp", "built_in")
 )
 }
 \arguments{
 \item{st}{two-character string denoting a state, or "US". If "US", then this
-is equivalent to calling the us_distance_matrix() function}
+is equivalent to calling \code{us_distance_matrix()}.}
 
 \item{unit}{string, one of "miles" (default), "kilometers", or "meters".
 Indicating the desired unit for the distances}
 
-\item{source}{string indicating either "rnssp" (default) or "tigris". The
-former will use `Rnssp::county_sf` file and leverage sf_centroid() and
-sf_distance() functions to produce the distance matrix. The latter will use
-this package's default `counties` dataset and `geosphere` package to get
-distance. The results are slightly different.}
+\item{source}{string indicating either "rnssp" (default) or "built_in".
+If "rnssp" is requested and \pkg{Rnssp} is available, the function uses
+\code{Rnssp::county_sf} with \code{sf::st_centroid()} and
+\code{sf::st_distance()}. If \pkg{Rnssp} is not available, the function
+warns and falls back to this package's default \code{counties} dataset.}
 }
 \description{
 Function returns a list of counties and a matrix with the distance between
@@ -29,6 +29,6 @@ those counties. leverages a built in dataset (`counties`).
 }
 \examples{
 # example code
-county_distance_matrix("MD", source = "tigris")
+county_distance_matrix("MD", source = "built_in")
 county_distance_matrix("CT", "kilometers", source = "rnssp")
 }

@@ -8,7 +8,7 @@ gen_nearby_case_info(cg, distance_matrix, distance_limit)
 }
 \arguments{
 \item{cg}{object of class `CaseGrids`, such as returned from the
-`generate_case_grids()`}
+\code{generate_case_grids()}}
 
 \item{distance_matrix}{a square distance matrix, named on both dimensions or
 a list of distance vectors, one for each location}

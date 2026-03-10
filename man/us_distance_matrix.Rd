@@ -14,5 +14,5 @@ Indicating the desired unit for the distances}
 Function returns a list of counties and a matrix with the distance between
 those counties. leverages a built in dataset (`counties`). Note that the
 generation of this matrix can take a few seconds. Note: it is better and
-faster to use create_dist_matrix()
+faster to use \code{create_dist_list()}.
 }

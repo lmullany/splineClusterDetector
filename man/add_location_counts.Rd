@@ -18,6 +18,6 @@ the cluster list from compress_clusters with individual location
 }
 \description{
 Add counts of individual cluster locations Operates on the output list of the
-'compress_clusters()' component Calculates indiv. location counts for each
-cluster, appends to the cluster location list
+\code{compress_clusters()} component. Calculates individual location counts
+for each cluster, and appends to the cluster location list.
 }

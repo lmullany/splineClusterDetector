@@ -27,7 +27,6 @@ if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 a dataframe of class `ObservedExpectedGrid`
 }
 \description{
-Function takes an object of class `NearbyClusterGrids`, as returned from the
-`generate_nearby_case_information()`, and adds the observed and expected
-information
+Function takes an object of class `NearbyClusterGrids`, as returned from
+\code{gen_nearby_case_info()}, and adds observed and expected information.
 }

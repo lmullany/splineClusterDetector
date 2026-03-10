@@ -80,7 +80,7 @@ locations within the identified cluster}
 of the compress clusters function}
 
 \item{return_interim}{boolean (default = FALSE) - set to TRUE to return all
-interim objects of the find_clusters() function}
+interim objects of the \code{find_clusters()} function}
 }
 \value{
 returns a list of two of two dataframes.

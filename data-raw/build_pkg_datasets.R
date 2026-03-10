@@ -72,7 +72,8 @@ usethis::use_data(counties, overwrite = TRUE)
 
 ## code to prepare `zipcodes` dataset goes here
 zipcodes <- data.table::fread(
-  "data-raw/zipcode_mapping.csv"
+  "data-raw/zipcode_mapping.csv",
+  encoding = "Latin-1"
 )
 
 data.table::setnames(
@@ -83,6 +84,39 @@ data.table::setnames(
     "latitude", "longitude"
   )
 )
+
+# Normalize all character columns to valid UTF-8 for reliable rendering.
+char_cols <- names(zipcodes)[vapply(zipcodes, is.character, logical(1))]
+zipcodes[
+  ,
+  (char_cols) := lapply(.SD, enc2utf8),
+  .SDcols = char_cols
+]
+
+# Correct known Puerto Rico municipality mojibake to proper UTF-8 accents.
+pr_name_map <- c(
+  "PR_A+¦asco" = "PR_Añasco",
+  "PR_Pe+¦uelas" = "PR_Peñuelas",
+  "PR_Gu+ínica" = "PR_Guánica",
+  "PR_Las Mar+¡as" = "PR_Las Marías",
+  "PR_Manat+¡" = "PR_Manatí",
+  "PR_Rinc+¦n" = "PR_Rincón",
+  "PR_San Germ+ín" = "PR_San Germán",
+  "PR_San Sebasti+ín" = "PR_San Sebastián",
+  "PR_R+¡o Grande" = "PR_Río Grande",
+  "PR_Can+¦vanas" = "PR_Canóvanas",
+  "PR_Lo+¡za" = "PR_Loíza",
+  "PR_Comer+¡o" = "PR_Comerío",
+  "PR_Juana D+¡az" = "PR_Juana Díaz",
+  "PR_Bayam+¦n" = "PR_Bayamón",
+  "PR_Cata+¦o" = "PR_Cataño",
+  "PR_Mayag++ez" = "PR_Mayagüez"
+)
+
+for (nm in c("county", "region_name")) {
+  ndx <- zipcodes[[nm]] %in% names(pr_name_map)
+  zipcodes[ndx, (nm) := unname(pr_name_map[zipcodes[[nm]][ndx]])]
+}
 
 usethis::use_data(zipcodes, overwrite = TRUE)
 

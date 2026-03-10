@@ -26,14 +26,15 @@
 #' )
 #' }
 st_injects <- function(
-    cases,
-    distance_matrix,
-    target_loc,
-    center_decile,
-    radius_miles,
-    nr_cases,
-    nr_days,
-    end_date) {
+  cases,
+  distance_matrix,
+  target_loc,
+  center_decile,
+  radius_miles,
+  nr_cases,
+  nr_days,
+  end_date
+) {
   # check that cases has location, count, and date
   check_vars(cases, required = c("location", "count", "date"))
 
@@ -142,7 +143,6 @@ st_injects <- function(
   )
 
 
-
   case_counts_inj[is.na(case_counts_inj)] <- 0
   case_counts_inj[, count := count_x + count_y]
   case_counts_inj[, c("count_x", "count_y") := NULL]
@@ -168,9 +168,10 @@ st_injects <- function(
 #' dm <- zip_distance_matrix("MD")$distance_matrix
 #' nearby_locations <- get_nearby_locations("21228", dm, 10)
 get_nearby_locations <- function(
-    center_location,
-    distance_matrix,
-    radius_miles) {
+  center_location,
+  distance_matrix,
+  radius_miles
+) {
   r <- distance_matrix[center_location, ] |> sort()
   ndx <- which(r <= radius_miles)
   data.table::data.table(nearby_locs = names(ndx), distance_mi = r[ndx])

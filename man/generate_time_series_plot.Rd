@@ -17,9 +17,12 @@ generate_time_series_plot(
 
 \item{end_date}{optional end date to truncate date}
 
-\item{plot_type}{string indicating either a "ggplot" or "plotly" result}
+\item{plot_type}{string indicating either a "ggplot" or "plotly" result.
+If the requested backend is unavailable, the function warns and falls back
+to the other backend when available.}
 
-\item{locations}{string indicating location name (defaults to "All Locations")}
+\item{locations}{string indicating location name (defaults to
+"All Locations")}
 
 \item{...}{passed onto plotly}
 }

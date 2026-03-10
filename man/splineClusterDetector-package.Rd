@@ -4,8 +4,8 @@
 \name{splineClusterDetector-package}
 \alias{splineClusterDetector}
 \alias{splineClusterDetector-package}
-\title{splineClusterDetector: Utilities for cluster detection and significance classification using splines}
+\title{splineClusterDetector: Utilities for Cluster Detection and Significance Classification using Splines}
 \description{
-This package provides utilities for manipulating time series of location-based counts of events to detect clusters, and to determine the significance of these clusters via spline approach.
+Provides utilities for manipulating time series of location-based counts of events to detect clusters, and to determine the significance of these clusters via spline approach.
 }
 \keyword{internal}
