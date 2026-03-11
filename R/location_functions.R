@@ -294,7 +294,7 @@ zip_distance_matrix <- function(
 #'   is equivalent to calling \code{us_distance_matrix()}.
 #' @param unit string, one of "miles" (default), "kilometers", or "meters".
 #'   Indicating the desired unit for the distances
-#' @param source string indicating either "rnssp" (default) or "built_in".
+#' @param source string indicating either "built_in" (default) or "rnssp".
 #'   If "rnssp" is requested and \pkg{Rnssp} is available, the function uses
 #'   \code{Rnssp::county_sf} with \code{sf::st_centroid()} and
 #'   \code{sf::st_distance()}. If \pkg{Rnssp} is not available, the function
@@ -303,13 +303,13 @@ zip_distance_matrix <- function(
 #' @examples
 #' # example code
 #' county_distance_matrix("MD", source = "built_in")
-#' county_distance_matrix("CT", "kilometers", source = "rnssp")
 county_distance_matrix <- function(
   st,
   unit = c("miles", "kilometers", "meters"),
-  source = c("rnssp", "built_in")
+  source = c("built_in","rnssp")
 ) {
   # if State = "US" pass this request on to us_distance_matrix()
+  # which always uses built-in dataset
   if (st == "US") {
     us_distance_matrix(unit = unit)
   } else {
