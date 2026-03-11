@@ -13,15 +13,14 @@ A data frame with 11,264 rows and 4 columns:
 }
 }
 \source{
-Generated from a local development input using
-`data-raw/build_example_count_data.R`
+package authors
 }
 \usage{
 example_count_data
 }
 \description{
 Synthetic county-level example count data for package examples and tests. 
-Generationg includes a in cases near chronological end to ensure there is
-non-trivial cluster detection behavior.
+Generation included a synthetic injection of cases near the end of the time
+series to ensure that clusters are detected in this example dataset.
 }
 \keyword{datasets}

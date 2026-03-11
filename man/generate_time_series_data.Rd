@@ -31,7 +31,7 @@ interval}
 interval}
 }
 \value{
-a ggplot object
+a dataframe of time series data
 }
 \description{
 Function returns a time series of counts-by-location-and-date data,

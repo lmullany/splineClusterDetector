@@ -306,7 +306,7 @@ zip_distance_matrix <- function(
 county_distance_matrix <- function(
   st,
   unit = c("miles", "kilometers", "meters"),
-  source = c("built_in","rnssp")
+  source = c("built_in", "rnssp")
 ) {
   # if State = "US" pass this request on to us_distance_matrix()
   # which always uses built-in dataset

@@ -405,7 +405,7 @@ ggplot_heatmap <- function(heatmap_data) {
 #' @param guard numeric (default=0) number of days between baseline and test
 #'   interval
 #' @export
-#' @returns a ggplot object
+#' @returns a dataframe of time series data
 generate_time_series_data <- function(
   data,
   end_date = NULL,
