@@ -8,21 +8,19 @@
 A data frame with 11,264 rows and 4 columns:
 \describe{
   \item{location}{county FIPS code as character}
-  \item{count}{non-negative integer daily count}
   \item{date}{date of observation}
-  \item{display_name}{human-readable county label}
+  \item{count}{non-negative integer daily count}
 }
 }
 \source{
-Generated from a local development input using
-`data-raw/build_example_count_data.R`
+package authors
 }
 \usage{
 example_count_data
 }
 \description{
-County-level example count data for package examples and tests. The values
-are generated deterministically to provide stable, non-trivial cluster
-detection behavior.
+Synthetic county-level example count data for package examples and tests.
+Generation included a synthetic injection of cases near the end of the time
+series to ensure that clusters are detected in this example dataset.
 }
 \keyword{datasets}

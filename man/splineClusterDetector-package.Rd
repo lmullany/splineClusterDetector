@@ -6,6 +6,23 @@
 \alias{splineClusterDetector-package}
 \title{splineClusterDetector: Utilities for Cluster Detection and Significance Classification using Splines}
 \description{
-Provides utilities for manipulating time series of location-based counts of events to detect clusters, and to determine the significance of these clusters via spline approach.
+Provides utilities for manipulating time series of location-based counts of events to detect geospatial clusters. Significance of these clusters is determined using a set of simple spline models that classify based on a learned relationship between observed and the log(observed/expected) ratio of counts. The approach implemented here is similar to prospective space-time estimation of clusters using the scan statistic.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/lmullany/splineClusterDetector}
+  \item Report bugs at \url{https://github.com/lmullany/splineClusterDetector/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Luke Mullany \email{luke.mullany@jhuapl.edu}
+
+Authors:
+\itemize{
+  \item Howard Burkom
+}
+
 }
 \keyword{internal}

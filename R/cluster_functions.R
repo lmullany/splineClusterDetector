@@ -1,7 +1,3 @@
-# © 2025 The Johns Hopkins University Applied Physics Laboratory LLC
-# Development of this software was sponsored by the U.S. Government under
-# contract no. 75D30124C19958
-
 #' Get candidate clusters and locations in baseline intervals
 #'
 #' Given raw case counts by location, and some dates and other params return

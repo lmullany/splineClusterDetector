@@ -7,7 +7,7 @@
 county_distance_matrix(
   st,
   unit = c("miles", "kilometers", "meters"),
-  source = c("rnssp", "built_in")
+  source = c("built_in", "rnssp")
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ is equivalent to calling \code{us_distance_matrix()}.}
 \item{unit}{string, one of "miles" (default), "kilometers", or "meters".
 Indicating the desired unit for the distances}
 
-\item{source}{string indicating either "rnssp" (default) or "built_in".
+\item{source}{string indicating either "built_in" (default) or "rnssp".
 If "rnssp" is requested and \pkg{Rnssp} is available, the function uses
 \code{Rnssp::county_sf} with \code{sf::st_centroid()} and
 \code{sf::st_distance()}. If \pkg{Rnssp} is not available, the function
@@ -30,5 +30,4 @@ those counties. leverages a built in dataset (`counties`).
 \examples{
 # example code
 county_distance_matrix("MD", source = "built_in")
-county_distance_matrix("CT", "kilometers", source = "rnssp")
 }

@@ -1,7 +1,3 @@
-# © 2025 The Johns Hopkins University Applied Physics Laboratory LLC
-# Development of this software was sponsored by the U.S. Government under
-# contract no. 75D30124C19958
-
 #' Add data counts for parameterized injected clusters
 #'
 #' Function st_injects returns a list of two objects 1. a full dataset as a

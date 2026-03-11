@@ -1,7 +1,3 @@
-# © 2025 The Johns Hopkins University Applied Physics Laboratory LLC
-# Development of this software was sponsored by the U.S. Government under
-# contract no. 75D30124C19958
-
 #' Summary count-by-location-and-date data, given baseline and test interval
 #' lengths, and an end-date for the test interval
 #'
@@ -409,7 +405,7 @@ ggplot_heatmap <- function(heatmap_data) {
 #' @param guard numeric (default=0) number of days between baseline and test
 #'   interval
 #' @export
-#' @returns a ggplot object
+#' @returns a dataframe of time series data
 generate_time_series_data <- function(
   data,
   end_date = NULL,
