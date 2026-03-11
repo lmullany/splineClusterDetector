@@ -19,7 +19,7 @@ package authors
 example_count_data
 }
 \description{
-Synthetic county-level example count data for package examples and tests. 
+Synthetic county-level example count data for package examples and tests.
 Generation included a synthetic injection of cases near the end of the time
 series to ensure that clusters are detected in this example dataset.
 }
