@@ -5,3 +5,4 @@
 ^data-raw$
 ^certs$
 ^Dockerfile$
+^cran-comments\.md$
