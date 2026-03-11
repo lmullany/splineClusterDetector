@@ -191,29 +191,32 @@ testthat::test_that("generate_heatmap returns expected plot object classes", {
   )
 })
 
-testthat::test_that("generate_heatmap errors if neither plotting library is installed", {
-  d <- .load_example_data()
-  h <- splineClusterDetector::generate_heatmap_data(
-    data = d,
-    end_date = as.Date("2025-01-31"),
-    baseline_length = 30,
-    test_length = 7
-  )
+testthat::test_that(
+  "generate_heatmap errors if neither plotting library is installed",
+  {
+    d <- .load_example_data()
+    h <- splineClusterDetector::generate_heatmap_data(
+      data = d,
+      end_date = as.Date("2025-01-31"),
+      baseline_length = 30,
+      test_length = 7
+    )
 
-  testthat::local_mocked_bindings(
-    requireNamespace = function(pkg, quietly = TRUE) FALSE,
-    .package = "base"
-  )
+    testthat::local_mocked_bindings(
+      requireNamespace = function(pkg, quietly = TRUE) FALSE,
+      .package = "base"
+    )
 
-  testthat::expect_error(
-    splineClusterDetector::generate_heatmap(h, plot_type = "ggplot"),
-    class = "plotting_libraries_not_found"
-  )
-  testthat::expect_error(
-    splineClusterDetector::generate_heatmap(h, plot_type = "plotly"),
-    class = "plotting_libraries_not_found"
-  )
-})
+    testthat::expect_error(
+      splineClusterDetector::generate_heatmap(h, plot_type = "ggplot"),
+      class = "plotting_libraries_not_found"
+    )
+    testthat::expect_error(
+      splineClusterDetector::generate_heatmap(h, plot_type = "plotly"),
+      class = "plotting_libraries_not_found"
+    )
+  }
+)
 
 testthat::test_that("generate_heatmap warns and falls back if plotly missing", {
   .skip_if_no_ggplot2()

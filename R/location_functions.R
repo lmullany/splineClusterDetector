@@ -29,7 +29,7 @@
         paste0("{.fn ", fn_name, "}."),
         "Install it with install.packages('tigris')."
       ),
-      class="tigris_not_available"
+      class = "tigris_not_available"
     )
   }
 }
@@ -421,33 +421,30 @@ us_distance_matrix <- function(
 #' a list of named vectors is returned, where there is one element in the list
 #' for each location, and each named vector holds the distance within
 #' `threshold` of the location.
-#' @param level string either "county" (default), "zip", or "tract"
+#' @param level string either "county", "zip", or "tract"
 #' @param threshold numeric value; include in each location-specific named
 #'   vector only those locations that a within `threshold` distance units of the
-#'   target. The defaults is 50 (miles), 15 (miles) and 3 (miles) for county,
-#'   zip, and tract, respectively, but these can be adjusted. Note if a
-#'   different unit other than miles is used, then the user should also adjust
-#'   this parameter appropriately
+#'   target. Reasonable thresholds might be 50 (miles), 15 (miles) and 3 (miles)
+#'   for county, zip, and tract, respectively, but these can be adjusted.
+#'   Note if a different unit other than miles is used, then the user should
+#'   also adjust this parameter appropriately
 #' @param st string; optional to specify a state; if NULL distances are returned
 #'   for all zip codes or counties in the US
+#' @param fips string vector of fips to restrict within \code{st}; ignored
+#'   unless \code{level} is "tract"
 #' @param unit string one of miles (default), kilometers, or meters; this is the
 #'   unit relevant to the threshold
 #' @export
 create_dist_list <- function(
-  level = c("county", "zip", "tract"),
-  threshold = {
-    data.table::fcase(
-      level == "county", 50,
-      level == "zip", 15,
-      level == "tract", 3
-    )
-  },
+  level,
+  threshold,
   st = NULL,
+  fips = NULL,
   unit = c("miles", "kilometers", "meters")
 ) {
-  state <- zip_code <- latitude <- longitude <- fips <- NULL
+  state <- zip_code <- latitude <- longitude <- NULL
 
-  level <- match.arg(level)
+  level <- match.arg(level, c("county", "zip", "tract"))
   unit <- match.arg(unit)
   factor <- .meters_per_unit(unit)
 
@@ -464,11 +461,13 @@ create_dist_list <- function(
          single state, `st` must not be null"
       )
     }
-    tracts <- tract_generator(st = st)
+    tracts <- tract_generator(st = st, fips = fips)
     return(
       create_custom_dist_list(
         df = tracts,
         label_var = "geoid",
+        lat_var = "latitude",
+        long_var = "longitude",
         threshold = threshold,
         unit = unit
       )
@@ -510,10 +509,8 @@ create_dist_list <- function(
 #' @param df data.frame containing label and coordinate columns
 #' @param label_var character scalar; column name used as location label
 #'   (must be unique and non-missing)
-#' @param lat_var character scalar; latitude column name. If \code{NULL},
-#'   defaults to \code{"latitude"}
-#' @param long_var character scalar; longitude column name. If \code{NULL},
-#'   defaults to \code{"longitude"}
+#' @param lat_var character scalar; latitude column name.
+#' @param long_var character scalar; longitude column name.
 #' @param threshold numeric scalar distance cutoff in units of \code{unit}
 #' @param unit string, one of "miles" (default), "kilometers", or "meters"
 #' @export
@@ -523,6 +520,8 @@ create_dist_list <- function(
 #' dlist <- create_custom_dist_list(
 #'   df = md,
 #'   label_var = "geoid",
+#'   lat_var = "latitude",
+#'   long_var = "longitude",
 #'   threshold = 15,
 #'   unit = "miles"
 #' )
@@ -530,8 +529,8 @@ create_dist_list <- function(
 create_custom_dist_list <- function(
   df,
   label_var,
-  lat_var = NULL,
-  long_var = NULL,
+  lat_var,
+  long_var,
   threshold,
   unit = c("miles", "kilometers", "meters")
 ) {
@@ -581,6 +580,8 @@ create_custom_dist_list <- function(
 #' @param st Character scalar; either a 2-digit state FIPS code
 #'   (for example, \code{"24"}) or a 2-letter USPS abbreviation
 #'   (for example, \code{"MD"}).
+#' @param fips character vector of one or more 5-character fips codes
+#'   to liit with \code{st}
 #' @param year Integer TIGER/Line year to request from \pkg{tigris}.
 #'   Default is \code{2024}.
 #' @param cb Logical; passed to \code{tigris::tracts()}. Default is \code{TRUE}.
@@ -599,14 +600,18 @@ create_custom_dist_list <- function(
 #' \dontrun{
 #' md_tracts <- tract_generator("24")
 #' md_tracts2 <- tract_generator("MD")
+#' howard_county_tracts <- tract_generator("MD", fips = "24027")
 #' head(md_tracts)
 #' }
 tract_generator <- function(
   st,
+  fips = NULL,
   year = 2024,
   cb = TRUE,
   use_cache = TRUE
 ) {
+  geoid <- NULL
+
   .assert_tigris_available("tract_generator")
 
   if (
@@ -629,15 +634,27 @@ tract_generator <- function(
 
   options(tigris_use_cache = use_cache)
 
-  tracts_sf <- tigris::tracts(state = st, cb = cb, year = year)
-  centroids_sf <- sf::st_transform(sf::st_centroid(tracts_sf), 4326)
+  tracts_sf <- suppressMessages(tigris::tracts(state = st, cb = cb, year = year))
+  centroids_sf <- suppressWarnings(
+    sf::st_transform(sf::st_centroid(tracts_sf), 4326)
+  )
   coords <- sf::st_coordinates(centroids_sf)
 
-  data.table::data.table(
+  result <- data.table::data.table(
     geoid = centroids_sf$GEOID,
     latitude = coords[, "Y"],
     longitude = coords[, "X"]
   )
+
+  # reduce to only those in specified fips
+  if (!is.null(fips)) {
+    if (!is.character(fips)) {
+      cli::cli_abort("`fips` is not a character vector")
+    }
+    result <- result[substr(geoid, 1, 5) %in% fips]
+  }
+
+  result
 }
 
 #' Build a Tract Distance Matrix for a State
@@ -648,6 +665,8 @@ tract_generator <- function(
 #'
 #' @param st Character scalar; 2-character USPS state abbreviation
 #'   (for example, \code{"MD"}).
+#' @param fips Character vector of one or more fips to limit to
+#'   within \code{st}
 #' @param unit Character string; one of \code{"miles"} (default),
 #'   \code{"kilometers"}, or \code{"meters"}.
 #' @param year Integer TIGER/Line year to request from \pkg{tigris}.
@@ -673,6 +692,7 @@ tract_generator <- function(
 #' }
 tract_distance_matrix <- function(
   st,
+  fips = NULL,
   unit = c("miles", "kilometers", "meters"),
   year = 2024,
   cb = TRUE,
@@ -693,6 +713,7 @@ tract_distance_matrix <- function(
   st <- toupper(st)
   tract_df <- tract_generator(
     st = st,
+    fips = fips,
     year = year,
     cb = cb,
     use_cache = use_cache
@@ -701,7 +722,9 @@ tract_distance_matrix <- function(
   custom_distance_matrix(
     df = tract_df,
     unit = unit,
-    label_var = "geoid"
+    label_var = "geoid",
+    lat_var = "latitude",
+    long_var = "longitude"
   )
 }
 
@@ -717,9 +740,7 @@ tract_distance_matrix <- function(
 #' @param label_var Character scalar; column name to use for matrix
 #'   row/column names. Values in this column must be unique and non-missing.
 #' @param lat_var Character scalar; column name containing latitude values.
-#'   If \code{NULL} (default), \code{"latitude"} is used.
 #' @param long_var Character scalar; column name containing longitude values.
-#'   If \code{NULL} (default), \code{"longitude"} is used.
 #'
 #' @return A list with:
 #' \describe{
@@ -733,7 +754,10 @@ tract_distance_matrix <- function(
 #' @examples
 #' \dontrun{
 #' md <- tract_generator("24")
-#' dm <- custom_distance_matrix(md, label_var = "geoid")
+#' dm <- custom_distance_matrix(
+#'   md,
+#'   label_var = "geoid", lat_var = "lon", long_var = "long"
+#' )
 #' dim(dm[["distance_matrix"]])
 #'
 #' names(md) <- c("tract_id", "lat", "lon")
@@ -749,8 +773,8 @@ custom_distance_matrix <- function(
   df,
   unit = c("miles", "kilometers", "meters"),
   label_var,
-  lat_var = NULL,
-  long_var = NULL
+  lat_var,
+  long_var
 ) {
   longitude <- latitude <- NULL
 

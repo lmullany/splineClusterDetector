@@ -8,8 +8,8 @@ custom_distance_matrix(
   df,
   unit = c("miles", "kilometers", "meters"),
   label_var,
-  lat_var = NULL,
-  long_var = NULL
+  lat_var,
+  long_var
 )
 }
 \arguments{
@@ -21,11 +21,9 @@ custom_distance_matrix(
 \item{label_var}{Character scalar; column name to use for matrix
 row/column names. Values in this column must be unique and non-missing.}
 
-\item{lat_var}{Character scalar; column name containing latitude values.
-If \code{NULL} (default), \code{"latitude"} is used.}
+\item{lat_var}{Character scalar; column name containing latitude values.}
 
-\item{long_var}{Character scalar; column name containing longitude values.
-If \code{NULL} (default), \code{"longitude"} is used.}
+\item{long_var}{Character scalar; column name containing longitude values.}
 }
 \value{
 A list with:
@@ -44,7 +42,10 @@ from a unique label variable.
 \examples{
 \dontrun{
 md <- tract_generator("24")
-dm <- custom_distance_matrix(md, label_var = "geoid")
+dm <- custom_distance_matrix(
+  md,
+  label_var = "geoid", lat_var = "lon", long_var = "long"
+)
 dim(dm[["distance_matrix"]])
 
 names(md) <- c("tract_id", "lat", "lon")

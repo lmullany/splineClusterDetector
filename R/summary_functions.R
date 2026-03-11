@@ -534,7 +534,7 @@ resolve_plot_backend <- function(plot_type, fn_name) {
         "Install at least one package to use ",
         fn_name,
         "."
-      ), 
+      ),
       class = "plotting_libraries_not_found"
     )
   }

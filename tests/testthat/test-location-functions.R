@@ -188,7 +188,6 @@ testthat::test_that("tract_generator validates st format", {
 
 
 testthat::test_that("tract_distance_matrix validates st format and unit", {
-
   testthat::skip_if_not_installed("tigris")
 
   testthat::expect_error(
@@ -219,12 +218,16 @@ testthat::test_that(
     dm_mi <- splineClusterDetector:::custom_distance_matrix(
       df = df,
       unit = "miles",
-      label_var = "geoid"
+      label_var = "geoid",
+      lat_var = "latitude",
+      long_var = "longitude"
     )
     dm_km <- splineClusterDetector:::custom_distance_matrix(
       df = df,
       unit = "kilometers",
-      label_var = "geoid"
+      label_var = "geoid",
+      lat_var = "latitude",
+      long_var = "longitude"
     )
 
     testthat::expect_type(dm_mi, "list")
@@ -293,7 +296,9 @@ testthat::test_that(
     testthat::expect_error(
       splineClusterDetector:::custom_distance_matrix(
         df = list(a = 1),
-        label_var = "id"
+        label_var = "id",
+        lat_var = "x",
+        long_var = "y"
       ),
       "class data.frame"
     )
@@ -301,7 +306,9 @@ testthat::test_that(
     testthat::expect_error(
       splineClusterDetector:::custom_distance_matrix(
         df = data.frame(id = c("a", "b"), latitude = c(39, 40)),
-        label_var = "id"
+        label_var = "id",
+        lat_var = "latitude",
+        long_var = "y"
       ),
       class = "column_not_found"
     )
@@ -313,7 +320,9 @@ testthat::test_that(
           latitude = c(39, 40),
           longitude = c(-76, -76)
         ),
-        label_var = "id"
+        label_var = "id",
+        lat_var = "latitude",
+        long_var = "longitude"
       ),
       "must be unique"
     )
@@ -325,7 +334,9 @@ testthat::test_that(
           latitude = c(39, 40),
           longitude = c(-76, -76)
         ),
-        label_var = "id"
+        label_var = "id",
+        lat_var = "latitude",
+        long_var = "longitude"
       ),
       "Label column contains NA"
     )
@@ -337,7 +348,9 @@ testthat::test_that(
           latitude = c("39", "40"),
           longitude = c(-76, -76)
         ),
-        label_var = "id"
+        label_var = "id",
+        lat_var = "latitude",
+        long_var = "longitude"
       ),
       "must be numeric"
     )
@@ -349,7 +362,9 @@ testthat::test_that(
           latitude = c(39, NA_real_),
           longitude = c(-76, -76)
         ),
-        label_var = "id"
+        label_var = "id",
+        lat_var = "latitude",
+        long_var = "longitude"
       ),
       "cannot contain NA"
     )
@@ -362,6 +377,8 @@ testthat::test_that(
           longitude = c(-76, -76)
         ),
         label_var = "id",
+        lat_var = "latitude",
+        long_var = "longitude",
         unit = "yards"
       ),
       "arg"
@@ -383,6 +400,8 @@ testthat::test_that(
     d <- splineClusterDetector::create_custom_dist_list(
       df = df,
       label_var = "geoid",
+      lat_var = "latitude",
+      long_var = "longitude",
       threshold = 80,
       unit = "miles"
     )
@@ -450,6 +469,8 @@ testthat::test_that("create_custom_dist_list validates inputs", {
     splineClusterDetector::create_custom_dist_list(
       df = list(a = 1),
       label_var = "id",
+      lat_var = "latitude",
+      long_var = "longitude",
       threshold = 10
     ),
     "class data.frame"
@@ -463,6 +484,8 @@ testthat::test_that("create_custom_dist_list validates inputs", {
         longitude = c(3, 4)
       ),
       label_var = c("id", "other"),
+      lat_var = "latitude",
+      long_var = "longitude",
       threshold = 10
     ),
     "single column name"
@@ -476,6 +499,8 @@ testthat::test_that("create_custom_dist_list validates inputs", {
         longitude = c(3, 4)
       ),
       label_var = "id",
+      lat_var = "latitude",
+      long_var = "longitude",
       threshold = -1
     ),
     "non-negative numeric"
@@ -490,7 +515,9 @@ testthat::test_that("create_custom_dist_list validates inputs", {
       ),
       label_var = "id",
       threshold = 10,
-      unit = "yards"
+      unit = "yards",
+      lat_var = "latitude",
+      long_var = "longitude"
     ),
     "arg"
   )
@@ -503,7 +530,9 @@ testthat::test_that("create_custom_dist_list validates inputs", {
         longitude = c(3, 4)
       ),
       label_var = "id",
-      threshold = 10
+      threshold = 10,
+      lat_var = "latitude",
+      long_var = "longitude"
     ),
     "must be unique"
   )
@@ -516,7 +545,9 @@ testthat::test_that("create_custom_dist_list validates inputs", {
         longitude = c(3, 4)
       ),
       label_var = "id",
-      threshold = 10
+      threshold = 10,
+      lat_var = "latitude",
+      long_var = "longitude"
     ),
     "Label column contains NA"
   )
@@ -529,7 +560,9 @@ testthat::test_that("create_custom_dist_list validates inputs", {
         longitude = c(3, 4)
       ),
       label_var = "id",
-      threshold = 10
+      threshold = 10,
+      lat_var = "latitude",
+      long_var = "longitude"
     ),
     "must be numeric"
   )
@@ -542,7 +575,9 @@ testthat::test_that("create_custom_dist_list validates inputs", {
         longitude = c(3, 4)
       ),
       label_var = "id",
-      threshold = 10
+      threshold = 10,
+      lat_var = "latitude",
+      long_var = "longitude"
     ),
     "cannot contain NA"
   )

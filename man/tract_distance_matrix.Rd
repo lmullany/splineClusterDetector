@@ -6,6 +6,7 @@
 \usage{
 tract_distance_matrix(
   st,
+  fips = NULL,
   unit = c("miles", "kilometers", "meters"),
   year = 2024,
   cb = TRUE,
@@ -15,6 +16,9 @@ tract_distance_matrix(
 \arguments{
 \item{st}{Character scalar; 2-character USPS state abbreviation
 (for example, \code{"MD"}).}
+
+\item{fips}{Character vector of one or more fips to limit to
+within \code{st}}
 
 \item{unit}{Character string; one of \code{"miles"} (default),
 \code{"kilometers"}, or \code{"meters"}.}

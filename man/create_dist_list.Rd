@@ -5,27 +5,28 @@
 \title{Generalized distance list as sparse list}
 \usage{
 create_dist_list(
-  level = c("county", "zip", "tract"),
-  threshold = {
-     data.table::fcase(level == "county", 50, level == "zip", 15, level
-    == "tract", 3)
- },
+  level,
+  threshold,
   st = NULL,
+  fips = NULL,
   unit = c("miles", "kilometers", "meters")
 )
 }
 \arguments{
-\item{level}{string either "county" (default), "zip", or "tract"}
+\item{level}{string either "county", "zip", or "tract"}
 
 \item{threshold}{numeric value; include in each location-specific named
 vector only those locations that a within `threshold` distance units of the
-target. The defaults is 50 (miles), 15 (miles) and 3 (miles) for county,
-zip, and tract, respectively, but these can be adjusted. Note if a
-different unit other than miles is used, then the user should also adjust
-this parameter appropriately}
+target. Reasonable thresholds might be 50 (miles), 15 (miles) and 3 (miles)
+for county, zip, and tract, respectively, but these can be adjusted.
+Note if a different unit other than miles is used, then the user should
+also adjust this parameter appropriately}
 
 \item{st}{string; optional to specify a state; if NULL distances are returned
 for all zip codes or counties in the US}
+
+\item{fips}{string vector of fips to restrict within \code{st}; ignored
+unless \code{level} is "tract"}
 
 \item{unit}{string one of miles (default), kilometers, or meters; this is the
 unit relevant to the threshold}

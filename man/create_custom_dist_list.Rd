@@ -7,8 +7,8 @@
 create_custom_dist_list(
   df,
   label_var,
-  lat_var = NULL,
-  long_var = NULL,
+  lat_var,
+  long_var,
   threshold,
   unit = c("miles", "kilometers", "meters")
 )
@@ -19,11 +19,9 @@ create_custom_dist_list(
 \item{label_var}{character scalar; column name used as location label
 (must be unique and non-missing)}
 
-\item{lat_var}{character scalar; latitude column name. If \code{NULL},
-defaults to \code{"latitude"}}
+\item{lat_var}{character scalar; latitude column name.}
 
-\item{long_var}{character scalar; longitude column name. If \code{NULL},
-defaults to \code{"longitude"}}
+\item{long_var}{character scalar; longitude column name.}
 
 \item{threshold}{numeric scalar distance cutoff in units of \code{unit}}
 
@@ -40,6 +38,8 @@ md <- tract_generator("MD")
 dlist <- create_custom_dist_list(
   df = md,
   label_var = "geoid",
+  lat_var = "latitude",
+  long_var = "longitude",
   threshold = 15,
   unit = "miles"
 )
