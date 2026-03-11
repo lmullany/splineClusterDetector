@@ -1,8 +1,3 @@
-# © 2025 The Johns Hopkins University Applied Physics Laboratory LLC
-# Development of this software was sponsored by the U.S. Government under
-# contract no. 75D30124C19958
-
-
 #--------------------------------------
 # script to create county lat/long table
 #--------------------------------------
@@ -121,7 +116,7 @@ for (nm in c("county", "region_name")) {
 usethis::use_data(zipcodes, overwrite = TRUE)
 
 # Use the spline-lookup tables (these are the same as are in the app)
-sl <- fread("data-raw/spline_lookups.csv")
+sl <- data.table::fread("data-raw/spline_lookups.csv")
 spline_001 <- sl[pval == "0.001", .(observed, spl_thresh)]
 spline_005 <- sl[pval == "0.005", .(observed, spl_thresh)]
 spline_01 <- sl[pval == "0.01", .(observed, spl_thresh)]

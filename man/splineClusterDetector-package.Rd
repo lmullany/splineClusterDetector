@@ -6,6 +6,6 @@
 \alias{splineClusterDetector-package}
 \title{splineClusterDetector: Utilities for Cluster Detection and Significance Classification using Splines}
 \description{
-Provides utilities for manipulating time series of location-based counts of events to detect clusters, and to determine the significance of these clusters via spline approach.
+Provides utilities for manipulating time series of location-based counts of events to detect geospatial clusters, and to determine the significance of these clusters using a set of simple spline models that classify based on the relationship between observed and the log(observed/expected) ratio of counts.
 }
 \keyword{internal}

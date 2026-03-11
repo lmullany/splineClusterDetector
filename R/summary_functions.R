@@ -1,7 +1,3 @@
-# © 2025 The Johns Hopkins University Applied Physics Laboratory LLC
-# Development of this software was sponsored by the U.S. Government under
-# contract no. 75D30124C19958
-
 #' Summary count-by-location-and-date data, given baseline and test interval
 #' lengths, and an end-date for the test interval
 #'
