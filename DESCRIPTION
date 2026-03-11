@@ -2,12 +2,18 @@ Package: splineClusterDetector
 Type: Package
 Title: Utilities for Cluster Detection and Significance Classification using Splines
 Version: 1.0.0
-Author: Luke Mullany, Howard Burkom
+Authors@R:
+    c(
+        person("Luke", "Mullany", email = "luke.mullany@jhuapl.edu", role = c("aut", "cre")),
+        person("Howard", "Burkom", role = "aut")
+    )
 Maintainer: Luke Mullany <luke.mullany@jhuapl.edu>
 Description: Provides utilities for manipulating time series of 
     location-based counts of events to detect geospatial clusters, and to determine the
     significance of these clusters using a set of simple spline models that classify based
     on the relationship between observed and the log(observed/expected) ratio of counts.
+URL: https://github.com/lmullany/splineClusterDetector
+BugReports: https://github.com/lmullany/splineClusterDetector/issues
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true

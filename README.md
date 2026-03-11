@@ -14,6 +14,23 @@ format. These can be generated for census tract, zip codes, or counties (fips), 
 be constructed for custom locations by provided a dataframe with columns for latitude and 
 longitude (i.e the centroid of each location)
 
+### Installation
+
+Install the `splineClusterDetector` package from CRAN as follows:
+```r
+install.packages("splineClusterDetector")
+```
+
+Install the development version from git as follows:
+```r
+devtools::install_github("lmullany/splineClusterDetector")
+```
+
+### Getting Started:
+```r
+# load package and the example data
+library(splineClusterDetector)
+```
 
 ### Contacts:
  - Luke Mullany <Luke.Mullany@jhuapl.edu>

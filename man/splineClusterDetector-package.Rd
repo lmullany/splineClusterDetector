@@ -8,4 +8,21 @@
 \description{
 Provides utilities for manipulating time series of location-based counts of events to detect geospatial clusters, and to determine the significance of these clusters using a set of simple spline models that classify based on the relationship between observed and the log(observed/expected) ratio of counts.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/lmullany/splineClusterDetector}
+  \item Report bugs at \url{https://github.com/lmullany/splineClusterDetector/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Luke Mullany \email{luke.mullany@jhuapl.edu}
+
+Authors:
+\itemize{
+  \item Howard Burkom
+}
+
+}
 \keyword{internal}
