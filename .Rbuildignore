@@ -6,3 +6,4 @@
 ^certs$
 ^Dockerfile$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
