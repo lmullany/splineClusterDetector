@@ -4,23 +4,19 @@
 \alias{tract_generator}
 \title{Generate Census Tract Centroids for a State}
 \usage{
-tract_generator(st, fips = NULL, year = 2024, cb = TRUE, use_cache = TRUE)
+tract_generator(st, county = NULL, use_cache = TRUE, ...)
 }
 \arguments{
 \item{st}{Character scalar; either a 2-digit state FIPS code
 (for example, \code{"24"}) or a 2-letter USPS abbreviation
 (for example, \code{"MD"}).}
 
-\item{fips}{character vector of one or more 5-character fips codes
-to limit with \code{st}}
+\item{county}{A three-digit FIPS code (string) of the county or
+counties to subset on. This can also be a county name or vector of names.}
 
-\item{year}{Integer TIGER/Line year to request from \pkg{tigris}.
-Default is \code{2024}.}
+\item{use_cache}{a boolean, defaults to TRUE, to set tigris option to use cache}
 
-\item{cb}{Logical; passed to \code{tigris::tracts()}. Default is \code{TRUE}.}
-
-\item{use_cache}{Logical; if \code{TRUE}, enables
-\code{options(tigris_use_cache = TRUE)}.}
+\item{...}{arguments to be passed on to tigris::tracts()}
 }
 \value{
 A \code{data.table} with columns:
@@ -38,7 +34,7 @@ a three-column \pkg{data.table} with GEOID, latitude, and longitude.
 \dontrun{
 md_tracts <- tract_generator("24")
 md_tracts2 <- tract_generator("MD")
-howard_county_tracts <- tract_generator("MD", fips = "24027")
+howard_county_tracts <- tract_generator("MD", county = "027")
 head(md_tracts)
 }
 }

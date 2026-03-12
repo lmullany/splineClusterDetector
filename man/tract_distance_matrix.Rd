@@ -6,30 +6,26 @@
 \usage{
 tract_distance_matrix(
   st,
-  fips = NULL,
+  county = NULL,
   unit = c("miles", "kilometers", "meters"),
-  year = 2024,
-  cb = TRUE,
-  use_cache = TRUE
+  use_cache = TRUE,
+  ...
 )
 }
 \arguments{
 \item{st}{Character scalar; 2-character USPS state abbreviation
 (for example, \code{"MD"}).}
 
-\item{fips}{Character vector of one or more fips to limit to
-within \code{st}}
+\item{county}{A three-digit FIPS code (string) of the county or
+counties to subset on. This can also be a county name or vector of names.}
 
 \item{unit}{Character string; one of \code{"miles"} (default),
 \code{"kilometers"}, or \code{"meters"}.}
 
-\item{year}{Integer TIGER/Line year to request from \pkg{tigris}.
-Default is \code{2024}.}
-
-\item{cb}{Logical; passed to \code{tigris::tracts()}. Default is \code{TRUE}.}
-
 \item{use_cache}{Logical; if \code{TRUE}, enables
 \code{options(tigris_use_cache = TRUE)}.}
+
+\item{...}{arguments passed on to tigris::tracts}
 }
 \value{
 A list with:

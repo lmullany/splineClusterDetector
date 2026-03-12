@@ -295,10 +295,9 @@ zip_distance_matrix <- function(
 #' @param unit string, one of "miles" (default), "kilometers", or "meters".
 #'   Indicating the desired unit for the distances
 #' @param source string indicating either "built_in" (default) or "rnssp".
-#'   If "rnssp" is requested and \pkg{Rnssp} is available, the function uses
-#'   \code{Rnssp::county_sf} with \code{sf::st_centroid()} and
-#'   \code{sf::st_distance()}. If \pkg{Rnssp} is not available, the function
-#'   warns and falls back to this package's default \code{counties} dataset.
+#'   The latter simply uses a package-stored version of the publicly avaialable
+#'   shape file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/
+#'
 #' @export
 #' @examples
 #' # example code
@@ -324,22 +323,12 @@ county_distance_matrix <- function(
     # limit rows, and only
     # where lat/long available
 
-    if (source == "rnssp" && !requireNamespace("Rnssp", quietly = TRUE)) {
-      cli::cli_warn(
-        c(
-          "{.pkg Rnssp} is not installed.",
-          "i" = "Falling back to the built-in {.arg counties} dataset."
-        )
-      )
-      source <- "built_in"
-    }
-
     if (source == "rnssp") {
       # look up the state fips code for this two letter code
-      st <- Rnssp::state_sf[Rnssp::state_sf$STUSPS == toupper(st), ]$STATEFP |>
+      st <- state_fips_codes[state_fips_codes$STUSPS == toupper(st), ]$STATEFP |>
         as.character()
 
-      county_sf <- Rnssp::county_sf[Rnssp::county_sf$STATEFP == st, ]
+      county_sf <- county_sf[county_sf$STATEFP == st, ]
       loc_vec <- county_sf$GEOID
       dist_units <- suppressWarnings(
         county_sf |> sf::st_centroid() |> sf::st_distance()
@@ -576,13 +565,10 @@ create_custom_dist_list <- function(
 #' @param st Character scalar; either a 2-digit state FIPS code
 #'   (for example, \code{"24"}) or a 2-letter USPS abbreviation
 #'   (for example, \code{"MD"}).
-#' @param fips character vector of one or more 5-character fips codes
-#'   to limit with \code{st}
-#' @param year Integer TIGER/Line year to request from \pkg{tigris}.
-#'   Default is \code{2024}.
-#' @param cb Logical; passed to \code{tigris::tracts()}. Default is \code{TRUE}.
-#' @param use_cache Logical; if \code{TRUE}, enables
-#'   \code{options(tigris_use_cache = TRUE)}.
+#' @param county A three-digit FIPS code (string) of the county or
+#'   counties to subset on. This can also be a county name or vector of names.
+#' @param use_cache a boolean, defaults to TRUE, to set tigris option to use cache
+#' @param ... arguments to be passed on to tigris::tracts()
 #'
 #' @return A \code{data.table} with columns:
 #' \describe{
@@ -596,15 +582,14 @@ create_custom_dist_list <- function(
 #' \dontrun{
 #' md_tracts <- tract_generator("24")
 #' md_tracts2 <- tract_generator("MD")
-#' howard_county_tracts <- tract_generator("MD", fips = "24027")
+#' howard_county_tracts <- tract_generator("MD", county = "027")
 #' head(md_tracts)
 #' }
 tract_generator <- function(
   st,
-  fips = NULL,
-  year = 2024,
-  cb = TRUE,
-  use_cache = TRUE
+  county = NULL,
+  use_cache = TRUE,
+  ...
 ) {
   geoid <- NULL
 
@@ -630,7 +615,7 @@ tract_generator <- function(
 
   options(tigris_use_cache = use_cache)
 
-  tracts_sf <- suppressMessages(tigris::tracts(state = st, cb = cb, year = year))
+  tracts_sf <- suppressMessages(tigris::tracts(state = st, county = county, ...))
   centroids_sf <- suppressWarnings(
     sf::st_transform(sf::st_centroid(tracts_sf), 4326)
   )
@@ -642,13 +627,6 @@ tract_generator <- function(
     longitude = coords[, "X"]
   )
 
-  # reduce to only those in specified fips
-  if (!is.null(fips)) {
-    if (!is.character(fips)) {
-      cli::cli_abort("`fips` is not a character vector")
-    }
-    result <- result[substr(geoid, 1, 5) %in% fips]
-  }
 
   result
 }
@@ -661,15 +639,13 @@ tract_generator <- function(
 #'
 #' @param st Character scalar; 2-character USPS state abbreviation
 #'   (for example, \code{"MD"}).
-#' @param fips Character vector of one or more fips to limit to
-#'   within \code{st}
+#' @param county A three-digit FIPS code (string) of the county or
+#'   counties to subset on. This can also be a county name or vector of names.
 #' @param unit Character string; one of \code{"miles"} (default),
 #'   \code{"kilometers"}, or \code{"meters"}.
-#' @param year Integer TIGER/Line year to request from \pkg{tigris}.
-#'   Default is \code{2024}.
-#' @param cb Logical; passed to \code{tigris::tracts()}. Default is \code{TRUE}.
 #' @param use_cache Logical; if \code{TRUE}, enables
 #'   \code{options(tigris_use_cache = TRUE)}.
+#' @param ... arguments passed on to tigris::tracts
 #'
 #' @export
 #' @return A list with:
@@ -688,11 +664,10 @@ tract_generator <- function(
 #' }
 tract_distance_matrix <- function(
   st,
-  fips = NULL,
+  county = NULL,
   unit = c("miles", "kilometers", "meters"),
-  year = 2024,
-  cb = TRUE,
-  use_cache = TRUE
+  use_cache = TRUE,
+  ...
 ) {
   .assert_tigris_available("tract_distance_matrix")
 
@@ -709,10 +684,9 @@ tract_distance_matrix <- function(
   st <- toupper(st)
   tract_df <- tract_generator(
     st = st,
-    fips = fips,
-    year = year,
-    cb = cb,
-    use_cache = use_cache
+    county = county,
+    use_cache = use_cache,
+    ...
   )
 
   custom_distance_matrix(
