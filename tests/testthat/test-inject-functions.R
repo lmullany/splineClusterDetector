@@ -1,14 +1,14 @@
 testthat::test_that(
   "get_nearby_locations returns sorted neighbors within radius",
   {
-    dm <- splineClusterDetector::county_distance_matrix(
+    dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
       source = "built_in"
     )[["distance_matrix"]]
     center <- rownames(dm)[1]
 
-    nearby <- splineClusterDetector::get_nearby_locations(
+    nearby <- gsClusterDetect::get_nearby_locations(
       center_location = center,
       distance_matrix = dm,
       radius_miles = 50
@@ -27,14 +27,14 @@ testthat::test_that(
 )
 
 testthat::test_that("get_nearby_locations handles edge and invalid center", {
-  dm <- splineClusterDetector::county_distance_matrix(
+  dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
     source = "built_in"
   )[["distance_matrix"]]
   center <- rownames(dm)[1]
 
-  nearby0 <- splineClusterDetector::get_nearby_locations(
+  nearby0 <- gsClusterDetect::get_nearby_locations(
     center_location = center,
     distance_matrix = dm,
     radius_miles = 0
@@ -43,7 +43,7 @@ testthat::test_that("get_nearby_locations handles edge and invalid center", {
   testthat::expect_true(all(nearby0[["distance_mi"]] == 0))
 
   testthat::expect_error(
-    splineClusterDetector::get_nearby_locations(
+    gsClusterDetect::get_nearby_locations(
       center_location = "not-a-location",
       distance_matrix = dm,
       radius_miles = 10
@@ -58,7 +58,7 @@ testthat::test_that(
       testthat::skip("withr not available")
     }
 
-    dm <- splineClusterDetector::county_distance_matrix(
+    dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
       source = "built_in"
@@ -71,7 +71,7 @@ testthat::test_that(
     cases[, count := 2L]
 
     withr::local_seed(42)
-    out <- splineClusterDetector::st_injects(
+    out <- gsClusterDetect::st_injects(
       cases = cases,
       distance_matrix = dm,
       target_loc = center,
@@ -102,7 +102,7 @@ testthat::test_that(
       as.Date("2025-01-20")
     )
 
-    nearby <- splineClusterDetector::get_nearby_locations(
+    nearby <- gsClusterDetect::get_nearby_locations(
       center,
       dm,
       radius_miles = 100
@@ -114,7 +114,7 @@ testthat::test_that(
 )
 
 testthat::test_that("st_injects edge and error handling", {
-  dm <- splineClusterDetector::county_distance_matrix(
+  dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
     source = "built_in"
@@ -126,7 +126,7 @@ testthat::test_that("st_injects edge and error handling", {
   base_cases <- data.table::CJ(location = locs, date = dates)
   base_cases[, count := 1L]
 
-  out0 <- splineClusterDetector::st_injects(
+  out0 <- gsClusterDetect::st_injects(
     cases = data.table::copy(base_cases),
     distance_matrix = dm,
     target_loc = center,
@@ -146,7 +146,7 @@ testthat::test_that("st_injects edge and error handling", {
     testthat::skip("withr not available")
   }
   withr::local_seed(123)
-  out_rand <- splineClusterDetector::st_injects(
+  out_rand <- gsClusterDetect::st_injects(
     cases = data.table::copy(base_cases),
     distance_matrix = dm,
     target_loc = NULL,
@@ -160,7 +160,7 @@ testthat::test_that("st_injects edge and error handling", {
 
   bad_cases <- data.table::copy(base_cases)[, .(location, date)]
   testthat::expect_error(
-    splineClusterDetector::st_injects(
+    gsClusterDetect::st_injects(
       cases = bad_cases,
       distance_matrix = dm,
       target_loc = center,
@@ -176,7 +176,7 @@ testthat::test_that("st_injects edge and error handling", {
   bad_date_cases <- data.table::copy(base_cases)
   bad_date_cases[, date := as.character(date)]
   testthat::expect_error(
-    splineClusterDetector::st_injects(
+    gsClusterDetect::st_injects(
       cases = bad_date_cases,
       distance_matrix = dm,
       target_loc = center,

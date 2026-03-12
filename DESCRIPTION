@@ -1,6 +1,6 @@
-Package: splineClusterDetector
+Package: gsClusterDetect
 Type: Package
-Title: Utilities for Cluster Detection and Significance Classification using Splines
+Title: Utilities for Geo-Spatial Cluster Detection and Significance Classification
 Version: 1.0.0
 Authors@R:
     c(
@@ -10,12 +10,12 @@ Authors@R:
 Maintainer: Luke Mullany <luke.mullany@jhuapl.edu>
 Description: Provides utilities for manipulating time series of location-based counts of
     events to detect geospatial clusters. Significance of these clusters is determined
-    using a set of simple spline models that classify based on a learned relationship 
+    using a set of models that classify based on a learned relationship 
     between observed and the log(observed/expected) ratio of counts. The approach 
     implemented here is similar to prospective space-time estimation of clusters using
     the scan statistic.
-URL: https://github.com/lmullany/splineClusterDetector
-BugReports: https://github.com/lmullany/splineClusterDetector/issues
+URL: https://github.com/lmullany/gsClusterDetect
+BugReports: https://github.com/lmullany/gsClusterDetect/issues
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true

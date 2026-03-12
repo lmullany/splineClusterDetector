@@ -1,36 +1,36 @@
-# splineClusterDetector
+# gsClusterDetect
 
 ### Description
 
-An R package for implementing spline-based cluster classification/detection of geospatial
-clusters from time series of counts, by location. Locations can be expressed as counties,
-zip codes, census tracts, or custom definitions. Users provide:
+An R package for implementing geospatial cluster identification from time series of
+counts, by location. Locations can be expressed as counties, zip codes, census tracts,
+or other user-defined geographies. Users provide:
 
 1. a data.frame of counts by location and date
 2. a distance object, that contains the distance between location and its neighbors
 
 The package provides functions to create these distance objects in either matrix or list 
 format. These can be generated for census tract, zip codes, or counties (fips), or can
-be constructed for custom locations by provided a dataframe with columns for latitude and 
-longitude (i.e the centroid of each location)
+be constructed for custom locations by providing a dataframe with columns for latitude and 
+longitude (i.e the centroid of each location).
 
 ### Installation
 
-Install the `splineClusterDetector` package from CRAN as follows:
+Install the `gsClusterDetect` package from CRAN as follows:
 ```r
-install.packages("splineClusterDetector")
+install.packages("gsClusterDetect")
 ```
 
 Install the development version from git as follows:
 ```r
-devtools::install_github("lmullany/splineClusterDetector")
+devtools::install_github("lmullany/gsClusterDetect")
 ```
 
 ### Getting Started:
 
 1. Load the package and provide data frame with `location`, `date`, and `count` columns.
 ```r
-library(splineClusterDetector)
+library(gsClusterDetect)
 df <- example_count_data
 tail(df)
 

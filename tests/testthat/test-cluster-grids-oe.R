@@ -2,7 +2,7 @@
   location <- example_count_data <- NULL
   data(
     "example_count_data",
-    package = "splineClusterDetector",
+    package = "gsClusterDetect",
     envir = environment()
   )
   cases <- data.table::as.data.table(example_count_data)
@@ -12,7 +12,7 @@
 
 .make_case_grids <- function() {
   cases <- .load_example_data()
-  splineClusterDetector::generate_case_grids(
+  gsClusterDetect::generate_case_grids(
     cases = cases,
     detect_date = as.Date("2025-01-31"),
     baseline_length = 60,
@@ -50,7 +50,7 @@ testthat::test_that(
 testthat::test_that("generate_case_grids edge and error handling", {
   cases <- .load_example_data()
 
-  cg_small <- splineClusterDetector::generate_case_grids(
+  cg_small <- gsClusterDetect::generate_case_grids(
     cases = cases,
     detect_date = as.Date("2025-01-31"),
     baseline_length = 1,
@@ -64,7 +64,7 @@ testthat::test_that("generate_case_grids edge and error handling", {
   bad_cases <- data.table::copy(cases)
   bad_cases[, location := as.integer(location)]
   testthat::expect_error(
-    splineClusterDetector::generate_case_grids(
+    gsClusterDetect::generate_case_grids(
       bad_cases,
       detect_date = as.Date("2025-01-31")
     ),
@@ -74,14 +74,14 @@ testthat::test_that("generate_case_grids edge and error handling", {
   bad_date <- data.table::copy(cases)
   bad_date[, date := as.character(date)]
   testthat::expect_error(
-    splineClusterDetector::generate_case_grids(
+    gsClusterDetect::generate_case_grids(
       bad_date,
       detect_date = as.Date("2025-01-31")
     ),
     "Date"
   )
 
-  cg_add_test <- splineClusterDetector::generate_case_grids(
+  cg_add_test <- gsClusterDetect::generate_case_grids(
     as.data.frame(cases),
     detect_date = as.Date("2025-01-31"),
     baseline_length = 60,
@@ -98,13 +98,13 @@ testthat::test_that(
   ),
   {
     cg <- .make_case_grids()
-    dm <- splineClusterDetector::county_distance_matrix(
+    dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
       source = "built_in"
     )[["distance_matrix"]]
 
-    nci <- splineClusterDetector::gen_nearby_case_info(
+    nci <- gsClusterDetect::gen_nearby_case_info(
       cg = cg,
       distance_matrix = dm,
       distance_limit = 50
@@ -121,13 +121,13 @@ testthat::test_that(
 
 testthat::test_that("gen_nearby_case_info edge and error handling", {
   cg <- .make_case_grids()
-  dm <- splineClusterDetector::county_distance_matrix(
+  dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
     source = "built_in"
   )[["distance_matrix"]]
 
-  nci0 <- splineClusterDetector::gen_nearby_case_info(
+  nci0 <- gsClusterDetect::gen_nearby_case_info(
     cg = cg,
     distance_matrix = dm,
     distance_limit = 0
@@ -135,7 +135,7 @@ testthat::test_that("gen_nearby_case_info edge and error handling", {
   testthat::expect_true(all(nci0[["baseline"]][["distance_value"]] == 0))
 
   testthat::expect_error(
-    splineClusterDetector::gen_nearby_case_info(
+    gsClusterDetect::gen_nearby_case_info(
       cg = list(),
       distance_matrix = dm,
       distance_limit = 50
@@ -143,13 +143,13 @@ testthat::test_that("gen_nearby_case_info edge and error handling", {
     "CaseGrids"
   )
 
-  dist_list <- splineClusterDetector::create_dist_list(
+  dist_list <- gsClusterDetect::create_dist_list(
     level = "county",
     threshold = 50,
     st = "OH",
     unit = "miles"
   )
-  nci_list <- splineClusterDetector::gen_nearby_case_info(
+  nci_list <- gsClusterDetect::gen_nearby_case_info(
     cg = cg,
     distance_matrix = dist_list,
     distance_limit = 50
@@ -161,17 +161,17 @@ testthat::test_that(
   "generate_observed_expected returns ObservedExpectedGrid and stable fields",
   {
     cg <- .make_case_grids()
-    dm <- splineClusterDetector::county_distance_matrix(
+    dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
       source = "built_in"
     )[["distance_matrix"]]
-    nci <- splineClusterDetector::gen_nearby_case_info(
+    nci <- gsClusterDetect::gen_nearby_case_info(
       cg, dm,
       distance_limit = 50
     )
 
-    oe <- splineClusterDetector::generate_observed_expected(
+    oe <- gsClusterDetect::generate_observed_expected(
       nearby_counts = nci,
       cases_grids = cg,
       adjust = TRUE
@@ -189,32 +189,32 @@ testthat::test_that(
 
 testthat::test_that("generate_observed_expected validates class requirements", {
   cg <- .make_case_grids()
-  dm <- splineClusterDetector::county_distance_matrix(
+  dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
     source = "built_in"
   )[["distance_matrix"]]
-  nci <- splineClusterDetector::gen_nearby_case_info(
+  nci <- gsClusterDetect::gen_nearby_case_info(
     cg, dm,
     distance_limit = 50
   )
 
   testthat::expect_error(
-    splineClusterDetector::generate_observed_expected(
+    gsClusterDetect::generate_observed_expected(
       nearby_counts = list(),
       cases_grids = cg
     ),
     "NearbyClusterGrids"
   )
   testthat::expect_error(
-    splineClusterDetector::generate_observed_expected(
+    gsClusterDetect::generate_observed_expected(
       nearby_counts = nci,
       cases_grids = list()
     ),
     "CaseGrids"
   )
 
-  oe_no_adjust <- splineClusterDetector::generate_observed_expected(
+  oe_no_adjust <- gsClusterDetect::generate_observed_expected(
     nearby_counts = nci,
     cases_grids = cg,
     adjust = FALSE
@@ -224,21 +224,21 @@ testthat::test_that("generate_observed_expected validates class requirements", {
 
 testthat::test_that("add_spline_threshold returns only positive alert gaps", {
   cg <- .make_case_grids()
-  dm <- splineClusterDetector::county_distance_matrix(
+  dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
     source = "built_in"
   )[["distance_matrix"]]
-  nci <- splineClusterDetector::gen_nearby_case_info(
+  nci <- gsClusterDetect::gen_nearby_case_info(
     cg, dm,
     distance_limit = 50
   )
-  oe <- splineClusterDetector::generate_observed_expected(
+  oe <- gsClusterDetect::generate_observed_expected(
     nci, cg,
     adjust = TRUE
   )
 
-  alerts <- splineClusterDetector::add_spline_threshold(
+  alerts <- gsClusterDetect::add_spline_threshold(
     oe,
     spline_lookup = "01"
   )
@@ -255,45 +255,45 @@ testthat::test_that(
   "add_spline_threshold validates lookup and oe_grid inputs",
   {
     cg <- .make_case_grids()
-    dm <- splineClusterDetector::county_distance_matrix(
+    dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
       source = "built_in"
     )[["distance_matrix"]]
-    nci <- splineClusterDetector::gen_nearby_case_info(
+    nci <- gsClusterDetect::gen_nearby_case_info(
       cg, dm,
       distance_limit = 50
     )
-    oe <- splineClusterDetector::generate_observed_expected(
+    oe <- gsClusterDetect::generate_observed_expected(
       nci, cg,
       adjust = TRUE
     )
 
     testthat::expect_error(
-      splineClusterDetector::add_spline_threshold(oe, spline_lookup = "bad"),
+      gsClusterDetect::add_spline_threshold(oe, spline_lookup = "bad"),
       "built-in spline"
     )
     testthat::expect_error(
-      splineClusterDetector::add_spline_threshold(
+      gsClusterDetect::add_spline_threshold(
         oe,
         spline_lookup = data.frame(observed = 1:3)
       ),
       "spl_thresh"
     )
     testthat::expect_error(
-      splineClusterDetector::add_spline_threshold(
+      gsClusterDetect::add_spline_threshold(
         data.table::data.table(x = 1),
         spline_lookup = "01"
       ),
       "ObservedExpectedGrid"
     )
-    default_alerts <- splineClusterDetector::add_spline_threshold(
+    default_alerts <- gsClusterDetect::add_spline_threshold(
       oe,
       spline_lookup = NULL
     )
     testthat::expect_true("ClusterAlertTable" %in% class(default_alerts))
     testthat::expect_error(
-      splineClusterDetector::add_spline_threshold(oe, spline_lookup = 10),
+      gsClusterDetect::add_spline_threshold(oe, spline_lookup = 10),
       "must be NULL"
     )
   }
