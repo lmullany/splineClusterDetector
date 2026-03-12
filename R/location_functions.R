@@ -295,7 +295,7 @@ zip_distance_matrix <- function(
 #' @param unit string, one of "miles" (default), "kilometers", or "meters".
 #'   Indicating the desired unit for the distances
 #' @param source string indicating either "built_in" (default) or "rnssp".
-#'   The latter simply uses a package-stored version of the publicly avaialable
+#'   The latter simply uses a package-stored version of the publicly available
 #'   shape file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/
 #'
 #' @export

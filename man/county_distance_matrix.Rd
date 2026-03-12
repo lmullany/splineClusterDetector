@@ -18,7 +18,7 @@ is equivalent to calling \code{us_distance_matrix()}.}
 Indicating the desired unit for the distances}
 
 \item{source}{string indicating either "built_in" (default) or "rnssp".
-The latter simply uses a package-stored version of the publicly avaialable
+The latter simply uses a package-stored version of the publicly available
 shape file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/}
 }
 \description{
