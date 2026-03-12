@@ -29,7 +29,6 @@ Depends:
 Suggests: 
     ggplot2,
     plotly,
-    Rnssp,
     tigris,
     testthat (>= 3.0.0),
     withr

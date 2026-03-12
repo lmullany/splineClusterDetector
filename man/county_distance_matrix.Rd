@@ -18,10 +18,8 @@ is equivalent to calling \code{us_distance_matrix()}.}
 Indicating the desired unit for the distances}
 
 \item{source}{string indicating either "built_in" (default) or "rnssp".
-If "rnssp" is requested and \pkg{Rnssp} is available, the function uses
-\code{Rnssp::county_sf} with \code{sf::st_centroid()} and
-\code{sf::st_distance()}. If \pkg{Rnssp} is not available, the function
-warns and falls back to this package's default \code{counties} dataset.}
+The latter simply uses a package-stored version of the publicly avaialable
+shape file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/}
 }
 \description{
 Function returns a list of counties and a matrix with the distance between
