@@ -2,7 +2,7 @@
   location <- example_count_data <- NULL
   data(
     "example_count_data",
-    package = "splineClusterDetector",
+    package = "gsClusterDetect",
     envir = environment()
   )
   cases <- data.table::as.data.table(example_count_data)
@@ -12,7 +12,7 @@
 
 .make_example_inputs <- function() {
   cases <- .load_example_data()
-  dm <- splineClusterDetector::county_distance_matrix(
+  dm <- gsClusterDetect::county_distance_matrix(
     "OH",
     source = "built_in"
   )[["distance_matrix"]]
@@ -22,7 +22,7 @@
 testthat::test_that(
   "get_test_dates returns contiguous dates ending at end_date",
   {
-    td <- splineClusterDetector::get_test_dates(
+    td <- gsClusterDetect::get_test_dates(
       end_date = as.Date("2025-01-31"),
       test_length = 7
     )
@@ -32,7 +32,7 @@ testthat::test_that(
     testthat::expect_true(all(diff(td) == 1))
 
     testthat::expect_error(
-      splineClusterDetector::get_test_dates(
+      gsClusterDetect::get_test_dates(
         end_date = as.Date("2025-01-31"),
         test_length = 0
       )
@@ -43,7 +43,7 @@ testthat::test_that(
 testthat::test_that(
   "get_baseline_dates returns expected length and boundaries",
   {
-    bd <- splineClusterDetector::get_baseline_dates(
+    bd <- gsClusterDetect::get_baseline_dates(
       end_date = as.Date("2025-01-31"),
       test_length = 7,
       baseline_length = 60,
@@ -59,7 +59,7 @@ testthat::test_that(
 
 testthat::test_that("find_clusters smoke test returns cluster object", {
   x <- .make_example_inputs()
-  out <- splineClusterDetector::find_clusters(
+  out <- gsClusterDetect::find_clusters(
     cases = x[["cases"]],
     distance_matrix = x[["dm"]],
     detect_date = as.Date("2025-01-31"),
@@ -90,7 +90,7 @@ testthat::test_that("find_clusters edge and error behavior", {
   x <- .make_example_inputs()
 
   testthat::expect_error(
-    splineClusterDetector::find_clusters(
+    gsClusterDetect::find_clusters(
       cases = x[["cases"]],
       distance_matrix = x[["dm"]],
       detect_date = as.Date("2025-01-31"),
@@ -100,7 +100,7 @@ testthat::test_that("find_clusters edge and error behavior", {
   )
 
   testthat::expect_error(
-    splineClusterDetector::find_clusters(
+    gsClusterDetect::find_clusters(
       cases = x[["cases"]],
       distance_matrix = x[["dm"]],
       detect_date = as.Date("2025-01-31"),
@@ -109,7 +109,7 @@ testthat::test_that("find_clusters edge and error behavior", {
     "arg"
   )
 
-  no_clusters <- splineClusterDetector::find_clusters(
+  no_clusters <- gsClusterDetect::find_clusters(
     cases = x[["cases"]],
     distance_matrix = x[["dm"]],
     detect_date = as.Date("2025-01-31"),
@@ -124,7 +124,7 @@ testthat::test_that("find_clusters edge and error behavior", {
 
   bad_cases <- data.table::copy(x[["cases"]])[, .(location, date)]
   testthat::expect_error(
-    splineClusterDetector::find_clusters(
+    gsClusterDetect::find_clusters(
       cases = bad_cases,
       distance_matrix = x[["dm"]],
       detect_date = as.Date("2025-01-31")
@@ -132,7 +132,7 @@ testthat::test_that("find_clusters edge and error behavior", {
     "case_grid_info"
   )
 
-  interim_err <- splineClusterDetector::find_clusters(
+  interim_err <- gsClusterDetect::find_clusters(
     cases = bad_cases,
     distance_matrix = x[["dm"]],
     detect_date = as.Date("2025-01-31"),
@@ -142,7 +142,7 @@ testthat::test_that("find_clusters edge and error behavior", {
   testthat::expect_true(!is.null(attr(interim_err, "error")))
   testthat::expect_equal(attr(interim_err, "error")$step, "case_grid_info")
 
-  out_slow <- splineClusterDetector::find_clusters(
+  out_slow <- gsClusterDetect::find_clusters(
     cases = x[["cases"]],
     distance_matrix = x[["dm"]],
     detect_date = as.Date("2025-01-31"),

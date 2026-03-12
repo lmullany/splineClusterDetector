@@ -2,7 +2,7 @@
   location <- example_count_data <- NULL
   data(
     "example_count_data",
-    package = "splineClusterDetector",
+    package = "gsClusterDetect",
     envir = environment()
   )
   cases <- data.table::as.data.table(example_count_data)
@@ -33,7 +33,7 @@
 testthat::test_that("generate_summary_table smoke, edge, and error checks", {
   d <- .load_example_data()
 
-  s <- splineClusterDetector::generate_summary_table(
+  s <- gsClusterDetect::generate_summary_table(
     data = d,
     end_date = as.Date("2025-01-31"),
     baseline_length = 60,
@@ -63,7 +63,7 @@ testthat::test_that("generate_summary_table smoke, edge, and error checks", {
   )
 
   one_loc <- unique(d[["location"]])[1]
-  s_one <- splineClusterDetector::generate_summary_table(
+  s_one <- gsClusterDetect::generate_summary_table(
     data = d,
     end_date = as.Date("2025-01-31"),
     locations = one_loc,
@@ -73,7 +73,7 @@ testthat::test_that("generate_summary_table smoke, edge, and error checks", {
   testthat::expect_s3_class(s_one, "data.frame")
 
   testthat::expect_error(
-    splineClusterDetector::generate_summary_table(
+    gsClusterDetect::generate_summary_table(
       data = d,
       cut_vec = c(0, 1, 2),
       cut_labels = c("a")
@@ -81,14 +81,14 @@ testthat::test_that("generate_summary_table smoke, edge, and error checks", {
     "cutVec"
   )
   testthat::expect_error(
-    splineClusterDetector::generate_summary_table(
+    gsClusterDetect::generate_summary_table(
       data = d[, .(location, date)],
       end_date = as.Date("2025-01-31")
     ),
     "date, location, or count"
   )
   testthat::expect_error(
-    splineClusterDetector::generate_summary_table(
+    gsClusterDetect::generate_summary_table(
       data = d,
       locations = "does-not-exist",
       end_date = as.Date("2025-01-31")
@@ -100,7 +100,7 @@ testthat::test_that("generate_summary_table smoke, edge, and error checks", {
 testthat::test_that("generate_heatmap_data smoke, invariant, and errors", {
   d <- .load_example_data()
 
-  h <- splineClusterDetector::generate_heatmap_data(
+  h <- gsClusterDetect::generate_heatmap_data(
     data = d,
     end_date = as.Date("2025-01-31"),
     baseline_length = 30,
@@ -115,7 +115,7 @@ testthat::test_that("generate_heatmap_data smoke, invariant, and errors", {
   testthat::expect_equal(attr(h, "baseline_length"), 30)
   testthat::expect_true(all(!is.na(h[["count_cat"]])))
 
-  h_small <- splineClusterDetector::generate_heatmap_data(
+  h_small <- gsClusterDetect::generate_heatmap_data(
     data = d,
     end_date = as.Date("2025-01-31"),
     locations = unique(d[["location"]])[1:2],
@@ -125,7 +125,7 @@ testthat::test_that("generate_heatmap_data smoke, invariant, and errors", {
   testthat::expect_true(length(unique(h_small[["location"]])) <= 2)
 
   testthat::expect_error(
-    splineClusterDetector::generate_heatmap_data(
+    gsClusterDetect::generate_heatmap_data(
       data = d,
       break_points = c(0, 1),
       break_labels = c("a", "b")
@@ -133,7 +133,7 @@ testthat::test_that("generate_heatmap_data smoke, invariant, and errors", {
     "Break points"
   )
   testthat::expect_error(
-    splineClusterDetector::generate_heatmap_data(
+    gsClusterDetect::generate_heatmap_data(
       data = d,
       locations = "does-not-exist"
     ),
@@ -143,7 +143,7 @@ testthat::test_that("generate_heatmap_data smoke, invariant, and errors", {
 
 testthat::test_that("generate_heatmap returns expected plot object classes", {
   d <- .load_example_data()
-  h <- splineClusterDetector::generate_heatmap_data(
+  h <- gsClusterDetect::generate_heatmap_data(
     data = d,
     end_date = as.Date("2025-01-31"),
     baseline_length = 30,
@@ -151,39 +151,39 @@ testthat::test_that("generate_heatmap returns expected plot object classes", {
   )
 
   if (.has_ggplot2()) {
-    p_gg <- splineClusterDetector::generate_heatmap(h, plot_type = "ggplot")
+    p_gg <- gsClusterDetect::generate_heatmap(h, plot_type = "ggplot")
     testthat::expect_s3_class(p_gg, "ggplot")
   } else if (.has_plotly()) {
     testthat::expect_warning(
-      p_gg <- splineClusterDetector::generate_heatmap(h, plot_type = "ggplot"),
+      p_gg <- gsClusterDetect::generate_heatmap(h, plot_type = "ggplot"),
       "Falling back"
     )
     testthat::expect_s3_class(p_gg, "plotly")
   } else {
     testthat::expect_error(
-      splineClusterDetector::generate_heatmap(h, plot_type = "ggplot"),
+      gsClusterDetect::generate_heatmap(h, plot_type = "ggplot"),
       class = "plotting_libraries_not_found"
     )
   }
 
   if (.has_plotly()) {
-    p_pl <- splineClusterDetector::generate_heatmap(h, plot_type = "plotly")
+    p_pl <- gsClusterDetect::generate_heatmap(h, plot_type = "plotly")
     testthat::expect_s3_class(p_pl, "plotly")
   } else if (.has_ggplot2()) {
     testthat::expect_warning(
-      p_pl <- splineClusterDetector::generate_heatmap(h, plot_type = "plotly"),
+      p_pl <- gsClusterDetect::generate_heatmap(h, plot_type = "plotly"),
       "Falling back"
     )
     testthat::expect_s3_class(p_pl, "ggplot")
   } else {
     testthat::expect_error(
-      splineClusterDetector::generate_heatmap(h, plot_type = "plotly"),
+      gsClusterDetect::generate_heatmap(h, plot_type = "plotly"),
       class = "plotting_libraries_not_found"
     )
   }
 
   testthat::expect_error(
-    splineClusterDetector::generate_heatmap(h, plot_type = "base"),
+    gsClusterDetect::generate_heatmap(h, plot_type = "base"),
     "arg"
   )
 })
@@ -192,7 +192,7 @@ testthat::test_that(
   "generate_heatmap errors if neither plotting library is installed",
   {
     d <- .load_example_data()
-    h <- splineClusterDetector::generate_heatmap_data(
+    h <- gsClusterDetect::generate_heatmap_data(
       data = d,
       end_date = as.Date("2025-01-31"),
       baseline_length = 30,
@@ -205,11 +205,11 @@ testthat::test_that(
     )
 
     testthat::expect_error(
-      splineClusterDetector::generate_heatmap(h, plot_type = "ggplot"),
+      gsClusterDetect::generate_heatmap(h, plot_type = "ggplot"),
       class = "plotting_libraries_not_found"
     )
     testthat::expect_error(
-      splineClusterDetector::generate_heatmap(h, plot_type = "plotly"),
+      gsClusterDetect::generate_heatmap(h, plot_type = "plotly"),
       class = "plotting_libraries_not_found"
     )
   }
@@ -218,7 +218,7 @@ testthat::test_that(
 testthat::test_that("generate_heatmap warns and falls back if plotly missing", {
   .skip_if_no_ggplot2()
   d <- .load_example_data()
-  h <- splineClusterDetector::generate_heatmap_data(
+  h <- gsClusterDetect::generate_heatmap_data(
     data = d,
     end_date = as.Date("2025-01-31"),
     baseline_length = 30,
@@ -237,7 +237,7 @@ testthat::test_that("generate_heatmap warns and falls back if plotly missing", {
   )
 
   testthat::expect_warning(
-    p <- splineClusterDetector::generate_heatmap(h, plot_type = "plotly"),
+    p <- gsClusterDetect::generate_heatmap(h, plot_type = "plotly"),
     "Falling back"
   )
   testthat::expect_s3_class(p, "ggplot")
@@ -248,7 +248,7 @@ testthat::test_that(
   {
     .skip_if_no_plotly()
     d <- .load_example_data()
-    h <- splineClusterDetector::generate_heatmap_data(
+    h <- gsClusterDetect::generate_heatmap_data(
       data = d,
       end_date = as.Date("2025-01-31"),
       baseline_length = 30,
@@ -267,7 +267,7 @@ testthat::test_that(
     )
 
     testthat::expect_warning(
-      p <- splineClusterDetector::generate_heatmap(h, plot_type = "ggplot"),
+      p <- gsClusterDetect::generate_heatmap(h, plot_type = "ggplot"),
       "Falling back"
     )
     testthat::expect_s3_class(p, "plotly")
@@ -277,7 +277,7 @@ testthat::test_that(
 testthat::test_that("generate_time_series_data smoke, edge, and error checks", {
   d <- .load_example_data()
 
-  tsd <- splineClusterDetector::generate_time_series_data(
+  tsd <- gsClusterDetect::generate_time_series_data(
     data = d,
     end_date = as.Date("2025-01-31"),
     baseline_length = 60,
@@ -290,7 +290,7 @@ testthat::test_that("generate_time_series_data smoke, edge, and error checks", {
   testthat::expect_true(all(diff(tsd[["date"]]) >= 1))
   testthat::expect_true(all(tsd[["date_count"]] >= 0))
 
-  tsd_one <- splineClusterDetector::generate_time_series_data(
+  tsd_one <- gsClusterDetect::generate_time_series_data(
     data = d,
     end_date = as.Date("2025-01-31"),
     locations = unique(d[["location"]])[1],
@@ -300,13 +300,13 @@ testthat::test_that("generate_time_series_data smoke, edge, and error checks", {
   testthat::expect_gt(nrow(tsd_one), 0)
 
   testthat::expect_error(
-    splineClusterDetector::generate_time_series_data(
+    gsClusterDetect::generate_time_series_data(
       data = d[, .(location, date)]
     ),
     "required columns"
   )
   testthat::expect_error(
-    splineClusterDetector::generate_time_series_data(
+    gsClusterDetect::generate_time_series_data(
       data = d,
       locations = "does-not-exist"
     ),
@@ -318,7 +318,7 @@ testthat::test_that(
   "generate_time_series_plot returns ggplot and plotly outputs",
   {
     d <- .load_example_data()
-    tsd <- splineClusterDetector::generate_time_series_data(
+    tsd <- gsClusterDetect::generate_time_series_data(
       data = d,
       end_date = as.Date("2025-01-31"),
       baseline_length = 30,
@@ -326,7 +326,7 @@ testthat::test_that(
     )
 
     if (.has_ggplot2()) {
-      p_gg <- splineClusterDetector::generate_time_series_plot(
+      p_gg <- gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         end_date = as.Date("2025-01-31"),
         plot_type = "ggplot",
@@ -335,7 +335,7 @@ testthat::test_that(
       testthat::expect_s3_class(p_gg, "ggplot")
     } else if (.has_plotly()) {
       testthat::expect_warning(
-        p_gg <- splineClusterDetector::generate_time_series_plot(
+        p_gg <- gsClusterDetect::generate_time_series_plot(
           time_series_data = tsd,
           end_date = as.Date("2025-01-31"),
           plot_type = "ggplot",
@@ -346,7 +346,7 @@ testthat::test_that(
       testthat::expect_s3_class(p_gg, "plotly")
     } else {
       testthat::expect_error(
-        splineClusterDetector::generate_time_series_plot(
+        gsClusterDetect::generate_time_series_plot(
           time_series_data = tsd,
           end_date = as.Date("2025-01-31"),
           plot_type = "ggplot",
@@ -357,7 +357,7 @@ testthat::test_that(
     }
 
     if (.has_plotly()) {
-      p_pl <- splineClusterDetector::generate_time_series_plot(
+      p_pl <- gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         end_date = as.Date("2025-01-31"),
         plot_type = "plotly",
@@ -366,7 +366,7 @@ testthat::test_that(
       testthat::expect_s3_class(p_pl, "plotly")
     } else if (.has_ggplot2()) {
       testthat::expect_warning(
-        p_pl <- splineClusterDetector::generate_time_series_plot(
+        p_pl <- gsClusterDetect::generate_time_series_plot(
           time_series_data = tsd,
           end_date = as.Date("2025-01-31"),
           plot_type = "plotly",
@@ -377,7 +377,7 @@ testthat::test_that(
       testthat::expect_s3_class(p_pl, "ggplot")
     } else {
       testthat::expect_error(
-        splineClusterDetector::generate_time_series_plot(
+        gsClusterDetect::generate_time_series_plot(
           time_series_data = tsd,
           end_date = as.Date("2025-01-31"),
           plot_type = "plotly",
@@ -388,7 +388,7 @@ testthat::test_that(
     }
 
     if (.has_ggplot2()) {
-      p_default_end <- splineClusterDetector::generate_time_series_plot(
+      p_default_end <- gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         plot_type = "ggplot",
         locations = "OH"
@@ -396,7 +396,7 @@ testthat::test_that(
       testthat::expect_s3_class(p_default_end, "ggplot")
     } else if (.has_plotly()) {
       testthat::expect_warning(
-        p_default_end <- splineClusterDetector::generate_time_series_plot(
+        p_default_end <- gsClusterDetect::generate_time_series_plot(
           time_series_data = tsd,
           plot_type = "ggplot",
           locations = "OH"
@@ -406,7 +406,7 @@ testthat::test_that(
       testthat::expect_s3_class(p_default_end, "plotly")
     } else {
       testthat::expect_error(
-        splineClusterDetector::generate_time_series_plot(
+        gsClusterDetect::generate_time_series_plot(
           time_series_data = tsd,
           plot_type = "ggplot",
           locations = "OH"
@@ -416,7 +416,7 @@ testthat::test_that(
     }
 
     testthat::expect_error(
-      splineClusterDetector::generate_time_series_plot(
+      gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         plot_type = "base"
       ),
@@ -429,7 +429,7 @@ testthat::test_that(
   "generate_time_series_plot errors if neither plotting library is installed",
   {
     d <- .load_example_data()
-    tsd <- splineClusterDetector::generate_time_series_data(
+    tsd <- gsClusterDetect::generate_time_series_data(
       data = d,
       end_date = as.Date("2025-01-31"),
       baseline_length = 30,
@@ -442,7 +442,7 @@ testthat::test_that(
     )
 
     testthat::expect_error(
-      splineClusterDetector::generate_time_series_plot(
+      gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         plot_type = "ggplot",
         locations = "OH"
@@ -450,7 +450,7 @@ testthat::test_that(
       class = "plotting_libraries_not_found"
     )
     testthat::expect_error(
-      splineClusterDetector::generate_time_series_plot(
+      gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         plot_type = "plotly",
         locations = "OH"
@@ -465,7 +465,7 @@ testthat::test_that(
   {
     .skip_if_no_ggplot2()
     d <- .load_example_data()
-    tsd <- splineClusterDetector::generate_time_series_data(
+    tsd <- gsClusterDetect::generate_time_series_data(
       data = d,
       end_date = as.Date("2025-01-31"),
       baseline_length = 30,
@@ -484,7 +484,7 @@ testthat::test_that(
     )
 
     testthat::expect_warning(
-      p <- splineClusterDetector::generate_time_series_plot(
+      p <- gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         plot_type = "plotly",
         locations = "OH"
@@ -500,7 +500,7 @@ testthat::test_that(
   {
     .skip_if_no_plotly()
     d <- .load_example_data()
-    tsd <- splineClusterDetector::generate_time_series_data(
+    tsd <- gsClusterDetect::generate_time_series_data(
       data = d,
       end_date = as.Date("2025-01-31"),
       baseline_length = 30,
@@ -519,7 +519,7 @@ testthat::test_that(
     )
 
     testthat::expect_warning(
-      p <- splineClusterDetector::generate_time_series_plot(
+      p <- gsClusterDetect::generate_time_series_plot(
         time_series_data = tsd,
         plot_type = "ggplot",
         locations = "OH"

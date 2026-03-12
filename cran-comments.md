@@ -8,4 +8,5 @@ This is a new release.
 
 ## Notes
 
-None
+checking for future file timestamps ... NOTE
+  unable to verify current time
