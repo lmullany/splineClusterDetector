@@ -76,7 +76,7 @@ require that any final clusters (post compression from candidate rows) have
 at least \code{post_cluster_min_count} cases, when aggregated over all
 locations within the identified cluster}
 
-\item{use_fast}{boolean (default = TRUE) - set to TRUE to use the fast verson
+\item{use_fast}{boolean (default = TRUE) - set to TRUE to use the fast version
 of the compress clusters function}
 
 \item{return_interim}{boolean (default = FALSE) - set to TRUE to return all

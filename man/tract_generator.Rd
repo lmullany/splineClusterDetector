@@ -12,7 +12,7 @@ tract_generator(st, fips = NULL, year = 2024, cb = TRUE, use_cache = TRUE)
 (for example, \code{"MD"}).}
 
 \item{fips}{character vector of one or more 5-character fips codes
-to liit with \code{st}}
+to limit with \code{st}}
 
 \item{year}{Integer TIGER/Line year to request from \pkg{tigris}.
 Default is \code{2024}.}

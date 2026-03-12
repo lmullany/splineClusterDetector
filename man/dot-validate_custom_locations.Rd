@@ -2,7 +2,7 @@
 % Please edit documentation in R/location_functions.R
 \name{.validate_custom_locations}
 \alias{.validate_custom_locations}
-\title{Helper funtion: given a data frame, and strings for label_var,
+\title{Helper function: given a data frame, and strings for label_var,
 lat_var, and long_var, the df is checked for}
 \usage{
 .validate_custom_locations(df, label_var, lat_var, long_var)
@@ -21,7 +21,7 @@ A \code{data.table} with standardized columns
   \code{location}, \code{latitude}, and \code{longitude}.
 }
 \description{
-Helper funtion: given a data frame, and strings for label_var,
+Helper function: given a data frame, and strings for label_var,
 lat_var, and long_var, the df is checked for
 }
 \keyword{internal}

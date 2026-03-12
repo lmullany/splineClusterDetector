@@ -59,7 +59,7 @@
   list(lat_var = lat_var, long_var = long_var)
 }
 
-#' Helper funtion: given a data frame, and strings for label_var,
+#' Helper function: given a data frame, and strings for label_var,
 #' lat_var, and long_var, the df is checked for
 #' @param df A \code{data.frame} containing label and coordinate columns.
 #' @param label_var Character scalar naming the label column.
@@ -106,7 +106,7 @@
   locs
 }
 
-#' Helper function reduces a data fram to only those where latitude
+#' Helper function reduces a data frame to only those rows where latitude
 #' and longitude are not missing
 #' @param locs A \code{data.table} with \code{latitude} and \code{longitude}
 #'   columns.
@@ -128,7 +128,7 @@
 }
 
 #' Helper function gets the distance in meter between
-#' pairs of coordinates. Note that ccords must be a matrix
+#' pairs of coordinates. Note that \code{coords} must be a matrix
 #' or frame, where the first col is longitude and the second
 #' column is latitude
 #' @param coords Matrix-like object with longitude in column 1 and latitude in
@@ -577,7 +577,7 @@ create_custom_dist_list <- function(
 #'   (for example, \code{"24"}) or a 2-letter USPS abbreviation
 #'   (for example, \code{"MD"}).
 #' @param fips character vector of one or more 5-character fips codes
-#'   to liit with \code{st}
+#'   to limit with \code{st}
 #' @param year Integer TIGER/Line year to request from \pkg{tigris}.
 #'   Default is \code{2024}.
 #' @param cb Logical; passed to \code{tigris::tracts()}. Default is \code{TRUE}.

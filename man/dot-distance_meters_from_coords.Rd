@@ -3,7 +3,7 @@
 \name{.distance_meters_from_coords}
 \alias{.distance_meters_from_coords}
 \title{Helper function gets the distance in meter between
-pairs of coordinates. Note that ccords must be a matrix
+pairs of coordinates. Note that \code{coords} must be a matrix
 or frame, where the first col is longitude and the second
 column is latitude}
 \usage{
@@ -18,7 +18,7 @@ Numeric square matrix of pairwise distances in meters.
 }
 \description{
 Helper function gets the distance in meter between
-pairs of coordinates. Note that ccords must be a matrix
+pairs of coordinates. Note that \code{coords} must be a matrix
 or frame, where the first col is longitude and the second
 column is latitude
 }

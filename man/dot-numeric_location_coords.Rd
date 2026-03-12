@@ -2,7 +2,7 @@
 % Please edit documentation in R/location_functions.R
 \name{.numeric_location_coords}
 \alias{.numeric_location_coords}
-\title{Helper function reduces a data fram to only those where latitude
+\title{Helper function reduces a data frame to only those rows where latitude
 and longitude are not missing}
 \usage{
 .numeric_location_coords(locs)
@@ -16,7 +16,7 @@ A \code{data.table} filtered to non-missing latitude rows with
   numeric latitude/longitude columns.
 }
 \description{
-Helper function reduces a data fram to only those where latitude
+Helper function reduces a data frame to only those rows where latitude
 and longitude are not missing
 }
 \keyword{internal}

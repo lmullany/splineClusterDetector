@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster_functions.R
 \name{add_spline_threshold}
 \alias{add_spline_threshold}
-\title{Use spline lookup to restrict `ObserveExpectedGrid` to potential clusters}
+\title{Use spline lookup to restrict `ObservedExpectedGrid` to potential clusters}
 \usage{
 add_spline_threshold(oe_grid, spline_lookup = NULL)
 }
@@ -21,7 +21,7 @@ a frame containing rows of oe_grid that are candidate alert clusters
 }
 \description{
 Function takes a spline lookup table (or uses package default), and an object
-of class ObservedExpectedGrid and identfies which rows in each potential
+of class `ObservedExpectedGrid` and identifies which rows in each potential
 centroid have observed over expected values that exceed a threshold for that
 observed value
 }
