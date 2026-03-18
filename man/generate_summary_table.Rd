@@ -50,3 +50,8 @@ set of locations, and the length of the baseline and test intervals, and and
 end date for the test interval. Note that a guard, a buffer between the end
 of the baseline interval and the test interval can be provided.
 }
+\examples{
+generate_summary_table(
+  data = example_count_data
+)
+}

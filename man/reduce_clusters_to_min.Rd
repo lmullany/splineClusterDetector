@@ -22,3 +22,12 @@ and a minimum threshold for counts, and reduces the identified clusters to
 only those clusters where the total number of observed across the cluster
 meets that minimum threshold.
 }
+\examples{
+cl <- find_clusters(
+  cases = example_count_data,
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+  detect_date = example_count_data[, max(date)],
+  distance_limit = 50
+)
+reduce_clusters_to_min(cl, 50)
+}

@@ -33,3 +33,8 @@ a ggplot or plotly object
 Generate a timeseries plot of count information by date and location given a
 frame of count-by-location-and-date data and an optional end_date
 }
+\examples{
+ts <- generate_time_series_data(example_count_data)
+generate_time_series_plot(ts)
+generate_time_series_plot(ts, plot_type = "plotly")
+}

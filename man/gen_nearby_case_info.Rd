@@ -34,3 +34,13 @@ those locations (over increasing distance) 2. A frame that has for each
 location, a list of nearby locations and the observed cumulative sum of cases
 by date (over increasing distance)
 }
+\examples{
+case_grid <- generate_case_grids(
+  example_count_data, example_count_data[, max(date)]
+)
+nci <- gen_nearby_case_info(
+  cg = case_grid,
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+  distance_limit = 25
+)
+}

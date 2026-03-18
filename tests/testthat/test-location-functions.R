@@ -43,7 +43,7 @@ testthat::test_that(
     cty <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
-      source = "built_in"
+      source = "tigris"
     )
 
     testthat::expect_type(cty, "list")
@@ -67,7 +67,6 @@ testthat::test_that(
       gsClusterDetect::county_distance_matrix(
         "OH",
         unit = "yards",
-        source = "built_in"
       ),
       "arg"
     )

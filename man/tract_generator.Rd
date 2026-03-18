@@ -7,14 +7,14 @@
 tract_generator(st, county = NULL, use_cache = TRUE, ...)
 }
 \arguments{
-\item{st}{Character scalar; either a 2-digit state FIPS code
-(for example, \code{"24"}) or a 2-letter USPS abbreviation
-(for example, \code{"MD"}).}
+\item{st}{Character scalar; either a 2-digit state FIPS code (for example,
+\code{"24"}) or a 2-letter USPS abbreviation (for example, \code{"MD"}).}
 
-\item{county}{A three-digit FIPS code (string) of the county or
-counties to subset on. This can also be a county name or vector of names.}
+\item{county}{A three-digit FIPS code (string) of the county or counties to
+subset on. This can also be a county name or vector of names.}
 
-\item{use_cache}{a boolean, defaults to TRUE, to set tigris option to use cache}
+\item{use_cache}{a boolean, defaults to TRUE, to set tigris option to use
+cache}
 
 \item{...}{arguments to be passed on to tigris::tracts()}
 }
@@ -31,10 +31,8 @@ Pulls census tracts using \pkg{tigris}, computes tract centroids, and returns
 a three-column \pkg{data.table} with GEOID, latitude, and longitude.
 }
 \examples{
-\dontrun{
 md_tracts <- tract_generator("24")
 md_tracts2 <- tract_generator("MD")
 howard_county_tracts <- tract_generator("MD", county = "027")
 head(md_tracts)
-}
 }

@@ -34,6 +34,12 @@
 #'  \item `baseline_total`: an integer holding the total counts over all
 #'  locations and dates
 #' }
+#' @examples
+#' dd <- example_count_data[, max(date)]
+#' generate_case_grids(
+#'   cases = example_count_data,
+#'   detect_date = dd
+#' )
 generate_case_grids <- function(
   cases,
   detect_date,
@@ -219,6 +225,15 @@ generate_case_grids <- function(
 #'   dataframes, including "baseline" (has the nearby information for baseline
 #'   counts) and "test" (which holds the nearby information for test interval
 #'   counts)
+#' @examples
+#' case_grid <- generate_case_grids(
+#'   example_count_data, example_count_data[, max(date)]
+#' )
+#' nci <- gen_nearby_case_info(
+#'   cg = case_grid,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   distance_limit = 25
+#' )
 gen_nearby_case_info <- function(
   cg,
   distance_matrix,
@@ -290,22 +305,37 @@ gen_nearby_case_info <- function(
 #' Function takes an object of class `NearbyClusterGrids`, as returned from
 #' \code{gen_nearby_case_info()}, and adds observed and expected information.
 #' @param nearby_counts an object of class `NearbyClusterGrids`
-#' @param cases_grids an object of class `CaseGrids`
+#' @param case_grid an object of class `CaseGrids`
 #' @param adjust boolean default TRUE, set to \code{FALSE} to avoid adding
 #' one to the expected when it is zero. Could result in errors.
 #' @param adj_constant numeric (default=1.0); this is the constant to be added
 #'   if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 #'   'add_one'}
 #' @export
-#' @returns a dataframe of class `ObservedExpectedGrid`
+#' @returns a dataframe of class `ObservedExpectedGrid`, which is simply a data
+#' frame with
+#' @examples
+#' case_grid <- generate_case_grids(
+#'   example_count_data,
+#'   example_count_data[, max(date)]
+#' )
+#' nci <- gen_nearby_case_info(
+#'   cg = case_grid,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   distance_limit = 25
+#' )
+#' generate_observed_expected(
+#'   nearby_counts = nci,
+#'   case_grid = case_grid
+#' )
 generate_observed_expected <- function(
   nearby_counts,
-  cases_grids,
+  case_grid,
   adjust = FALSE,
   adj_constant = 1.0
 ) {
-  if (!"CaseGrids" %in% class(cases_grids)) {
-    cli::cli_abort("cases_grids must be an object of class CaseGrids")
+  if (!"CaseGrids" %in% class(case_grid)) {
+    cli::cli_abort("case_grid must be an object of class CaseGrids")
   }
 
   if (!"NearbyClusterGrids" %in% class(nearby_counts)) {
@@ -319,55 +349,55 @@ generate_observed_expected <- function(
   expected <- target <- distance_value <- location <- NULL
 
 
-  dt_cases_grid_clust <- data.table::copy(nearby_counts[["test"]])
-  dt_cases_grid_clust[
+  dt_case_grid_clust <- data.table::copy(nearby_counts[["test"]])
+  dt_case_grid_clust[
     order(distance_value),
     observed := cumsum(count_sum),
     by = c("date", "target")
   ]
 
-  dt_cases_grid_clust <- nearby_counts[["baseline"]][
+  dt_case_grid_clust <- nearby_counts[["baseline"]][
     ,
     list(target, location, base_clust_sums)
   ] |>
-    _[dt_cases_grid_clust, on = c("target", "location")]
+    _[dt_case_grid_clust, on = c("target", "location")]
 
   # Now, bring in the test totals on each of the dates (note that this is a
   # constant, within date, across all locations)
-  dt_cases_grid_clust <- cases_grids[["case_grid_totals_by_date"]][
-    dt_cases_grid_clust,
+  dt_case_grid_clust <- case_grid[["case_grid_totals_by_date"]][
+    dt_case_grid_clust,
     on = c("date")
   ]
 
-  dt_cases_grid_clust[, `:=`(
-    detect_date = cases_grids[["detect_date"]],
-    baseline_total = cases_grids[["baseline_total"]],
-    expected = test_totals * base_clust_sums / cases_grids[["baseline_total"]]
+  dt_case_grid_clust[, `:=`(
+    detect_date = case_grid[["detect_date"]],
+    baseline_total = case_grid[["baseline_total"]],
+    expected = test_totals * base_clust_sums / case_grid[["baseline_total"]]
   )]
 
   # add the log of observed to expected
   if (adjust == TRUE) {
-    dt_cases_grid_clust[, log_obs_exp := data.table::fifelse(
+    dt_case_grid_clust[, log_obs_exp := data.table::fifelse(
       expected == 0,
       log(observed / (expected + adj_constant)),
       log(observed / expected)
     )]
   } else {
-    dt_cases_grid_clust[, log_obs_exp := log(observed / expected)]
+    dt_case_grid_clust[, log_obs_exp := log(observed / expected)]
   }
 
-  dt_cases_grid_clust[, log_obs_exp := data.table::fifelse(
+  dt_case_grid_clust[, log_obs_exp := data.table::fifelse(
     expected == 0 & adjust == TRUE,
     log(observed / (expected + adj_constant)),
     log(observed / expected)
   )]
 
-  class(dt_cases_grid_clust) <- c(
-    class(dt_cases_grid_clust),
+  class(dt_case_grid_clust) <- c(
+    class(dt_case_grid_clust),
     "ObservedExpectedGrid"
   )
 
-  dt_cases_grid_clust
+  dt_case_grid_clust
 }
 
 
@@ -385,7 +415,24 @@ generate_observed_expected <- function(
 #'   tables: i.e. one of \code{"001", "005", "01", "05"}. If NULL, the default
 #'   table will be 01 (i.e. \code{spline_01} dataset)
 #' @export
-#' @returns a frame containing rows of oe_grid that are candidate alert clusters
+#' @returns an object of class `ClusterAlertTable` which is simply a data frame
+#'   containing rows of the input `oe_grid`` that represent the reduced set of
+#'   candidate alert clusters
+#' @examples
+#' case_grid <- generate_case_grids(
+#'   example_count_data, example_count_data[, max(date)]
+#' )
+#' nci <- gen_nearby_case_info(
+#'   cg = case_grid,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   distance_limit = 25
+#' )
+#' obs_exp_grid <- generate_observed_expected(
+#'   nearby_counts = nci,
+#'   case_grid = case_grid
+#' )
+#' add_spline_threshold(oe_grid = obs_exp_grid)
+#' add_spline_threshold(oe_grid = obs_exp_grid, spline_lookup = "01")
 add_spline_threshold <- function(oe_grid, spline_lookup = NULL) {
   if (is.null(spline_lookup)) {
     # use the default
@@ -463,7 +510,7 @@ add_spline_threshold <- function(oe_grid, spline_lookup = NULL) {
   # gap) to restrict.  That is the alert gap must be positive for us to retain
   cluster_alert_table <- dt_cases_grid_clust[alert_gap > 0]
 
-  # add class to return objec
+  # add class to returned object
   class(cluster_alert_table) <- c(
     class(cluster_alert_table),
     "ClusterAlertTable"
@@ -474,27 +521,45 @@ add_spline_threshold <- function(oe_grid, spline_lookup = NULL) {
 
 #' Compress a cluster_alert_table
 #'
-#' Function reduces an object of class ClusterAlertTable to the final set of
+#' Function reduces an object of class `ClusterAlertTable`` to the final set of
 #' clusters and locations. The idea of this function is to retain only the most
 #' significant, non-overlapping clusters from the cluster alert table. The
 #' surrogate for significance is 'alertGap', or log(observed/expected) minus the
-#' threshold that the spline assigns to the observed value`. The logic below
-#' keeps two running tables, the table 'dt_keep' of clusters to be kept, in
-#' descending order of 'alertGap', and 'dt_clust', the remaining rows of the
-#' cluster alert table, which are reduced each time a cluster is accepted into
-#' dt_keep Each row of the cluster alert table represents a candidate cluster,
-#' with a column 'target', the cluster center, and a column 'location', the most
-#' distant location from the center. Each time a cluster is accepted into
-#' dt_keep, jClust is incremented, and remaining rows of 'dt_clust' are dropped
-#' if either 'target' or 'location' is the center of the newly accepted cluster
-#' in 'dt_keep'
+#' threshold that the spline assigns to the observed value. The logic in this
+#' function keeps two running tables, the table `dt_keep` of clusters to be
+#' kept, in descending order of `alertGap`, and `dt_clust`, the remaining rows
+#' of the cluster alert table, which are reduced each time a cluster is accepted
+#' into `dt_keep`. Each row of the cluster alert table represents a candidate
+#' cluster, with a column `target`, which is the cluster center, and a column
+#' `location`, the most distant location from the center. Each time a cluster is
+#' accepted into `dt_keep`, the remaining rows of `dt_clust` are dropped if
+#' either `target` or `location` is the center of the newly accepted cluster. in
+#' `dt_keep`
 
 #' @param cluster_alert_table an object of class `ClusterAlertTable`
 #' @param distance_matrix a square distance matrix, named on both dimensions or
 #'   a list of distance vectors, one for each location
 #' @export
-#' @returns a list including a data.frame of clusters and another frame of
-#'   individual location counts
+#' @returns an object of class `clusters`, which is simply a a list including a
+#'   a data.frame of clusters and another frame of individual location counts
+#' @examples
+#' case_grid <- generate_case_grids(
+#'   example_count_data, example_count_data[, max(date)]
+#' )
+#' nci <- gen_nearby_case_info(
+#'   cg = case_grid,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   distance_limit = 25
+#' )
+#' obs_exp_grid <- generate_observed_expected(
+#'   nearby_counts = nci,
+#'   case_grid = case_grid
+#' )
+#' cla <- add_spline_threshold(oe_grid = obs_exp_grid)
+#' compress_clusters(
+#'   cluster_alert_table = cla,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]]
+#' )
 compress_clusters <- function(
   cluster_alert_table,
   distance_matrix
@@ -632,8 +697,26 @@ compress_clusters <- function(
 #' @param distance_matrix a square distance matrix, named on both dimensions or
 #'   a list of distance vectors, one for each location
 #' @export
-#' @returns a list including a data.frame of clusters and another frame of
-#'   individual location counts
+#' @returns an object of class `clusters`, which is simply a a list including a
+#'   a data.frame of clusters and another frame of individual location counts
+#' @examples
+#' case_grid <- generate_case_grids(
+#'   example_count_data, example_count_data[, max(date)]
+#' )
+#' nci <- gen_nearby_case_info(
+#'   cg = case_grid,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   distance_limit = 25
+#' )
+#' obs_exp_grid <- generate_observed_expected(
+#'   nearby_counts = nci,
+#'   case_grid = case_grid
+#' )
+#' cla <- add_spline_threshold(oe_grid = obs_exp_grid)
+#' compress_clusters_fast(
+#'   cluster_alert_table = cla,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]]
+#' )
 compress_clusters_fast <- function(
   cluster_alert_table,
   distance_matrix
@@ -712,15 +795,40 @@ compress_clusters_fast <- function(
 
 #' Add location counts to cluster location list
 #'
-#' Add counts of individual cluster locations Operates on the output list of the
-#' \code{compress_clusters()} component. Calculates individual location counts
-#' for each cluster, and appends to the cluster location list.
-#' @param cluster_list output list from 'compress_clusters', cluster summary
-#'   rows and locations in each cluster
+#' Add counts of individual cluster locations. Operates on the output list of
+#' the \code{compress_clusters()} component. Calculates individual location
+#' counts for each cluster, and appends to the cluster location list.
+#' @param cluster_list output list from 'compress_clusters' (i.e. an object of
+#'   class `clusters`), which contains two elements: a data frame of cluster
+#'   summary rows and a data frame of the locations in each cluster
 #' @param cases original data in 3-column format of location, count, date
 #' @export
 #' @returns the cluster list from compress_clusters with individual location
 #'   counts appended
+#' @examples
+#' case_grid <- generate_case_grids(
+#'   example_count_data, example_count_data[, max(date)]
+#' )
+#' nci <- gen_nearby_case_info(
+#'   cg = case_grid,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   distance_limit = 25
+#' )
+#' obs_exp_grid <- generate_observed_expected(
+#'   nearby_counts = nci,
+#'   case_grid = case_grid
+#' )
+#' cla <- add_spline_threshold(oe_grid = obs_exp_grid)
+#' # use compress clusters to reduce
+#' cla <- compress_clusters_fast(
+#'   cluster_alert_table = cla,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]]
+#' )
+#' # Now add the location counts
+#' add_location_counts(
+#'   cluster_list = cla,
+#'   cases = example_count_data
+#' )
 add_location_counts <- function(cluster_list, cases) {
   # check this is an object of class clusters
   if (!"clusters" %in% class(cluster_list)) {
@@ -859,12 +967,19 @@ add_location_counts <- function(cluster_list, cases) {
 #'   require that any final clusters (post compression from candidate rows) have
 #'   at least \code{post_cluster_min_count} cases, when aggregated over all
 #'   locations within the identified cluster
-#' @param use_fast boolean (default = TRUE) - set to TRUE to use the fast version
-#'   of the compress clusters function
+#' @param use_fast boolean (default = TRUE) - set to TRUE to use the fast
+#'   version of the compress clusters function
 #' @param return_interim boolean (default = FALSE) - set to TRUE to return all
 #'   interim objects of the \code{find_clusters()} function
 #' @export
 #' @returns returns a list of two of two dataframes.
+#' @examples
+#' find_clusters(
+#'   cases = example_count_data,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   detect_date = example_count_data[, max(date)],
+#'   distance_limit = 50
+#' )
 find_clusters <- function(
   cases,
   distance_matrix,
@@ -960,7 +1075,7 @@ find_clusters <- function(
   obs_expected_frame <- handle_try(
     generate_observed_expected(
       nearby_counts = nearby_case_info,
-      cases_grids = case_grid_info,
+      case_grid = case_grid_info,
       adjust = baseline_adjustment != "none",
       adj_constant = adj_constant
     ),
@@ -1059,6 +1174,12 @@ find_clusters <- function(
 #'   of test interval
 #' @returns vector of dates
 #' @export
+#' @examples
+#' get_baseline_dates(
+#'   end_date = "2025-01-01",
+#'   test_length = 10,
+#'   baseline_length = 90
+#' )
 get_baseline_dates <- function(
   end_date,
   test_length,
@@ -1077,6 +1198,11 @@ get_baseline_dates <- function(
 #' @param test_length (integer) length of the test interval in days
 #' @export
 #' @returns vector of dates
+#' @examples
+#' get_test_dates(
+#'   end_date = "2025-01-01",
+#'   test_length = 10
+#' )
 get_test_dates <- function(end_date, test_length) {
   end_date <- as.Date(end_date)
   dates <- seq.Date((end_date - test_length + 1), end_date, 1)
@@ -1088,6 +1214,7 @@ get_test_dates <- function(end_date, test_length) {
 #' Function checks for variables in frame
 #' @param d input data frame to check for variables
 #' @param required vector of column names that must be in `d`
+#' @returns No return value, called for side effects
 check_vars <- function(d, required) {
   if (!all(required %in% names(d))) {
     cli::cli_abort(
@@ -1113,6 +1240,14 @@ check_vars <- function(d, required) {
 #'   a cluster in order to retain
 #' @export
 #' @returns an object of class \code{clusters}
+#' @examples
+#' cl <- find_clusters(
+#'   cases = example_count_data,
+#'   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+#'   detect_date = example_count_data[, max(date)],
+#'   distance_limit = 50
+#' )
+#' reduce_clusters_to_min(cl, 50)
 reduce_clusters_to_min <- function(cl, minimum = 0) {
   # check this is an object of class clusters
   if (!"clusters" %in% class(cl)) {

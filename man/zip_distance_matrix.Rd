@@ -12,12 +12,17 @@ zip_distance_matrix(st, unit = c("miles", "kilometers", "meters"))
 \item{unit}{string, one of "miles" (default), "kilometers", or "meters".
 Indicating the desired unit for the distances}
 }
+\value{
+a named list of length two; first element (`loc_vec`) is a vector of
+locations and the second element (`distance_matrix`) is a square matrix
+containing the pairwise distance (in the given `unit`) between all locations.
+}
 \description{
 Function returns a list of zipcodes and a matrix with the distance between
 those zip codes. leverages a built in dataset (`zipcodes`) that maps
 zipcodes to counties.
 }
 \examples{
-# example code
 zip_distance_matrix("MD")
+zip_distance_matrix("MD", unit = "kilometers")
 }

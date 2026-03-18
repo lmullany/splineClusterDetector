@@ -76,8 +76,8 @@ require that any final clusters (post compression from candidate rows) have
 at least \code{post_cluster_min_count} cases, when aggregated over all
 locations within the identified cluster}
 
-\item{use_fast}{boolean (default = TRUE) - set to TRUE to use the fast version
-of the compress clusters function}
+\item{use_fast}{boolean (default = TRUE) - set to TRUE to use the fast
+version of the compress clusters function}
 
 \item{return_interim}{boolean (default = FALSE) - set to TRUE to return all
 interim objects of the \code{find_clusters()} function}
@@ -88,4 +88,12 @@ returns a list of two of two dataframes.
 \description{
 Function will return clusters, given a frame of case counts by location and
 date, a distance matrix, a spline lookup table, and other parameters
+}
+\examples{
+find_clusters(
+  cases = example_count_data,
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+  detect_date = example_count_data[, max(date)],
+  distance_limit = 50
+)
 }
