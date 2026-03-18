@@ -2,7 +2,7 @@
 #' kilometers, or meters)
 #' @param unit Character scalar specifying distance unit; one of
 #'   \code{"miles"}, \code{"kilometers"}, or \code{"meters"}.
-#' @return Numeric scalar conversion factor from the selected unit to meters.
+#' @returns Numeric scalar conversion factor from the selected unit to meters.
 #' @keywords internal
 .meters_per_unit <- function(unit) {
   unit <- match.arg(unit, c("miles", "kilometers", "meters"))
@@ -14,7 +14,7 @@
 #' for some additional functionality
 #' @param fn_name Character scalar naming the calling function, used in the
 #'   error message.
-#' @return Invisibly returns \code{NULL}; otherwise throws an error when
+#' @returns Invisibly returns \code{NULL}; otherwise throws an error when
 #'   \pkg{tigris} is unavailable.
 #' @keywords internal
 .assert_tigris_available <- function(fn_name) {
@@ -35,7 +35,7 @@
 #'   \code{"latitude"}.
 #' @param long_var Character scalar longitude column name or \code{NULL} to use
 #'   \code{"longitude"}.
-#' @return A named list with elements \code{lat_var} and \code{long_var}.
+#' @returns A named list with elements \code{lat_var} and \code{long_var}.
 #' @keywords internal
 .resolve_coord_var_names <- function(lat_var = NULL, long_var = NULL) {
   if (is.null(lat_var)) {
@@ -65,7 +65,7 @@
 #' @param label_var Character scalar naming the label column.
 #' @param lat_var Character scalar naming the latitude column.
 #' @param long_var Character scalar naming the longitude column.
-#' @return A \code{data.table} with standardized columns
+#' @returns A \code{data.table} with standardized columns
 #'   \code{location}, \code{latitude}, and \code{longitude}.
 #' @keywords internal
 .validate_custom_locations <- function(df, label_var, lat_var, long_var) {
@@ -110,7 +110,7 @@
 #' and longitude are not missing
 #' @param locs A \code{data.table} with \code{latitude} and \code{longitude}
 #'   columns.
-#' @return A \code{data.table} filtered to non-missing latitude rows with
+#' @returns \code{data.table} filtered to non-missing latitude rows with
 #'   numeric latitude/longitude columns.
 #' @keywords internal
 .numeric_location_coords <- function(locs) {
@@ -133,7 +133,7 @@
 #' column is latitude
 #' @param coords Matrix-like object with longitude in column 1 and latitude in
 #'   column 2.
-#' @return Numeric square matrix of pairwise distances in meters.
+#' @returns Numeric square matrix of pairwise distances in meters.
 #' @keywords internal
 .distance_meters_from_coords <- function(coords) {
   pts <- sf::st_as_sf(
@@ -159,7 +159,7 @@
 #'   column 2.
 #' @param unit Character scalar unit for returned distances; one of
 #'   \code{"miles"}, \code{"kilometers"}, or \code{"meters"}.
-#' @return A list with elements \code{loc_vec} and \code{distance_matrix}.
+#' @returns A list with elements \code{loc_vec} and \code{distance_matrix}.
 #' @keywords internal
 .distance_result_from_coords <- function(
   loc_vec,
@@ -199,7 +199,7 @@
 #' @param threshold_meters Numeric scalar distance threshold in meters.
 #' @param meters_per_unit Numeric scalar conversion factor from output unit to
 #'   meters.
-#' @return Named list of numeric vectors of neighbor distances, keyed by
+#' @returns Named list of numeric vectors of neighbor distances, keyed by
 #'   location.
 #' @keywords internal
 .sparse_dist_list_from_locs <- function(
@@ -256,9 +256,12 @@
 #' @param unit string, one of "miles" (default), "kilometers", or "meters".
 #'   Indicating the desired unit for the distances
 #' @export
+#' @returns a named list of length two; first element (`loc_vec`) is a vector of
+#' locations and the second element (`distance_matrix`) is a square matrix
+#' containing the pairwise distance (in the given `unit`) between all locations.
 #' @examples
-#' # example code
 #' zip_distance_matrix("MD")
+#' zip_distance_matrix("MD", unit = "kilometers")
 zip_distance_matrix <- function(
   st,
   unit = c("miles", "kilometers", "meters")
@@ -299,9 +302,12 @@ zip_distance_matrix <- function(
 #'   shape file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/
 #'
 #' @export
+#' @returns a named list of length two; first element (`loc_vec`) is a vector of
+#' locations and the second element (`distance_matrix`) is a square matrix
+#' containing the pairwise distance (in the given `unit`) between all locations.
 #' @examples
-#' # example code
 #' county_distance_matrix("MD", source = "built_in")
+#' county_distance_matrix("WI", source = "rnssp", unit="kilometers")
 county_distance_matrix <- function(
   st,
   unit = c("miles", "kilometers", "meters"),
@@ -371,6 +377,11 @@ county_distance_matrix <- function(
 #' @param unit string, one of "miles" (default), "kilometers", or "meters".
 #'   Indicating the desired unit for the distances
 #' @export
+#' @returns a named list of length two; first element (`loc_vec`) is a vector of
+#' locations and the second element (`distance_matrix`) is a square matrix
+#' containing the pairwise distance (in the given `unit`) between all locations.
+#' @examples
+#' us_distance_matrix(unit = "kilometers")
 us_distance_matrix <- function(
   unit = c("miles", "kilometers", "meters")
 ) {
@@ -415,16 +426,30 @@ us_distance_matrix <- function(
 #'   also adjust this parameter appropriately
 #' @param st string; optional to specify a state; if NULL distances are returned
 #'   for all zip codes or counties in the US
-#' @param fips string vector of fips to restrict within \code{st}; ignored
+#' @param county string vector of 3-fips to restrict within \code{st}; ignored
 #'   unless \code{level} is "tract"
 #' @param unit string one of miles (default), kilometers, or meters; this is the
 #'   unit relevant to the threshold
 #' @export
+#' @returns a named list, where each element, named by a target location, is a named
+#'  vector of distances that are within `threshold` `units` of the target.
+#' @examples
+#' create_dist_list(
+#'   level ="tract",
+#'   threshold = 3,
+#'   st = "MD"
+#' )
+#' create_dist_list(
+#'   level="county",
+#'   threshold = 50,
+#'   st = "CA",
+#'   unit = "kilometers"
+#' )
 create_dist_list <- function(
   level,
   threshold,
   st = NULL,
-  fips = NULL,
+  county = NULL,
   unit = c("miles", "kilometers", "meters")
 ) {
   state <- zip_code <- latitude <- longitude <- NULL
@@ -446,7 +471,7 @@ create_dist_list <- function(
          single state, `st` must not be null"
       )
     }
-    tracts <- tract_generator(st = st, fips = fips)
+    tracts <- tract_generator(st = st, county = county)
     return(
       create_custom_dist_list(
         df = tracts,
@@ -499,8 +524,9 @@ create_dist_list <- function(
 #' @param threshold numeric scalar distance cutoff in units of \code{unit}
 #' @param unit string, one of "miles" (default), "kilometers", or "meters"
 #' @export
+#' @returns a named list, where each element, named by a target location, is a named
+#'  vector of distances that are within `threshold` `units` of the target.
 #' @examples
-#' \dontrun{
 #' md <- tract_generator("MD")
 #' dlist <- create_custom_dist_list(
 #'   df = md,
@@ -510,7 +536,6 @@ create_dist_list <- function(
 #'   threshold = 15,
 #'   unit = "miles"
 #' )
-#' }
 create_custom_dist_list <- function(
   df,
   label_var,
@@ -579,12 +604,10 @@ create_custom_dist_list <- function(
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' md_tracts <- tract_generator("24")
 #' md_tracts2 <- tract_generator("MD")
 #' howard_county_tracts <- tract_generator("MD", county = "027")
 #' head(md_tracts)
-#' }
 tract_generator <- function(
   st,
   county = NULL,
@@ -657,11 +680,9 @@ tract_generator <- function(
 #' }
 #'
 #' @examples
-#' \dontrun{
 #' md_dm <- tract_distance_matrix("MD")
 #' dim(md_dm$distance_matrix)
 #' md_dm_km <- tract_distance_matrix("MD", unit = "kilometers")
-#' }
 tract_distance_matrix <- function(
   st,
   county = NULL,
@@ -722,11 +743,10 @@ tract_distance_matrix <- function(
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' md <- tract_generator("24")
 #' dm <- custom_distance_matrix(
 #'   md,
-#'   label_var = "geoid", lat_var = "lon", long_var = "long"
+#'   label_var = "geoid", lat_var = "latitude", long_var = "longitude"
 #' )
 #' dim(dm[["distance_matrix"]])
 #'
@@ -738,7 +758,6 @@ tract_distance_matrix <- function(
 #'   lat_var = "lat",
 #'   long_var = "lon"
 #' )
-#' }
 custom_distance_matrix <- function(
   df,
   unit = c("miles", "kilometers", "meters"),

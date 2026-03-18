@@ -12,7 +12,7 @@ and longitude are not missing}
 columns.}
 }
 \value{
-A \code{data.table} filtered to non-missing latitude rows with
+\code{data.table} filtered to non-missing latitude rows with
   numeric latitude/longitude columns.
 }
 \description{

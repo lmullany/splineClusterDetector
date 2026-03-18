@@ -38,3 +38,8 @@ Function returns a time series of counts-by-location-and-date data,
 given length of baseline and test intervals, and an end date for the
 test-interval
 }
+\examples{
+generate_time_series_data(
+  data = example_count_data
+)
+}

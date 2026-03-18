@@ -10,9 +10,17 @@ us_distance_matrix(unit = c("miles", "kilometers", "meters"))
 \item{unit}{string, one of "miles" (default), "kilometers", or "meters".
 Indicating the desired unit for the distances}
 }
+\value{
+a named list of length two; first element (`loc_vec`) is a vector of
+locations and the second element (`distance_matrix`) is a square matrix
+containing the pairwise distance (in the given `unit`) between all locations.
+}
 \description{
 Function returns a list of counties and a matrix with the distance between
 those counties. leverages a built in dataset (`counties`). Note that the
 generation of this matrix can take a few seconds. Note: it is better and
 faster to use \code{create_dist_list()}.
+}
+\examples{
+us_distance_matrix(unit = "kilometers")
 }

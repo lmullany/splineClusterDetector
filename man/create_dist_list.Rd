@@ -8,7 +8,7 @@ create_dist_list(
   level,
   threshold,
   st = NULL,
-  fips = NULL,
+  county = NULL,
   unit = c("miles", "kilometers", "meters")
 )
 }
@@ -25,11 +25,15 @@ also adjust this parameter appropriately}
 \item{st}{string; optional to specify a state; if NULL distances are returned
 for all zip codes or counties in the US}
 
-\item{fips}{string vector of fips to restrict within \code{st}; ignored
+\item{county}{string vector of 3-fips to restrict within \code{st}; ignored
 unless \code{level} is "tract"}
 
 \item{unit}{string one of miles (default), kilometers, or meters; this is the
 unit relevant to the threshold}
+}
+\value{
+a named list, where each element, named by a target location, is a named
+ vector of distances that are within `threshold` `units` of the target.
 }
 \description{
 This function is an alternative to the package functions that create a square
@@ -37,4 +41,17 @@ distance matrix of dimension N, with all pairwise distances. In this approach
 a list of named vectors is returned, where there is one element in the list
 for each location, and each named vector holds the distance within
 `threshold` of the location.
+}
+\examples{
+create_dist_list(
+  level ="tract",
+  threshold = 3,
+  st = "MD"
+)
+create_dist_list(
+  level="county",
+  threshold = 50,
+  st = "CA",
+  unit = "kilometers"
+)
 }

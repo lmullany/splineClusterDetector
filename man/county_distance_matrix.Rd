@@ -21,11 +21,16 @@ Indicating the desired unit for the distances}
 The latter simply uses a package-stored version of the publicly available
 shape file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/}
 }
+\value{
+a named list of length two; first element (`loc_vec`) is a vector of
+locations and the second element (`distance_matrix`) is a square matrix
+containing the pairwise distance (in the given `unit`) between all locations.
+}
 \description{
 Function returns a list of counties and a matrix with the distance between
 those counties. leverages a built in dataset (`counties`).
 }
 \examples{
-# example code
 county_distance_matrix("MD", source = "built_in")
+county_distance_matrix("WI", source = "rnssp", unit="kilometers")
 }

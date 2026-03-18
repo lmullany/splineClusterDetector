@@ -2,7 +2,7 @@
 % Please edit documentation in R/inject_functions.R
 \name{get_nearby_locations}
 \alias{get_nearby_locations}
-\title{Add data counts for injected clusters}
+\title{Get nearby locations}
 \usage{
 get_nearby_locations(center_location, distance_matrix, radius_miles)
 }
@@ -17,8 +17,9 @@ get_nearby_locations(center_location, distance_matrix, radius_miles)
 a data.table
 }
 \description{
-Returns a 2-column table of locations near center location and associated
-case counts
+Given a location, a square distance matrix, and numeric value (radius_miles),
+this helper function returns a 2-column data frame listing the locations
+within that radius
 }
 \examples{
 dm <- zip_distance_matrix("MD")$distance_matrix

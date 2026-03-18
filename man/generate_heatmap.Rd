@@ -22,3 +22,8 @@ a ggplot or plotly object
 Generate a ggplot heatmap of count information by date and location given a
 frame of count-by-location-and-date data.
 }
+\examples{
+hd <- generate_heatmap_data(example_count_data)
+generate_heatmap(hd)
+generate_heatmap(hd, plot_type = "plotly")
+}

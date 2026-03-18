@@ -45,3 +45,8 @@ a data frame of heat map data
 Generate heat map data frame count information by date and location given an
 input frame of count-by-location-and-date data.
 }
+\examples{
+generate_heatmap_data(
+  data = example_count_data
+)
+}

@@ -31,10 +31,8 @@ Pulls census tracts using \pkg{tigris}, computes tract centroids, and returns
 a three-column \pkg{data.table} with GEOID, latitude, and longitude.
 }
 \examples{
-\dontrun{
 md_tracts <- tract_generator("24")
 md_tracts2 <- tract_generator("MD")
 howard_county_tracts <- tract_generator("MD", county = "027")
 head(md_tracts)
-}
 }
