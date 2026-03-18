@@ -18,9 +18,9 @@ create_dist_list(
 \item{threshold}{numeric value; include in each location-specific named
 vector only those locations that a within `threshold` distance units of the
 target. Reasonable thresholds might be 50 (miles), 15 (miles) and 3 (miles)
-for county, zip, and tract, respectively, but these can be adjusted.
-Note if a different unit other than miles is used, then the user should
-also adjust this parameter appropriately}
+for county, zip, and tract, respectively, but these can be adjusted. Note
+if a different unit other than miles is used, then the user should also
+adjust this parameter appropriately}
 
 \item{st}{string; optional to specify a state; if NULL distances are returned
 for all zip codes or counties in the US}
@@ -32,8 +32,9 @@ unless \code{level} is "tract"}
 unit relevant to the threshold}
 }
 \value{
-a named list, where each element, named by a target location, is a named
- vector of distances that are within `threshold` `units` of the target.
+a named list, where each element, named by a target location, is a
+  named vector of distances that are within `threshold` `units` of the
+  target.
 }
 \description{
 This function is an alternative to the package functions that create a square
@@ -44,12 +45,12 @@ for each location, and each named vector holds the distance within
 }
 \examples{
 create_dist_list(
-  level ="tract",
+  level = "tract",
   threshold = 3,
   st = "MD"
 )
 create_dist_list(
-  level="county",
+  level = "county",
   threshold = 50,
   st = "CA",
   unit = "kilometers"

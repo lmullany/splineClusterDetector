@@ -50,9 +50,9 @@ scen1 <- st_injects(
   distance_matrix = dm[["distance_matrix"]],
   target_loc = target_loc,
   center_decile = 7,
-  radius_miles=70,
+  radius_miles = 70,
   nr_cases = 100,
-  nr_days = 4, 
+  nr_days = 4,
   end_date = "2025-02-05"
 )
 }

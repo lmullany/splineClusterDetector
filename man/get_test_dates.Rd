@@ -19,7 +19,7 @@ Function to generate test dates given an end date and test length
 }
 \examples{
 get_test_dates(
-  end_date = "2025-01-01", 
+  end_date = "2025-01-01",
   test_length = 10
 )
 }

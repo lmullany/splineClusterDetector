@@ -18,7 +18,7 @@ table will be 01 (i.e. \code{spline_01} dataset)}
 }
 \value{
 an object of class `ClusterAlertTable` which is simply a data frame
-  containing rows of the input `oe_grid`` that represent the reduced set of 
+  containing rows of the input `oe_grid`` that represent the reduced set of
   candidate alert clusters
 }
 \description{
@@ -28,14 +28,16 @@ centroid have observed over expected values that exceed a threshold for that
 observed value
 }
 \examples{
-case_grid <- generate_case_grids(example_count_data, example_count_data[, max(date)])
+case_grid <- generate_case_grids(
+  example_count_data, example_count_data[, max(date)]
+)
 nci <- gen_nearby_case_info(
   cg = case_grid,
   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
   distance_limit = 25
 )
 obs_exp_grid <- generate_observed_expected(
-  nearby_counts = nci, 
+  nearby_counts = nci,
   case_grid = case_grid
 )
 add_spline_threshold(oe_grid = obs_exp_grid)

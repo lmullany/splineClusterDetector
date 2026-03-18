@@ -297,17 +297,18 @@ zip_distance_matrix <- function(
 #'   is equivalent to calling \code{us_distance_matrix()}.
 #' @param unit string, one of "miles" (default), "kilometers", or "meters".
 #'   Indicating the desired unit for the distances
-#' @param source string indicating either "built_in" (default) or "rnssp".
-#'   The latter simply uses a package-stored version of the publicly available
-#'   shape file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/
+#' @param source string indicating either "built_in" (default) or "rnssp". The
+#'   latter simply uses a package-stored version of the publicly available shape
+#'   file for counties from Rnssp package at https://cdcgov.github.io/Rnssp/
 #'
 #' @export
 #' @returns a named list of length two; first element (`loc_vec`) is a vector of
-#' locations and the second element (`distance_matrix`) is a square matrix
-#' containing the pairwise distance (in the given `unit`) between all locations.
+#'   locations and the second element (`distance_matrix`) is a square matrix
+#'   containing the pairwise distance (in the given `unit`) between all
+#'   locations.
 #' @examples
 #' county_distance_matrix("MD", source = "built_in")
-#' county_distance_matrix("WI", source = "rnssp", unit="kilometers")
+#' county_distance_matrix("WI", source = "rnssp", unit = "kilometers")
 county_distance_matrix <- function(
   st,
   unit = c("miles", "kilometers", "meters"),
@@ -331,7 +332,9 @@ county_distance_matrix <- function(
 
     if (source == "rnssp") {
       # look up the state fips code for this two letter code
-      st <- state_fips_codes[state_fips_codes$STUSPS == toupper(st), ]$STATEFP |>
+      st <- state_fips_codes[
+        state_fips_codes$STUSPS == toupper(st),
+      ]$STATEFP |>
         as.character()
 
       county_sf <- county_sf[county_sf$STATEFP == st, ]
@@ -421,9 +424,9 @@ us_distance_matrix <- function(
 #' @param threshold numeric value; include in each location-specific named
 #'   vector only those locations that a within `threshold` distance units of the
 #'   target. Reasonable thresholds might be 50 (miles), 15 (miles) and 3 (miles)
-#'   for county, zip, and tract, respectively, but these can be adjusted.
-#'   Note if a different unit other than miles is used, then the user should
-#'   also adjust this parameter appropriately
+#'   for county, zip, and tract, respectively, but these can be adjusted. Note
+#'   if a different unit other than miles is used, then the user should also
+#'   adjust this parameter appropriately
 #' @param st string; optional to specify a state; if NULL distances are returned
 #'   for all zip codes or counties in the US
 #' @param county string vector of 3-fips to restrict within \code{st}; ignored
@@ -431,16 +434,17 @@ us_distance_matrix <- function(
 #' @param unit string one of miles (default), kilometers, or meters; this is the
 #'   unit relevant to the threshold
 #' @export
-#' @returns a named list, where each element, named by a target location, is a named
-#'  vector of distances that are within `threshold` `units` of the target.
+#' @returns a named list, where each element, named by a target location, is a
+#'   named vector of distances that are within `threshold` `units` of the
+#'   target.
 #' @examples
 #' create_dist_list(
-#'   level ="tract",
+#'   level = "tract",
 #'   threshold = 3,
 #'   st = "MD"
 #' )
 #' create_dist_list(
-#'   level="county",
+#'   level = "county",
 #'   threshold = 50,
 #'   st = "CA",
 #'   unit = "kilometers"
@@ -452,7 +456,7 @@ create_dist_list <- function(
   county = NULL,
   unit = c("miles", "kilometers", "meters")
 ) {
-  state <- zip_code <- latitude <- longitude <- NULL
+  state <- zip_code <- latitude <- longitude <- fips <- NULL
 
   level <- match.arg(level, c("county", "zip", "tract"))
   unit <- match.arg(unit)
@@ -512,20 +516,21 @@ create_dist_list <- function(
 
 #' Create a sparse distance list from custom location data
 #'
-#' This function is a custom-data version of \code{create_dist_list()}.
-#' It returns a list of named numeric vectors where each list element contains
-#' only locations within \code{threshold} distance units of a target location.
+#' This function is a custom-data version of \code{create_dist_list()}. It
+#' returns a list of named numeric vectors where each list element contains only
+#' locations within \code{threshold} distance units of a target location.
 #'
 #' @param df data.frame containing label and coordinate columns
-#' @param label_var character scalar; column name used as location label
-#'   (must be unique and non-missing)
+#' @param label_var character scalar; column name used as location label (must
+#'   be unique and non-missing)
 #' @param lat_var character scalar; latitude column name.
 #' @param long_var character scalar; longitude column name.
 #' @param threshold numeric scalar distance cutoff in units of \code{unit}
 #' @param unit string, one of "miles" (default), "kilometers", or "meters"
 #' @export
-#' @returns a named list, where each element, named by a target location, is a named
-#'  vector of distances that are within `threshold` `units` of the target.
+#' @returns a named list, where each element, named by a target location, is a
+#'   named vector of distances that are within `threshold` `units` of the
+#'   target.
 #' @examples
 #' md <- tract_generator("MD")
 #' dlist <- create_custom_dist_list(
@@ -587,12 +592,12 @@ create_custom_dist_list <- function(
 #' Pulls census tracts using \pkg{tigris}, computes tract centroids, and returns
 #' a three-column \pkg{data.table} with GEOID, latitude, and longitude.
 #'
-#' @param st Character scalar; either a 2-digit state FIPS code
-#'   (for example, \code{"24"}) or a 2-letter USPS abbreviation
-#'   (for example, \code{"MD"}).
-#' @param county A three-digit FIPS code (string) of the county or
-#'   counties to subset on. This can also be a county name or vector of names.
-#' @param use_cache a boolean, defaults to TRUE, to set tigris option to use cache
+#' @param st Character scalar; either a 2-digit state FIPS code (for example,
+#'   \code{"24"}) or a 2-letter USPS abbreviation (for example, \code{"MD"}).
+#' @param county A three-digit FIPS code (string) of the county or counties to
+#'   subset on. This can also be a county name or vector of names.
+#' @param use_cache a boolean, defaults to TRUE, to set tigris option to use
+#'   cache
 #' @param ... arguments to be passed on to tigris::tracts()
 #'
 #' @return A \code{data.table} with columns:
@@ -614,8 +619,6 @@ tract_generator <- function(
   use_cache = TRUE,
   ...
 ) {
-  geoid <- NULL
-
   .assert_tigris_available("tract_generator")
 
   if (
@@ -638,7 +641,9 @@ tract_generator <- function(
 
   options(tigris_use_cache = use_cache)
 
-  tracts_sf <- suppressMessages(tigris::tracts(state = st, county = county, ...))
+  tracts_sf <- suppressMessages(
+    tigris::tracts(state = st, county = county, ...)
+  )
   centroids_sf <- suppressWarnings(
     sf::st_transform(sf::st_centroid(tracts_sf), 4326)
   )

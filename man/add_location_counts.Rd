@@ -7,9 +7,9 @@
 add_location_counts(cluster_list, cases)
 }
 \arguments{
-\item{cluster_list}{output list from 'compress_clusters' (i.e. an object of class
-`clusters`), which contains two elements: a data frame of cluster summary
-rows and a data frame of the locations in each cluster}
+\item{cluster_list}{output list from 'compress_clusters' (i.e. an object of
+class `clusters`), which contains two elements: a data frame of cluster
+summary rows and a data frame of the locations in each cluster}
 
 \item{cases}{original data in 3-column format of location, count, date}
 }
@@ -18,25 +18,27 @@ the cluster list from compress_clusters with individual location
   counts appended
 }
 \description{
-Add counts of individual cluster locations. Operates on the output list of the
-\code{compress_clusters()} component. Calculates individual location counts
-for each cluster, and appends to the cluster location list.
+Add counts of individual cluster locations. Operates on the output list of
+the \code{compress_clusters()} component. Calculates individual location
+counts for each cluster, and appends to the cluster location list.
 }
 \examples{
-case_grid <- generate_case_grids(example_count_data, example_count_data[, max(date)])
+case_grid <- generate_case_grids(
+  example_count_data, example_count_data[, max(date)]
+)
 nci <- gen_nearby_case_info(
   cg = case_grid,
   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
   distance_limit = 25
 )
 obs_exp_grid <- generate_observed_expected(
-  nearby_counts = nci, 
+  nearby_counts = nci,
   case_grid = case_grid
 )
 cla <- add_spline_threshold(oe_grid = obs_exp_grid)
 # use compress clusters to reduce
 cla <- compress_clusters_fast(
-  cluster_alert_table = cla, 
+  cluster_alert_table = cla,
   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]]
 )
 # Now add the location counts

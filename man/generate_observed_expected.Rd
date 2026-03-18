@@ -32,14 +32,17 @@ Function takes an object of class `NearbyClusterGrids`, as returned from
 \code{gen_nearby_case_info()}, and adds observed and expected information.
 }
 \examples{
-case_grid <- generate_case_grids(example_count_data, example_count_data[, max(date)])
+case_grid <- generate_case_grids(
+  example_count_data,
+  example_count_data[, max(date)]
+)
 nci <- gen_nearby_case_info(
   cg = case_grid,
   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
   distance_limit = 25
 )
 generate_observed_expected(
-  nearby_counts = nci, 
+  nearby_counts = nci,
   case_grid = case_grid
 )
 }

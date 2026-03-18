@@ -24,19 +24,21 @@ surrogate for significance is 'alertGap', or log(observed/expected) minus the
 threshold that the spline assigns to the observed value`.
 }
 \examples{
-case_grid <- generate_case_grids(example_count_data, example_count_data[, max(date)])
+case_grid <- generate_case_grids(
+  example_count_data, example_count_data[, max(date)]
+)
 nci <- gen_nearby_case_info(
   cg = case_grid,
   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
   distance_limit = 25
 )
 obs_exp_grid <- generate_observed_expected(
-  nearby_counts = nci, 
+  nearby_counts = nci,
   case_grid = case_grid
 )
 cla <- add_spline_threshold(oe_grid = obs_exp_grid)
 compress_clusters_fast(
-  cluster_alert_table = cla, 
+  cluster_alert_table = cla,
   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]]
 )
 }
