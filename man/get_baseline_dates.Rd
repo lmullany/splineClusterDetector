@@ -23,3 +23,10 @@ vector of dates
 Function to generate baseline dates given an end date and test length, plus
 optional guard, and length of baseline
 }
+\examples{
+get_baseline_dates(
+  end_date = "2025-01-01",
+  test_length=10, 
+  baseline_length=90
+)
+}

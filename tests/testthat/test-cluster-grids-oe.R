@@ -173,7 +173,7 @@ testthat::test_that(
 
     oe <- gsClusterDetect::generate_observed_expected(
       nearby_counts = nci,
-      cases_grids = cg,
+      case_grid = cg,
       adjust = TRUE
     )
 
@@ -202,21 +202,21 @@ testthat::test_that("generate_observed_expected validates class requirements", {
   testthat::expect_error(
     gsClusterDetect::generate_observed_expected(
       nearby_counts = list(),
-      cases_grids = cg
+      case_grid = cg
     ),
     "NearbyClusterGrids"
   )
   testthat::expect_error(
     gsClusterDetect::generate_observed_expected(
       nearby_counts = nci,
-      cases_grids = list()
+      case_grid = list()
     ),
     "CaseGrids"
   )
 
   oe_no_adjust <- gsClusterDetect::generate_observed_expected(
     nearby_counts = nci,
-    cases_grids = cg,
+    case_grid = cg,
     adjust = FALSE
   )
   testthat::expect_true("ObservedExpectedGrid" %in% class(oe_no_adjust))

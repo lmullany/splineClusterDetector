@@ -5,3 +5,5 @@
 .DS_Store
 .quarto
 CRAN-SUBMISSION
+/.quarto/
+**/*.quarto_ipynb

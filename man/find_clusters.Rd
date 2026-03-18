@@ -89,3 +89,11 @@ returns a list of two of two dataframes.
 Function will return clusters, given a frame of case counts by location and
 date, a distance matrix, a spline lookup table, and other parameters
 }
+\examples{
+find_clusters(
+  cases = example_count_data,
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+  detect_date = example_count_data[, max(date)],
+  distance_limit = 50
+)
+}

@@ -6,7 +6,7 @@
 \usage{
 generate_observed_expected(
   nearby_counts,
-  cases_grids,
+  case_grid,
   adjust = FALSE,
   adj_constant = 1
 )
@@ -14,7 +14,7 @@ generate_observed_expected(
 \arguments{
 \item{nearby_counts}{an object of class `NearbyClusterGrids`}
 
-\item{cases_grids}{an object of class `CaseGrids`}
+\item{case_grid}{an object of class `CaseGrids`}
 
 \item{adjust}{boolean default TRUE, set to \code{FALSE} to avoid adding
 one to the expected when it is zero. Could result in errors.}
@@ -24,9 +24,22 @@ if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 'add_one'}}
 }
 \value{
-a dataframe of class `ObservedExpectedGrid`
+a dataframe of class `ObservedExpectedGrid`, which is simply a data
+frame with
 }
 \description{
 Function takes an object of class `NearbyClusterGrids`, as returned from
 \code{gen_nearby_case_info()}, and adds observed and expected information.
+}
+\examples{
+case_grid <- generate_case_grids(example_count_data, example_count_data[, max(date)])
+nci <- gen_nearby_case_info(
+  cg = case_grid,
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+  distance_limit = 25
+)
+generate_observed_expected(
+  nearby_counts = nci, 
+  case_grid = case_grid
+)
 }

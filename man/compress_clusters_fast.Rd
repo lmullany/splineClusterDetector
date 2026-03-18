@@ -13,8 +13,8 @@ compress_clusters_fast(cluster_alert_table, distance_matrix)
 a list of distance vectors, one for each location}
 }
 \value{
-a list including a data.frame of clusters and another frame of
-  individual location counts
+an object of class `clusters`, which is simply a a list including a
+  a data.frame of clusters and another frame of individual location counts
 }
 \description{
 Function reduces an object of class ClusterAlertTable to the final set of
@@ -22,4 +22,21 @@ clusters and locations. The idea of this function is to retain only the most
 significant, non-overlapping clusters from the cluster alert table. The
 surrogate for significance is 'alertGap', or log(observed/expected) minus the
 threshold that the spline assigns to the observed value`.
+}
+\examples{
+case_grid <- generate_case_grids(example_count_data, example_count_data[, max(date)])
+nci <- gen_nearby_case_info(
+  cg = case_grid,
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+  distance_limit = 25
+)
+obs_exp_grid <- generate_observed_expected(
+  nearby_counts = nci, 
+  case_grid = case_grid
+)
+cla <- add_spline_threshold(oe_grid = obs_exp_grid)
+compress_clusters_fast(
+  cluster_alert_table = cla, 
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]]
+)
 }
