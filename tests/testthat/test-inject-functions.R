@@ -4,7 +4,7 @@ testthat::test_that(
     dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
-      source = "built_in"
+      source = "tigris"
     )[["distance_matrix"]]
     center <- rownames(dm)[1]
 
@@ -30,7 +30,7 @@ testthat::test_that("get_nearby_locations handles edge and invalid center", {
   dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
-    source = "built_in"
+    source = "tigris"
   )[["distance_matrix"]]
   center <- rownames(dm)[1]
 
@@ -61,7 +61,7 @@ testthat::test_that(
     dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
-      source = "built_in"
+      source = "tigris"
     )[["distance_matrix"]]
     center <- rownames(dm)[1]
     locs <- rownames(dm)[1:8]
@@ -117,7 +117,7 @@ testthat::test_that("st_injects edge and error handling", {
   dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
-    source = "built_in"
+    source = "tigris"
   )[["distance_matrix"]]
   center <- rownames(dm)[1]
   locs <- rownames(dm)[1:3]

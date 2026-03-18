@@ -21,6 +21,9 @@ plotly_heatmap(
 
 \item{logscale}{boolean (default FALSE); set to TRUE to view on log scale}
 }
+\value{
+a plotly object
+}
 \description{
 Internal function to generate plotly based heatmap
 }

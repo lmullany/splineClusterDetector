@@ -101,7 +101,7 @@ testthat::test_that(
     dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
-      source = "built_in"
+      source = "tigris"
     )[["distance_matrix"]]
 
     nci <- gsClusterDetect::gen_nearby_case_info(
@@ -124,7 +124,7 @@ testthat::test_that("gen_nearby_case_info edge and error handling", {
   dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
-    source = "built_in"
+    source = "tigris"
   )[["distance_matrix"]]
 
   nci0 <- gsClusterDetect::gen_nearby_case_info(
@@ -164,7 +164,7 @@ testthat::test_that(
     dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
-      source = "built_in"
+      source = "tigris"
     )[["distance_matrix"]]
     nci <- gsClusterDetect::gen_nearby_case_info(
       cg, dm,
@@ -192,7 +192,7 @@ testthat::test_that("generate_observed_expected validates class requirements", {
   dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
-    source = "built_in"
+    source = "tigris"
   )[["distance_matrix"]]
   nci <- gsClusterDetect::gen_nearby_case_info(
     cg, dm,
@@ -227,7 +227,7 @@ testthat::test_that("add_spline_threshold returns only positive alert gaps", {
   dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
-    source = "built_in"
+    source = "tigris"
   )[["distance_matrix"]]
   nci <- gsClusterDetect::gen_nearby_case_info(
     cg, dm,
@@ -258,7 +258,7 @@ testthat::test_that(
     dm <- gsClusterDetect::county_distance_matrix(
       st = "OH",
       unit = "miles",
-      source = "built_in"
+      source = "tigris"
     )[["distance_matrix"]]
     nci <- gsClusterDetect::gen_nearby_case_info(
       cg, dm,

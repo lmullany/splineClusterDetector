@@ -11,6 +11,9 @@ generate_plotly_time_series(time_series_data, locations = "All Locations")
 
 \item{locations}{vector of locations to limit to; default is "All Locations"}
 }
+\value{
+a plotly object
+}
 \description{
 Internal function to generate plotly based timeseries
 }

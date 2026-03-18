@@ -14,7 +14,7 @@
   cases <- .load_example_data()
   dm <- gsClusterDetect::county_distance_matrix(
     "OH",
-    source = "built_in"
+    source = "tigris"
   )[["distance_matrix"]]
   list(cases = cases, dm = dm)
 }

@@ -1214,7 +1214,7 @@ get_test_dates <- function(end_date, test_length) {
 #' Function checks for variables in frame
 #' @param d input data frame to check for variables
 #' @param required vector of column names that must be in `d`
-#' @returns No treturn value, called for side effects
+#' @returns No return value, called for side effects
 check_vars <- function(d, required) {
   if (!all(required %in% names(d))) {
     cli::cli_abort(
