@@ -22,5 +22,8 @@ generation of this matrix can take a few seconds. Note: it is better and
 faster to use \code{create_dist_list()}.
 }
 \examples{
+\donttest{
+# Takes ~ 10 seconds, depending on machine
 us_distance_matrix(unit = "kilometers")
+}
 }
