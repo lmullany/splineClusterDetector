@@ -42,9 +42,7 @@ state, using state abbreviation input similar to
 \code{zip_distance_matrix()}.
 }
 \examples{
-\dontrun{
 md_dm <- tract_distance_matrix("MD")
 dim(md_dm$distance_matrix)
 md_dm_km <- tract_distance_matrix("MD", unit = "kilometers")
-}
 }

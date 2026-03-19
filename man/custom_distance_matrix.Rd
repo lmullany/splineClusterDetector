@@ -40,11 +40,10 @@ in a user-supplied data frame. Row and column names of the matrix are set
 from a unique label variable.
 }
 \examples{
-\dontrun{
 md <- tract_generator("24")
 dm <- custom_distance_matrix(
   md,
-  label_var = "geoid", lat_var = "lon", long_var = "long"
+  label_var = "geoid", lat_var = "latitude", long_var = "longitude"
 )
 dim(dm[["distance_matrix"]])
 
@@ -56,5 +55,4 @@ dm_km <- custom_distance_matrix(
   lat_var = "lat",
   long_var = "lon"
 )
-}
 }

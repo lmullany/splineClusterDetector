@@ -15,12 +15,19 @@
 #' @returns a two-element list; each element is a dataframe. The first is the
 #'   full dataset with injected cases and the second is the injected cases only
 #' @examples
-#' \dontrun{
+#' cases <- example_count_data
+#' dm <- county_distance_matrix("OH")
+#' target_loc <- "39175"
 #' scen1 <- st_injects(
-#'   cases, distance_matrix, target_loc, center_decile,
-#'   radius_miles, nr_cases, nr_days, end_date
+#'   cases = cases,
+#'   distance_matrix = dm[["distance_matrix"]],
+#'   target_loc = target_loc,
+#'   center_decile = 7,
+#'   radius_miles = 70,
+#'   nr_cases = 100,
+#'   nr_days = 4,
+#'   end_date = "2025-02-05"
 #' )
-#' }
 st_injects <- function(
   cases,
   distance_matrix,
@@ -151,10 +158,11 @@ st_injects <- function(
   list(case_counts_inj = case_counts_inj[], inject_tbl = inject_tbl)
 }
 
-#' Add data counts for injected clusters
+#' Get nearby locations
 #'
-#' Returns a 2-column table of locations near center location and associated
-#' case counts
+#' Given a location, a square distance matrix, and numeric value (radius_miles),
+#' this helper function returns a 2-column data frame listing the locations
+#' within that radius
 #' @param center_location location
 #' @param distance_matrix a distance matrix
 #' @param radius_miles a numeric value >0

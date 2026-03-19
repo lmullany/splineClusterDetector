@@ -42,10 +42,17 @@ data.table with inject counts added according to design parameters. 2. a
 table of only the inject counts, locations, and dates.
 }
 \examples{
-\dontrun{
+cases <- example_count_data
+dm <- county_distance_matrix("OH")
+target_loc <- "39175"
 scen1 <- st_injects(
-  cases, distance_matrix, target_loc, center_decile,
-  radius_miles, nr_cases, nr_days, end_date
+  cases = cases,
+  distance_matrix = dm[["distance_matrix"]],
+  target_loc = target_loc,
+  center_decile = 7,
+  radius_miles = 70,
+  nr_cases = 100,
+  nr_days = 4,
+  end_date = "2025-02-05"
 )
-}
 }

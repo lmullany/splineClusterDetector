@@ -16,8 +16,8 @@ create_custom_dist_list(
 \arguments{
 \item{df}{data.frame containing label and coordinate columns}
 
-\item{label_var}{character scalar; column name used as location label
-(must be unique and non-missing)}
+\item{label_var}{character scalar; column name used as location label (must
+be unique and non-missing)}
 
 \item{lat_var}{character scalar; latitude column name.}
 
@@ -27,13 +27,17 @@ create_custom_dist_list(
 
 \item{unit}{string, one of "miles" (default), "kilometers", or "meters"}
 }
+\value{
+a named list, where each element, named by a target location, is a
+  named vector of distances that are within `threshold` `units` of the
+  target.
+}
 \description{
-This function is a custom-data version of \code{create_dist_list()}.
-It returns a list of named numeric vectors where each list element contains
-only locations within \code{threshold} distance units of a target location.
+This function is a custom-data version of \code{create_dist_list()}. It
+returns a list of named numeric vectors where each list element contains only
+locations within \code{threshold} distance units of a target location.
 }
 \examples{
-\dontrun{
 md <- tract_generator("MD")
 dlist <- create_custom_dist_list(
   df = md,
@@ -43,5 +47,4 @@ dlist <- create_custom_dist_list(
   threshold = 15,
   unit = "miles"
 )
-}
 }

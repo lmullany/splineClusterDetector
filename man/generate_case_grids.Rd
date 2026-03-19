@@ -59,3 +59,10 @@ an object of class `CaseGrids` contain a list of items
 Given raw case counts by location, and some dates and other params return
 candidate clusters and counts
 }
+\examples{
+dd <- example_count_data[, max(date)]
+generate_case_grids(
+  cases = example_count_data,
+  detect_date = dd
+)
+}

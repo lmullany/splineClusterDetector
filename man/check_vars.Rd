@@ -11,6 +11,9 @@ check_vars(d, required)
 
 \item{required}{vector of column names that must be in `d`}
 }
+\value{
+No return value, called for side effects
+}
 \description{
 Function checks for variables in frame
 }
