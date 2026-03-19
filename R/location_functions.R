@@ -261,7 +261,6 @@
 #' containing the pairwise distance (in the given `unit`) between all locations.
 #' @examples
 #' zip_distance_matrix("MD")
-#' zip_distance_matrix("MD", unit = "kilometers")
 zip_distance_matrix <- function(
   st,
   unit = c("miles", "kilometers", "meters")
@@ -387,7 +386,10 @@ county_distance_matrix <- function(
 #' locations and the second element (`distance_matrix`) is a square matrix
 #' containing the pairwise distance (in the given `unit`) between all locations.
 #' @examples
+#' \donttest{
+#' # Takes ~ 10 seconds, depending on machine
 #' us_distance_matrix(unit = "kilometers")
+#' }
 us_distance_matrix <- function(
   unit = c("miles", "kilometers", "meters")
 ) {
