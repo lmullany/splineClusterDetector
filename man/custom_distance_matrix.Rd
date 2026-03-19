@@ -40,6 +40,7 @@ in a user-supplied data frame. Row and column names of the matrix are set
 from a unique label variable.
 }
 \examples{
+\donttest{
 md <- tract_generator("24")
 dm <- custom_distance_matrix(
   md,
@@ -55,4 +56,5 @@ dm_km <- custom_distance_matrix(
   lat_var = "lat",
   long_var = "lon"
 )
+}
 }

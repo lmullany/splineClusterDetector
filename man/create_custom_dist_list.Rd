@@ -38,6 +38,7 @@ returns a list of named numeric vectors where each list element contains only
 locations within \code{threshold} distance units of a target location.
 }
 \examples{
+\donttest{
 md <- tract_generator("MD")
 dlist <- create_custom_dist_list(
   df = md,
@@ -47,4 +48,5 @@ dlist <- create_custom_dist_list(
   threshold = 15,
   unit = "miles"
 )
+}
 }

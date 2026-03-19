@@ -537,6 +537,7 @@ create_dist_list <- function(
 #'   named vector of distances that are within `threshold` `units` of the
 #'   target.
 #' @examples
+#' \donttest{
 #' md <- tract_generator("MD")
 #' dlist <- create_custom_dist_list(
 #'   df = md,
@@ -546,6 +547,7 @@ create_dist_list <- function(
 #'   threshold = 15,
 #'   unit = "miles"
 #' )
+#' }
 create_custom_dist_list <- function(
   df,
   label_var,
@@ -690,9 +692,11 @@ tract_generator <- function(
 #' }
 #'
 #' @examples
+#' \donttest{
 #' md_dm <- tract_distance_matrix("MD")
 #' dim(md_dm$distance_matrix)
 #' md_dm_km <- tract_distance_matrix("MD", unit = "kilometers")
+#' }
 tract_distance_matrix <- function(
   st,
   county = NULL,
@@ -753,6 +757,7 @@ tract_distance_matrix <- function(
 #'
 #' @export
 #' @examples
+#' \donttest{
 #' md <- tract_generator("24")
 #' dm <- custom_distance_matrix(
 #'   md,
@@ -768,6 +773,7 @@ tract_distance_matrix <- function(
 #'   lat_var = "lat",
 #'   long_var = "lon"
 #' )
+#' }
 custom_distance_matrix <- function(
   df,
   unit = c("miles", "kilometers", "meters"),
