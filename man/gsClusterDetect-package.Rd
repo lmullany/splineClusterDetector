@@ -6,7 +6,7 @@
 \alias{gsClusterDetect-package}
 \title{gsClusterDetect: Utilities for Geo-Spatial Cluster Detection and Significance Classification}
 \description{
-Provides utilities for manipulating time series of location-based counts of events to detect geospatial clusters. Significance of these clusters is determined using a set of models that classify based on a learned relationship between observed and the log(observed/expected) ratio of counts. The approach implemented here is similar to prospective space-time estimation of clusters using the scan statistic.
+Provides utilities for manipulating time series of location-based counts of events to detect geo-spatial clusters. Significance of these clusters is determined using a set of models that classify based on a learned relationship between observed and the log(observed/expected) ratio of counts. The approach implemented here is similar to prospective space-time estimation of clusters using the scan statistic.
 }
 \seealso{
 Useful links:
