@@ -2,7 +2,8 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/gsClusterDetect)](https://CRAN.R-project.org/package=gsClusterDetect)
-[![R-CMD-check](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml)
+[![release branch checks (main)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main&event=push)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml)
+[![development branch checks (dev)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml/badge.svg?branch=dev&event=push)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ### Description
