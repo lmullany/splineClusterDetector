@@ -1,5 +1,9 @@
 # gsClusterDetect
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/gsClusterDetect)](https://CRAN.R-project.org/package=gsClusterDetect)
+<!-- badges: end -->
+
 ### Description
 
 An R package for implementing geospatial cluster identification from time series of
