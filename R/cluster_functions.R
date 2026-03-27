@@ -988,7 +988,6 @@ find_clusters <- function(
   adj_constant = 1.0,
   min_clust_cases = 0,
   max_clust_cases = Inf,
-  post_cluster_min_count = 0,
   use_fast = TRUE,
   return_interim = FALSE
 ) {
