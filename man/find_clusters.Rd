@@ -64,17 +64,11 @@ adjustment is made.}
 if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 'add_one'}}
 
-\item{min_clust_cases}{(default = 0); minimum number of cluster cases to
-retain before compression}
+\item{min_clust_cases}{(default = 0); minimum number of case within a
+returned cluster.}
 
-\item{max_clust_cases}{(default = Inf); maximum number of cluster cases to
-retain before compression}
-
-\item{post_cluster_min_count}{(default=0); a second (or alternative) way to
-limit cluster. This parameter can be set to a non-negative integer to
-require that any final clusters (post compression from candidate rows) have
-at least \code{post_cluster_min_count} cases, when aggregated over all
-locations within the identified cluster}
+\item{max_clust_cases}{(default = Inf); maximum number of cases within a
+returned cluster.}
 
 \item{use_fast}{boolean (default = TRUE) - set to TRUE to use the fast
 version of the compress clusters function}

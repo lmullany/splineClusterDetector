@@ -1,3 +1,7 @@
+# gsClusterDetect 1.0.1
+
+- Parameter `post_cluster_min_count` removed from `find_clusters()` as it was never implemented or used (#15)
+
 # gsClusterDetect 1.0.0
 
 ## Initial release
