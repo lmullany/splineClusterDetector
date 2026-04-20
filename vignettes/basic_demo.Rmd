@@ -213,7 +213,6 @@ These can be used directly in workflows, examples, and tests.
 
 ```{r plotting clusters, echo = TRUE}
 library(gsClusterDetect)
-library(dplyr)
 library(ggplot2)
 library(tigris)
 library(sf)
@@ -226,8 +225,16 @@ dd <- d[, max(date)]
 dm <- create_dist_list("county", st = "OH", threshold = 50, )
 cl <- find_clusters(d, dm, dd)
 # Join locations/clusters to tigris counties shape file
-oh <- counties("OH", cb = TRUE, class = "sf") |>
-  left_join(cl$cluster_location_counts, by = c("GEOID" = "location"))
+oh <- data.table::setDT(
+  tigris::counties("OH", cb = TRUE, class = "sf")
+)
+oh <- sf::st_as_sf(
+  merge(
+    oh, 
+    cl$cluster_location_counts,
+    by.x = "GEOID", by.y = "location"
+  )
+)
 
 # Find the number of significant clusters
 n_groups <- nrow(cl$cluster_alert_table)
@@ -240,7 +247,7 @@ blue_vals <- setNames(
 # Make a simple map of the shape file,
 # filling with the target, and then coloring the fill-values
 # with the blue vals
-ggplot(oh) +
+ggplot2::ggplot(oh) +
   geom_sf(aes(fill = target), color = "black", linewidth = 0.2) +
   scale_fill_manual(values = blue_vals, na.value = NA) +
   theme_void() +
