@@ -12,6 +12,7 @@ Provides utilities for manipulating time series of location-based counts of even
 Useful links:
 \itemize{
   \item \url{https://github.com/lmullany/gsClusterDetect}
+  \item \url{https://lmullany.github.io/gsClusterDetect/}
   \item Report bugs at \url{https://github.com/lmullany/gsClusterDetect/issues}
 }
 
