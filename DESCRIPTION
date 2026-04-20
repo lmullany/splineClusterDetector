@@ -1,7 +1,7 @@
 Package: gsClusterDetect
 Type: Package
 Title: Utilities for Geo-Spatial Cluster Detection and Significance Classification
-Version: 1.0.0
+Version: 1.0.1
 Authors@R:
     c(
         person("Luke", "Mullany", email = "luke.mullany@jhuapl.edu", role = c("aut", "cre")),
@@ -26,5 +26,8 @@ Suggests:
     plotly,
     tigris,
     testthat (>= 3.0.0),
-    withr
+    withr,
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
+VignetteBuilder: knitr
