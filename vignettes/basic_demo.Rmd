@@ -11,9 +11,9 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  echo = FALSE,      # hide code
-  message = FALSE,   # hide messages
-  warning = FALSE,    # hide warnings
+  echo = FALSE, # hide code
+  message = FALSE, # hide messages
+  warning = FALSE, # hide warnings
   fig.width = 12,
   fig.height = 7,
   out.width = "100%"
@@ -67,7 +67,7 @@ This vignette demonstrates all exported functions, with emphasis on the recommen
 -   `count`: non-negative counts. Dates and locations with zero counts need not be provided. For many outcomes, counts are zero for the majority of locations in most dates and locations. The package code accounts for all date/location pairs.
 
 ```{r, echo = TRUE}
-# use the built in example_count_data 
+# use the built in example_count_data
 cases <- data.table::as.data.table(example_count_data)
 
 # For demonstration purposes, use only 12 unique locations
@@ -223,8 +223,8 @@ options(tigris_use_cache = TRUE)
 # Use example count data to find clusters
 d <- example_count_data
 dd <- d[, max(date)]
-dm <- create_dist_list("county", st="OH", threshold = 50, )
-cl <- find_clusters(d,dm,dd)
+dm <- create_dist_list("county", st = "OH", threshold = 50, )
+cl <- find_clusters(d, dm, dd)
 # Join locations/clusters to tigris counties shape file
 oh <- counties("OH", cb = TRUE, class = "sf") |>
   left_join(cl$cluster_location_counts, by = c("GEOID" = "location"))
@@ -237,7 +237,7 @@ blue_vals <- setNames(
   sort(unique(na.omit(oh$target)))
 )
 
-# Make a simple map of the shape file, 
+# Make a simple map of the shape file,
 # filling with the target, and then coloring the fill-values
 # with the blue vals
 ggplot(oh) +
