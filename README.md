@@ -1,5 +1,10 @@
 # gsClusterDetect
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/gsClusterDetect)](https://CRAN.R-project.org/package=gsClusterDetect)
+[![release branch checks (main)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main&event=push)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 ### Description
 
 An R package for implementing geospatial cluster identification from time series of
@@ -21,9 +26,12 @@ Install the `gsClusterDetect` package from CRAN as follows:
 install.packages("gsClusterDetect")
 ```
 
-Install the development version from git as follows:
+Install the development version from Github as follows:
+
+[![development branch checks (dev)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml/badge.svg?branch=dev&event=push)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml)
+
 ```r
-devtools::install_github("lmullany/gsClusterDetect")
+devtools::install_github("lmullany/gsClusterDetect", branch = "dev")
 ```
 
 ### Getting Started:

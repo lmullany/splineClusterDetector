@@ -958,15 +958,10 @@ add_location_counts <- function(cluster_list, cases) {
 #' @param adj_constant numeric (default=1.0); this is the constant to be added
 #'   if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 #'   'add_one'}
-#' @param min_clust_cases (default = 0); minimum number of cluster cases to
-#'   retain before compression
-#' @param max_clust_cases (default = Inf); maximum number of cluster cases to
-#'   retain before compression
-#' @param post_cluster_min_count (default=0); a second (or alternative) way to
-#'   limit cluster. This parameter can be set to a non-negative integer to
-#'   require that any final clusters (post compression from candidate rows) have
-#'   at least \code{post_cluster_min_count} cases, when aggregated over all
-#'   locations within the identified cluster
+#' @param min_clust_cases (default = 0); minimum number of case within a
+#'   returned cluster.
+#' @param max_clust_cases (default = Inf); maximum number of cases within a
+#'   returned cluster.
 #' @param use_fast boolean (default = TRUE) - set to TRUE to use the fast
 #'   version of the compress clusters function
 #' @param return_interim boolean (default = FALSE) - set to TRUE to return all
@@ -993,7 +988,6 @@ find_clusters <- function(
   adj_constant = 1.0,
   min_clust_cases = 0,
   max_clust_cases = Inf,
-  post_cluster_min_count = 0,
   use_fast = TRUE,
   return_interim = FALSE
 ) {
