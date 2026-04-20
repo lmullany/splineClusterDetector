@@ -156,33 +156,12 @@ dimnames(dm) <- list(locs, locs)
 | `min_clust_cases` / `max_clust_cases` | Pre-compression observed-count filters | to put a minimum or maximum on number of cluster cases |
 | `return_interim` | Return intermediate objects for debugging/inspection | Lets user inspect intermediate data tables. |
 
-## Generating Cluster Signals for Detection
-
-This package also provides a function `st_detect()` to create artifical cluster signals for addition to background data in order to test and evaluate the detection capability of the `find_clusters`' method. A subsequent vignette will provide details on `st_detect()`. To create a clear demonstration signal, inject a small synthetic cluster first:
-
-```{r, echo=TRUE}
-set.seed(42)
-inj <- st_injects(
-  cases = cases,
-  distance_matrix = dm,
-  target_loc = locs[1],
-  center_decile = 5,
-  radius_miles = 10,
-  nr_cases = 40,
-  nr_days = 3,
-  end_date = detect_date
-)
-
-cases_inj <- inj$case_counts_inj
-nearby <- get_nearby_locations(locs[1], dm, radius_miles = 10)
-head(nearby)
-```
 
 ## Running `find_clusters()`
 
 ```{r}
 clusters <- find_clusters(
-  cases = cases_inj,
+  cases = cases,
   distance_matrix = dm,
   detect_date = detect_date,
   spline_lookup = "01",
@@ -259,7 +238,7 @@ Create statistical summary of input data:
 
 ```{r, echo=TRUE}
 summary_tbl <- generate_summary_table(
-  data = cases_inj,
+  data = cases,
   end_date = detect_date,
   baseline_length = 90,
   test_length = 7
@@ -271,7 +250,7 @@ Create visual heatmap summary of input data to assess suitability for cluster de
 
 ```{r, echo=TRUE}
 heatmap_data <- generate_heatmap_data(
-  data = cases_inj,
+  data = cases,
   end_date = detect_date,
   baseline_length = 90,
   test_length = 7
@@ -286,7 +265,7 @@ Create time series of aggregated data counts over all locations:
 
 ```{r, echo = TRUE}
 ts_data <- generate_time_series_data(
-  data = cases_inj,
+  data = cases,
   end_date = detect_date,
   baseline_length = 90,
   test_length = 7
@@ -295,45 +274,4 @@ ts_data <- generate_time_series_data(
 p_ts <- generate_time_series_plot(ts_data, plot_type = "ggplot")
 class(p_ts)
 plot(p_ts)
-```
-
-Inspect intermediate objects:
-
-```{r, echo=TRUE}
-interim <- find_clusters(
-  cases = cases_inj,
-  distance_matrix = dm,
-  detect_date = detect_date,
-  return_interim = TRUE
-)
-
-names(interim)
-```
-
-## Intermediate Pipeline Functions
-
-These are used by the `find_clusters()` function and may be useful for custom diagnostics and method development.
-
-```{r, echo=TRUE}
-cg <- generate_case_grids(
-  cases = cases_inj,
-  detect_date = detect_date,
-  baseline_length = 90,
-  max_test_window_days = 7
-)
-
-nci <- gen_nearby_case_info(
-  cg = cg,
-  distance_matrix = dm,
-  distance_limit = 15
-)
-
-oe <- generate_observed_expected(
-  nearby_counts = nci,
-  cases_grids = cg,
-  adjust = TRUE,
-  adj_constant = 1
-)
-
-cat_tbl <- add_spline_threshold(oe_grid = oe, spline_lookup = "01")
 ```
