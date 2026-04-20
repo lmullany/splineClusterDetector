@@ -157,7 +157,7 @@ dimnames(dm) <- list(locs, locs)
 ### Key Parameters in `find_clusters()`
 
 | Parameter | Purpose | Comment |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | `cases` | Input location-date-count data | Include only rows whose count is positive. |
 | `distance_matrix` | Named matrix (dense) or named list (sparse) of distances | Used for scanning to include progressively closer locations. |
 | `detect_date` | End date for the detection window | Function will return only clusters ending on this date. |
@@ -224,15 +224,19 @@ d <- example_count_data
 dd <- d[, max(date)]
 dm <- create_dist_list("county", st = "OH", threshold = 50, )
 cl <- find_clusters(d, dm, dd)
+
 # Join locations/clusters to tigris counties shape file
+# First get tigris based shape file
 oh <- data.table::setDT(
   tigris::counties("OH", cb = TRUE, class = "sf")
 )
+# left join on the cluster location counts, and convert back to sf object
 oh <- sf::st_as_sf(
   merge(
-    oh, 
+    oh,
     cl$cluster_location_counts,
-    by.x = "GEOID", by.y = "location"
+    by.x = "GEOID", by.y = "location",
+    all.x = TRUE
   )
 )
 
@@ -247,7 +251,7 @@ blue_vals <- setNames(
 # Make a simple map of the shape file,
 # filling with the target, and then coloring the fill-values
 # with the blue vals
-ggplot2::ggplot(oh) +
+ggplot(oh) +
   geom_sf(aes(fill = target), color = "black", linewidth = 0.2) +
   scale_fill_manual(values = blue_vals, na.value = NA) +
   theme_void() +
