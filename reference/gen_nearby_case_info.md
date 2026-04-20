@@ -1,0 +1,55 @@
+# Return baseline and test period case grids restricting by distance
+
+Function takes a distance matrix between locations, a set of baseline
+period case sums by location, and grid of test period cases by date and
+location, and given a distance limit, returns two frames: 1. A frame
+that has for each location, a list of nearby locations and the
+cumulative sum of cases from those locations (over increasing distance)
+2. A frame that has for each location, a list of nearby locations and
+the observed cumulative sum of cases by date (over increasing distance)
+
+## Usage
+
+``` r
+gen_nearby_case_info(cg, distance_matrix, distance_limit)
+```
+
+## Arguments
+
+- cg:
+
+  object of class \`CaseGrids\`, such as returned from the
+  [`generate_case_grids()`](https://lmullany.github.io/gsClusterDetect/reference/generate_case_grids.md)
+
+- distance_matrix:
+
+  a square distance matrix, named on both dimensions or a list of
+  distance vectors, one for each location
+
+- distance_limit:
+
+  numeric value indicating the distance threshold to define "near"
+  locations; must be input in the same units as the distances in the
+  \`distance_matrix\`. Note that if passing the list version of
+  distance_matrix, this limit has already been used in that construction
+  and thus is ignored
+
+## Value
+
+an object of class \`NearbyClusterGrids\` which is list of two
+dataframes, including "baseline" (has the nearby information for
+baseline counts) and "test" (which holds the nearby information for test
+interval counts)
+
+## Examples
+
+``` r
+case_grid <- generate_case_grids(
+  example_count_data, example_count_data[, max(date)]
+)
+nci <- gen_nearby_case_info(
+  cg = case_grid,
+  distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
+  distance_limit = 25
+)
+```
