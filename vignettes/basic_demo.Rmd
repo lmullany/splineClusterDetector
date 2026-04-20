@@ -1,8 +1,8 @@
 ---
-title: "Vignette1: basic_demo"
+title: "Vignette 1: Package Overview"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{basic_demo}
+  %\VignetteIndexEntry{Vignette 1: Package Overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -30,13 +30,21 @@ data("counties", package = "gsClusterDetect")
 
 ## Overview: Package Purpose
 
-Health departments commonly seek clusters of cases in space and time, as cases occurring within similar time frames in nearby locations could signal outbreaks or other events of public health importance. The data of interest intended for the current package are typically counts of outcomes for syndromic categories such as emergency department visits for selected infectious diseases, overdoses, or other harms. However, the package may be applied to seek clusters of other types of count data whose observations have space and time descriptors. The following paragraphs briefly summarize the cluster-finding method.
+Health departments commonly seek clusters of cases in space and time, as cases occurring within similar time frames in nearby locations could signal outbreaks or other events of public health importance. The input data intended for the current package are typically counts of outcomes for syndromic categories such as emergency department visits for selected infectious diseases, overdoses, or other harms. However, the package may be applied to seek clusters of other types of count data whose observations have space and time descriptors. The following paragraphs briefly summarize the cluster-finding method.
 
 The scan statistic is a widely used method for detecting clusters. For a given outcome, the method works by testing many candidate regions for high observed counts of that outcome and identifying regions with unusually high counts relative to expected levels. In many applications including the current one, expected counts are derived from a baseline set of historical data. The most anomalous regions are then evaluated for statistical significance and potential alerting. This approach is implemented in the SaTScan software (www.satscan.org), which uses a moving cylindrical window over space and time. The base of each cylinder defines a geographic area, while its height represents a time interval. For each cylinder, the observed number of cases is compared with the expected count using a test statistic. The cylinder with the maximum value of the scan statistic defines a candidate cluster.
 
 Because the distribution of the maximum scan statistic is not available in closed form, SaTScan estimates statistical significance using Monte Carlo simulation. That is, it repeatedly generates simulated datasets under a null model and compares the observed cluster to this reference distribution. The approach implemented in this package replaces these repeated simulations with an immediate significance assessment based on spline functions trained on a large set of archived SaTScan results. The user chooses a spline corresponding to a significance level; this spline defines a threshold for each possible observed count. For each candidate cluster, an alert is issued if its observed count exceeds the corresponding threshold. This method reduces computation time while providing a practical approximation to the standard SaTScan significance test, enabling rapid, on-demand cluster detection across outcomes and time scales. The approach is faster than using conventional repeated trials and provides epidemiologists with a proxy method to obtain clusters on demand, for any outcome, and of any duration.
 
-Requirements for this scan statistic implementation are: - assignment of the observed data to geographic regions with centroid point locations for distance calculations to enable expanding cylinder scans - observed counts of the data in each region for each time step - corresponding expected counts of the data, estimated from baseline data - distances between the regions
+Requirements for this scan statistic implementation are:
+
+-   assignment of the observed data to geographic regions with centroid point locations for distance calculations to enable expanding cylinder scans
+
+-   observed counts of the data in each region for each time step
+
+-   corresponding expected counts of the data, estimated from baseline data
+
+-   distances between the regions
 
 ## Package functionality
 
@@ -45,7 +53,7 @@ The current package provides utilities for cluster detection on location-date-co
 -   building location distance structures (matrix and sparse list forms),
 -   computing baseline/test summaries and visualization-ready outputs,
 -   running a full clustering workflow through `find_clusters()`,
--   using lower-level functions when stepwise control is needed,
+-   using lower-level functions when step-wise control is needed,
 -   simulating cluster injections for testing workflows.
 
 This vignette demonstrates all exported functions, with emphasis on the recommended wrapper: `find_clusters()`.
@@ -59,10 +67,17 @@ This vignette demonstrates all exported functions, with emphasis on the recommen
 -   `count`: non-negative counts. Dates and locations with zero counts need not be provided. For many outcomes, counts are zero for the majority of locations in most dates and locations. The package code accounts for all date/location pairs.
 
 ```{r, echo = TRUE}
+# use the built in example_count_data 
 cases <- data.table::as.data.table(example_count_data)
+
+# For demonstration purposes, use only 12 unique locations
 locs <- unique(cases$location)[1:12]
 cases <- cases[location %in% locs]
+
+# For demonstration purposes only, keep the final 120 days only
 cases <- cases[date >= (max(date) - 120)]
+
+# Make sure that location is a character column
 cases[, location := as.character(location)]
 
 head(cases)
@@ -85,7 +100,7 @@ The scanning process requires distances between locations to enable systematic s
 
 ### Full Distance Matrix Functions:
 
-The functions zip_distance_matrix()`and`county_distance_matrix()\` provide full pairwise distance matrices, which may be sparse with many zeros, depending on the user data:
+The functions `tract_distance_matrix()`, `zip_distance_matrix()` and `county_distance_matrix()` provide full pairwise distance matrices, which may be sparse with many zeros, depending on the user data:
 
 ```{r, echo=TRUE}
 zip_dm <- zip_distance_matrix("DC")
@@ -95,7 +110,7 @@ county_dm <- county_distance_matrix("RI", source = "tigris")
 dim(county_dm$distance_matrix)
 ```
 
-`us_distance_matrix()` is available for all U.S. counties, but is typically too large for routine examples:
+`us_distance_matrix()` is a special function available for generating pairwise distance between all U.S. counties, but is typically too large for routine examples:
 
 ```{r, eval = FALSE, echo=TRUE}
 us_dm <- us_distance_matrix()
@@ -104,7 +119,7 @@ dim(us_dm$distance_matrix)
 
 ### Limited Distance Lists
 
-For applications with many hundreds of locations, the package function `create_dist_list()` returns a sparse neighbor representation. The output of this function is a list of vectors containing the nearby neighbor locations for each data location, where "nearby" means within a user-provided threshold. The example below returns a list of all counties within 25 miles for every county in Rhode Island. This list is adequate for detection of clusters whose radius is at most 25 miles. For many outcomes, users do not seek clusters whose geographic extent exceed a threshold.
+For applications with many hundreds of locations, the package function `create_dist_list()` returns a sparse neighbor representation. The output of this function is a list of vectors containing the ***nearby*** neighbor locations for each data location, where "nearby" means within a user-provided threshold. The example below returns a list of all counties within 25 miles for every county in Rhode Island. This list is adequate for detection of clusters whose radius is at most 25 miles. For many outcomes, users do not seek clusters whose geographic extent exceed a threshold.
 
 In summary, the matrix functions return all pairwise distances in a large, square matrix, while `create_dist_list()` returns only a sparse list of within-threshold neighbors (sparse list). The sparse lists are often faster/lighter for large geographies.
 
@@ -156,7 +171,6 @@ dimnames(dm) <- list(locs, locs)
 | `min_clust_cases` / `max_clust_cases` | Pre-compression observed-count filters | to put a minimum or maximum on number of cluster cases |
 | `return_interim` | Return intermediate objects for debugging/inspection | Lets user inspect intermediate data tables. |
 
-
 ## Running `find_clusters()`
 
 ```{r}
@@ -194,7 +208,9 @@ and demonstration data with tables of county and zip code locations and shape fi
 -   `counties`
 -   `zipcodes`
 
-These can be used directly in workflows, examples, and tests. \## Example cluster
+These can be used directly in workflows, examples, and tests.
+
+## Example Cluster Map
 
 ```{r plotting clusters, echo = TRUE}
 library(gsClusterDetect)
@@ -256,9 +272,9 @@ heatmap_data <- generate_heatmap_data(
   test_length = 7
 )
 
-p_heat <- generate_heatmap(heatmap_data, plot_type = "ggplot")
+p_heat <- generate_heatmap(heatmap_data, plot_type = "plotly")
 class(p_heat)
-plot(p_heat)
+p_heat
 ```
 
 Create time series of aggregated data counts over all locations:
@@ -271,7 +287,7 @@ ts_data <- generate_time_series_data(
   test_length = 7
 )
 
-p_ts <- generate_time_series_plot(ts_data, plot_type = "ggplot")
+p_ts <- generate_time_series_plot(ts_data, plot_type = "plotly")
 class(p_ts)
-plot(p_ts)
+p_ts
 ```
