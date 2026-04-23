@@ -42,7 +42,9 @@ If we have a set of locations among which we would like to identify clusters (sa
  - `zip_distance_matrix()`
  - `tract_distance_matrix()`
  
-Each of these functions must be called with a state level parameter, to constrain to a particular state (To combine states, see the section on "Custom Distance Objects"). These functions return a two-element named list containing:
+Each of these functions must be called with a state level parameter (`st`), to constrain to a particular state (To combine states, see the section on "Custom Distance Objects"). There is also a `unit` parameter, which takes a string: `"miles"` (default), `"kilometers"`, or "`meters"` to obtains the distance estimates in alternative units. 
+
+All of these functions return a two-element named list containing:
 
  - `loc_vec`: a vector containing the names of the `N` locations in the geographic target (e.g. "Minnesota")
  - `distance_matrix`: an `N x N` matrix containing the pairwise distances between all locations
@@ -76,7 +78,27 @@ dim(maryland_zips$distance_matrix)
 maryland_zips$distance_matrix[1:5,1:5]
 ```
 
-The default unit for these objects is "miles". However, for all of these functions, one can also obtain distances in other units by passing "kilometers" or "meters" to the `unit` parameter.
+### Example: tract distance matrix:
+The package also provides a function to generate distance matrices between census tracts. However, unlike at the zipcode and the county level, there is no built-in dataset that contains the centroids of these tracts across the United States. Therefore, to use the `tract_distance_matrix()` function, the user will need to have the package `tigris` installed. Also, in addition to the `st` and `unit` parameters, the user can also restrict the tracts within a state by providing a vector of 3-character fips codes in the `county` parameter. Furthermore, to prevent the `tigris` package from using a local cache (this has the benefit of speed for repeated calls), the user can turn this cache off using `use_cache = TRUE`
+
+```{r echo=TRUE, eval=TRUE}
+
+cook_county_tracts <- tract_distance_matrix(
+  st = "IL",
+  county = "031" # the full 5-digit code for Cook County, IL is 17031
+)
+
+# show the length and first 10 values of the `loc_vec`
+length(cook_county_tracts$loc_vec)
+cook_county_tracts$loc_vec |> head(10)
+
+# show the dimension and upper left section of the `distance_matrix`
+dim(cook_county_tracts$distance_matrix)
+cook_county_tracts$distance_matrix[1:5,1:5]
+
+```
+
+As described above, the default unit for these objects is "miles". However, for all of these functions, one can also obtain distances in other units by passing "kilometers" or "meters" to the `unit` parameter.
 ```{r echo=TRUE, eval=FALSE}
 maryland_zip <- zip_distance_matrix(st="MD", unit="kilometers")
 ```
