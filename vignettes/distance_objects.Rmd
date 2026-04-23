@@ -1,0 +1,82 @@
+---
+title: "Vignette 2: Creating Distance Objects"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette 2: Creating Distance Objects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE, # hide code
+  message = FALSE, # hide messages
+  warning = FALSE, # hide warnings
+  fig.width = 12,
+  fig.height = 7,
+  out.width = "100%"
+)
+```
+
+```{r setup}
+library(gsClusterDetect)
+```
+
+## Overview
+
+When using this package to identify clusters, given a set of date-location-count data, one of the key elements that must be provided is the geographical information about the units of clustering. Specifically, we need to provide to the `find_clusters()` function an object that contains information about pairwise distances (See `vignette("basic_demo")` for overview information on finding clusters).
+
+Here we describe how the package provides utilities to generate these objects.
+
+## Types of Distance Objects:
+
+There are two types of distance objects that can be passed to the `find_clusters()` function. These include square pairwise distance matrices and a constrained version that contains only a limited subset of the locations.
+
+### Square pairwise distance matrices
+
+If we have a set of locations among which we would like to identify clusters (say all the counties in Minnesota, or all the zipcodes in Maryland), we can create a matrix containing all the pairwise distances between the centroids of these locations. The package provides functions to do this for census tracts, zipcodes, and counties.
+
+ - `county_distance_matrix()`
+ - `zip_distance_matrix()`
+ - `tract_distance_matrix()`
+ 
+Each of these functions must be called with a state level parameter, to constrain to a particular state (To combine states, see the section on "Custom Distance Objects"). These functions return a two-element named list containing:
+
+ - `loc_vec`: a vector containing the names of the `N` locations in the geographic target (e.g. "Minnesota")
+ - `distance_matrix`: an `N x N` matrix containing the pairwise distances between all locations
+
+
+### Example: county distance matrix:
+
+```{r eval=TRUE, echo=TRUE}
+minnesota_counties <- county_distance_matrix(st = "MN")
+
+# show the length and first 10 values of the `loc_vec`
+length(minnesota_counties$loc_vec)
+minnesota_counties$loc_vec |> head(10)
+
+# show the dimension and upper left section of the `distance_matrix`
+dim(minnesota_counties$distance_matrix)
+minnesota_counties$distance_matrix[1:5,1:5]
+```
+
+### Example: zipcode distance matrix:
+
+```{r eval=TRUE, echo=TRUE}
+maryland_zips <- zip_distance_matrix(st = "MD")
+
+# show the length and first 10 values of the `loc_vec`
+length(maryland_zips$loc_vec)
+maryland_zips$loc_vec |> head(10)
+
+# show the dimension and upper left section of the `distance_matrix`
+dim(maryland_zips$distance_matrix)
+maryland_zips$distance_matrix[1:5,1:5]
+```
+
+The default unit for these objects is "miles". However, for all of these functions, one can also obtain distances in other units by passing "kilometers" or "meters" to the `unit` parameter.
+```{r echo=TRUE, eval=FALSE}
+maryland_zip <- zip_distance_matrix(st="MD", unit="kilometers")
+```
