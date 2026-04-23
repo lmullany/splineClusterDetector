@@ -88,39 +88,35 @@ expects a data frame with at least these columns:
 # use the built in example_count_data
 cases <- data.table::as.data.table(example_count_data)
 
-# For demonstration purposes, use only 12 unique locations
-locs <- unique(cases$location)[1:12]
-cases <- cases[location %in% locs]
-
-# For demonstration purposes only, keep the final 120 days only
-cases <- cases[date >= (max(date) - 120)]
-
-# Make sure that location is a character column
-cases[, location := as.character(location)]
-
 head(cases)
 #>    location       date count
 #>      <char>     <IDat> <int>
-#> 1:    39001 2024-10-08     4
-#> 2:    39001 2024-10-09     1
-#> 3:    39001 2024-10-10     0
-#> 4:    39001 2024-10-11     2
-#> 5:    39001 2024-10-12     0
-#> 6:    39003 2024-10-08    13
+#> 1:    39001 2024-10-01     3
+#> 2:    39001 2024-10-02     1
+#> 3:    39001 2024-10-03     2
+#> 4:    39001 2024-10-04     5
+#> 5:    39001 2024-10-05     4
+#> 6:    39003 2024-10-01     4
 ```
 
-The code below restricts the data to 12 locations for concise
-demonstration. Using the full dataset will not impact computation speed.
-
-Date helper functions:
+Date helper functions: These are show here for reference, but not
+usually needed in application:
 
 ``` r
 detect_date <- max(cases$date)
+
+# get the test dates, given a detect date and test_length
 get_test_dates(detect_date, test_length = 7)
 #> [1] "2025-01-30" "2025-01-31" "2025-02-01" "2025-02-02" "2025-02-03"
 #> [6] "2025-02-04" "2025-02-05"
-## For reference, but not usually needed in application:
-head(get_baseline_dates(detect_date, test_length = 7, baseline_length = 90, guard = 0))
+
+# get the baseline dates, given a detect date, test and baseline length
+get_baseline_dates(
+  detect_date,
+  test_length = 7,
+  baseline_length = 90,
+  guard = 0
+) |> head()
 #> [1] "2024-11-01" "2024-11-02" "2024-11-03" "2024-11-04" "2024-11-05"
 #> [6] "2024-11-06"
 ```
@@ -138,8 +134,9 @@ The functions
 [`zip_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/zip_distance_matrix.md)
 and
 [`county_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/county_distance_matrix.md)
-provide full pairwise distance matrices, which may be sparse with many
-zeros, depending on the user data:
+provide full pairwise distance matrices (i.e. size `N x N`, where `N` is
+the number of locations, and each cell is the distance between the
+centroids of any paired locations:
 
 ``` r
 zip_dm <- zip_distance_matrix("DC")
@@ -157,21 +154,24 @@ all U.S. counties, but is typically too large for routine examples:
 
 ``` r
 us_dm <- us_distance_matrix()
-dim(us_dm$distance_matrix)
 ```
 
 ### Limited Distance Lists
 
-For applications with many hundreds of locations, the package function
+For applications with many hundreds of locations, the above matrices may
+contain many location-pair estimations that are not needed because the
+distance between the locations exceeds the cluster radius that is
+appropriate. As a result, these matrices can be slower to compute and
+many of the cells are unnecessary. Therefore, we provide an alternate
+representation via the function
 [`create_dist_list()`](https://lmullany.github.io/gsClusterDetect/reference/create_dist_list.md)
-returns a sparse neighbor representation. The output of this function is
-a list of vectors containing the ***nearby*** neighbor locations for
-each data location, where “nearby” means within a user-provided
-threshold. The example below returns a list of all counties within 25
-miles for every county in Rhode Island. This list is adequate for
-detection of clusters whose radius is at most 25 miles. For many
-outcomes, users do not seek clusters whose geographic extent exceed a
-threshold.
+. The output of this function is a list of vectors containing the
+***nearby*** neighbor locations for each data location, where “nearby”
+means within a user-provided threshold. The example below returns a list
+of all counties within 25 miles for every county in Rhode Island. This
+list is adequate for detection of clusters whose radius is at most 25
+miles. For many outcomes, users do not seek clusters whose geographic
+extent exceed a threshold.
 
 In summary, the matrix functions return all pairwise distances in a
 large, square matrix, while
@@ -218,11 +218,18 @@ dimnames(dm) <- list(locs, locs)
 
 ### Key Parameters in `find_clusters()`
 
+#### Required:
+
+| Parameter         | Purpose                                                  | Comment                                                      |
+|-------------------|----------------------------------------------------------|--------------------------------------------------------------|
+| `cases`           | Input location-date-count data                           | Include only rows whose count is positive.                   |
+| `distance_matrix` | Named matrix (dense) or named list (sparse) of distances | Used for scanning to include progressively closer locations. |
+| `detect_date`     | End date for the detection window                        | Function will return only clusters ending on this date.      |
+
+#### Optional:
+
 | Parameter                             | Purpose                                                                                      | Comment                                                                                                                           |
 |---------------------------------------|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `cases`                               | Input location-date-count data                                                               | Include only rows whose count is positive.                                                                                        |
-| `distance_matrix`                     | Named matrix (dense) or named list (sparse) of distances                                     | Used for scanning to include progressively closer locations.                                                                      |
-| `detect_date`                         | End date for the detection window                                                            | Function will return only clusters ending on this date.                                                                           |
 | `spline_lookup`                       | Spline threshold table (`NULL`, built-ins `"05"`, `"01"`, `"005"`, `"001"`, or custom frame) | Derived from SaTScan cluster output runs with p-values of 0.05, 0.01, 0.005, and 0.001, to emulate those sensitivity requirements |
 | `baseline_length`                     | Number of days in baseline period                                                            | Default is 90 days; can use larger intervals if available in `cases`.                                                             |
 | `max_test_window_days`                | Maximum test window size (days)                                                              | Number of days that a cluster can include, i.e. max cylinder height.                                                              |
@@ -235,6 +242,27 @@ dimnames(dm) <- list(locs, locs)
 
 ## Running `find_clusters()`
 
+In the argument list below, cluster dimensions are limited to 15 miles
+from the cluster center and 7 days total including detection date, with
+a 90-day baseline interval. The baseline_adjustment option is set to
+“add_test” to include the 7-day test interval counts in the baseline, as
+in the SaTScan space-time permutation method. The default adjustment
+“add_one” excludes the test interval and adds one only when needed to
+avoid division by zero when calculating expected counts.
+
+``` r
+clusters <- find_clusters(
+  cases = cases,
+  distance_matrix = dm,
+  detect_date = detect_date,
+  spline_lookup = "01",
+  baseline_length = 90,
+  max_test_window_days = 7,
+  distance_limit = 15,
+  baseline_adjustment = "add_test",
+)
+```
+
 ## Built-In Spline Tables and Example Data
 
 The package ships with spline lookup tables. For observed cluster
@@ -246,8 +274,8 @@ counts, tables provide significance thresholds approximating p-values of
 - `spline_01`
 - `spline_05`
 
-and demonstration data with tables of county and zip code locations and
-shape files:
+demonstration data, and tables of county and zip code locations
+(centroids):
 
 - `example_count_data`
 - `counties`
@@ -271,12 +299,14 @@ dd <- d[, max(date)]
 dm <- create_dist_list("county", st = "OH", threshold = 50, )
 cl <- find_clusters(d, dm, dd)
 
+
 # Join locations/clusters to tigris counties shape file
+
 # First get tigris based shape file
 oh <- data.table::setDT(
   tigris::counties("OH", cb = TRUE, class = "sf")
 )
-#>   |                                                                              |                                                                      |   0%  |                                                                              |                                                                      |   1%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |===                                                                   |   4%  |                                                                              |===                                                                   |   5%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |=====                                                                 |   8%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |=========                                                             |  14%  |                                                                              |==========                                                            |  14%  |                                                                              |===========                                                           |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  17%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  22%  |                                                                              |================                                                      |  22%  |                                                                              |================                                                      |  23%  |                                                                              |================                                                      |  24%  |                                                                              |=================                                                     |  24%  |                                                                              |==================                                                    |  25%  |                                                                              |==================                                                    |  26%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  28%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  31%  |                                                                              |=======================                                               |  32%  |                                                                              |=========================                                             |  35%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |==========================                                            |  38%  |                                                                              |===========================                                           |  38%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  43%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  51%  |                                                                              |=====================================                                 |  53%  |                                                                              |===============================================                       |  67%  |                                                                              |=========================================================             |  81%  |                                                                              |============================================================          |  86%  |                                                                              |=============================================================         |  87%  |                                                                              |======================================================================| 100%
+#>   |                                                                              |                                                                      |   0%  |                                                                              |                                                                      |   1%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |===                                                                   |   4%  |                                                                              |===                                                                   |   5%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |=====                                                                 |   8%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  14%  |                                                                              |==========                                                            |  15%  |                                                                              |===========                                                           |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  16%  |                                                                              |============                                                          |  17%  |                                                                              |============                                                          |  18%  |                                                                              |=============                                                         |  18%  |                                                                              |==============                                                        |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  21%  |                                                                              |================                                                      |  22%  |                                                                              |================                                                      |  23%  |                                                                              |=================                                                     |  24%  |                                                                              |=================                                                     |  25%  |                                                                              |==================                                                    |  25%  |                                                                              |==================                                                    |  26%  |                                                                              |===================                                                   |  27%  |                                                                              |===================                                                   |  28%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  32%  |                                                                              |=======================                                               |  32%  |                                                                              |=======================                                               |  33%  |                                                                              |========================                                              |  34%  |                                                                              |=========================                                             |  35%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |==========================                                            |  38%  |                                                                              |===========================                                           |  39%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  43%  |                                                                              |================================                                      |  45%  |                                                                              |================================                                      |  46%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  48%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  51%  |                                                                              |=======================================                               |  56%  |                                                                              |=========================================                             |  58%  |                                                                              |=========================================                             |  59%  |                                                                              |==========================================                            |  60%  |                                                                              |===========================================                           |  62%  |                                                                              |============================================                          |  63%  |                                                                              |=============================================                         |  64%  |                                                                              |==============================================                        |  66%  |                                                                              |===============================================                       |  67%  |                                                                              |===============================================                       |  68%  |                                                                              |================================================                      |  69%  |                                                                              |=================================================                     |  69%  |                                                                              |=================================================                     |  70%  |                                                                              |==================================================                    |  71%  |                                                                              |==================================================                    |  72%  |                                                                              |====================================================                  |  74%  |                                                                              |=====================================================                 |  75%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  77%  |                                                                              |======================================================                |  78%  |                                                                              |========================================================              |  79%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  83%  |                                                                              |===========================================================           |  84%  |                                                                              |============================================================          |  85%  |                                                                              |=============================================================         |  87%  |                                                                              |===============================================================       |  89%  |                                                                              |===============================================================       |  90%  |                                                                              |===============================================================       |  91%  |                                                                              |=================================================================     |  94%  |                                                                              |==================================================================    |  94%  |                                                                              |===================================================================== |  98%  |                                                                              |======================================================================| 100%
 # left join on the cluster location counts, and convert back to sf object
 oh <- sf::st_as_sf(
   merge(
@@ -289,6 +319,7 @@ oh <- sf::st_as_sf(
 
 # Find the number of significant clusters
 n_groups <- nrow(cl$cluster_alert_table)
+
 # Get that number of shades of blue
 blue_vals <- setNames(
   colorRampPalette(c("lightblue", "darkblue"))(n_groups),
@@ -321,16 +352,16 @@ summary_tbl <- generate_summary_table(
 summary_tbl
 #>          Statistic (rounded means) Baseline Interval Test Interval
 #>                             <char>             <num>         <num>
-#>  1:                      Nr. Dates              90.0             7
-#>  2:                Nr. Total Cases            6683.0          1449
-#>  3:                  Cases per Day              74.3           207
-#>  4:        Nr. Locations with Data              12.0            12
-#>  5:      Nr. Locations, no records               0.0             0
-#>  6: Nr. Locs, daily mean 1 or less               1.0             1
-#>  7:         Nr. Locs, daily mean 2               2.0             1
-#>  8:       Nr. Locs, daily mean 3-5               4.0             0
-#>  9:      Nr. Locs, daily mean 6-10               2.0             5
-#> 10:       Nr. Locs, daily mean >10               3.0             5
+#>  1:                      Nr. Dates              90.0           7.0
+#>  2:                Nr. Total Cases           63803.0        9673.0
+#>  3:                  Cases per Day             708.9        1381.9
+#>  4:        Nr. Locations with Data              88.0          88.0
+#>  5:      Nr. Locations, no records               0.0           0.0
+#>  6: Nr. Locs, daily mean 1 or less              15.0           8.0
+#>  7:         Nr. Locs, daily mean 2              13.0           6.0
+#>  8:       Nr. Locs, daily mean 3-5              29.0          16.0
+#>  9:      Nr. Locs, daily mean 6-10              13.0          25.0
+#> 10:       Nr. Locs, daily mean >10              18.0          32.0
 ```
 
 Create visual heatmap summary of input data to assess suitability for
