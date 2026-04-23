@@ -4,10 +4,10 @@ Title: Utilities for Geo-Spatial Cluster Detection and Significance Classificati
 Version: 1.0.1
 Authors@R:
     c(
-        person("Luke", "Mullany", email = "luke.mullany@jhuapl.edu", role = c("aut", "cre")),
-        person("Howard", "Burkom", role = "aut")
+        person("Luke C.", "Mullany", email = "luke.mullany@jhuapl.edu", role = c("aut", "cre")),
+        person("Howard S.", "Burkom", role = "aut")
     )
-Maintainer: Luke Mullany <luke.mullany@jhuapl.edu>
+Maintainer: Luke C. Mullany, PhD <luke.mullany@jhuapl.edu>
 Description: Provides utilities for manipulating time series of location-based counts of events to detect geo-spatial clusters. Significance of these clusters is determined using a set of models that classify based on a learned relationship between observed and the log(observed/expected) ratio of counts. The approach implemented here is similar to prospective space-time estimation of clusters using the scan statistic.
 URL: https://github.com/lmullany/gsClusterDetect, https://lmullany.github.io/gsClusterDetect/
 BugReports: https://github.com/lmullany/gsClusterDetect/issues
