@@ -50,7 +50,7 @@ All of these functions return a two-element named list containing:
  - `distance_matrix`: an `N x N` matrix containing the pairwise distances between all locations
 
 
-### Example: county distance matrix:
+#### Example: county distance matrix:
 
 ```{r eval=TRUE, echo=TRUE}
 minnesota_counties <- county_distance_matrix(st = "MN")
@@ -64,7 +64,7 @@ dim(minnesota_counties$distance_matrix)
 minnesota_counties$distance_matrix[1:5,1:5]
 ```
 
-### Example: zipcode distance matrix:
+#### Example: zipcode distance matrix:
 
 ```{r eval=TRUE, echo=TRUE}
 maryland_zips <- zip_distance_matrix(st = "MD")
@@ -78,7 +78,7 @@ dim(maryland_zips$distance_matrix)
 maryland_zips$distance_matrix[1:5,1:5]
 ```
 
-### Example: tract distance matrix:
+#### Example: tract distance matrix:
 The package also provides a function to generate distance matrices between census tracts. However, unlike at the zipcode and the county level, there is no built-in dataset that contains the centroids of these tracts across the United States. Therefore, to use the `tract_distance_matrix()` function, the user will need to have the package `tigris` installed. Also, in addition to the `st` and `unit` parameters, the user can also restrict the tracts within a state by providing a vector of 3-character fips codes in the `county` parameter. Furthermore, to prevent the `tigris` package from using a local cache (this has the benefit of speed for repeated calls), the user can turn this cache off using `use_cache = TRUE`
 
 ```{r echo=TRUE, eval=TRUE}
@@ -99,6 +99,55 @@ cook_county_tracts$distance_matrix[1:5,1:5]
 ```
 
 As described above, the default unit for these objects is "miles". However, for all of these functions, one can also obtain distances in other units by passing "kilometers" or "meters" to the `unit` parameter.
+
 ```{r echo=TRUE, eval=FALSE}
 maryland_zip <- zip_distance_matrix(st="MD", unit="kilometers")
 ```
+
+### Custom Distance Matrices
+Notice that all of the above functions require the user to indicate a state parameter, `st`, thus restricting the output to a single state. We also provide a function `custom_distance_matrix()` to allow users to provide any type of geospatial unit. The function has a different set of parameters than the other functions described above:
+
+ - `df`: This is a `data.frame` with one row per unit, a unique label, and columns containing the latitude and longitude of the centroid of each unit
+ - `unit`: as before, this allows the user to obtain distances in miles, kilometers, or meters
+ - `label_var`: this is the string name of the column containing the name/label of the unit
+ - `lat_var`: the user must provide the name of the column containing the latitude of the centroid
+ - `long_var`: the user must provide the name of the column containing the longitude of the centroid
+
+ Below, we demonstrate how this function could be used to get a pairwise distance matrix for a collection of contiguous states, in this case Maryland, Delaware, and Virginia
+
+```{r echo=TRUE, eval=TRUE}
+ 
+ # Use the built-in-counties dataset to get a dataframe of counties in the states of interests
+ states <- c("Delaware", "Maryland", "Virginia")
+ delmarva_counties <- counties[state_name %in% states]
+
+ head(delmarva_counties, 3)
+
+ # Use the custom function to get the distance matrix
+ delmarva_dm <- custom_distance_matrix(
+  df = delmarva_counties, 
+  label_var = "fips",
+  lat_var = "latitude",
+  long_var = "longitude"
+ )
+```
+
+The output structure of the `custom_distance_matrix()` function is the same as the other distance matrix functions.
+
+```{r eval = TRUE, echo=TRUE}
+
+# show the length and first 10 values of the `loc_vec`
+length(delmarva_dm$loc_vec)
+delmarva_dm$loc_vec |> head(10)
+
+# show the dimension and upper left section of the `distance_matrix`
+dim(delmarva_dm$distance_matrix)
+delmarva_dm$distance_matrix[1:5,1:5]
+
+```
+
+
+
+
+ 
+ 
