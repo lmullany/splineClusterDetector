@@ -18,11 +18,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Luke Mullany \email{luke.mullany@jhuapl.edu}
+\strong{Maintainer}: Luke C. Mullany \email{luke.mullany@jhuapl.edu}
 
 Authors:
 \itemize{
-  \item Howard Burkom
+  \item Howard S. Burkom
 }
 
 }
