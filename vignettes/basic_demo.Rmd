@@ -70,28 +70,24 @@ This vignette demonstrates all exported functions, with emphasis on the recommen
 # use the built in example_count_data
 cases <- data.table::as.data.table(example_count_data)
 
-# For demonstration purposes, use only 12 unique locations
-locs <- unique(cases$location)[1:12]
-cases <- cases[location %in% locs]
-
-# For demonstration purposes only, keep the final 120 days only
-cases <- cases[date >= (max(date) - 120)]
-
-# Make sure that location is a character column
-cases[, location := as.character(location)]
-
 head(cases)
 ```
 
-The code below restricts the data to 12 locations for concise demonstration. Using the full dataset will not impact computation speed.
-
-Date helper functions:
+Date helper functions: These are show here for reference, but not usually needed in application:
 
 ```{r, echo=TRUE}
 detect_date <- max(cases$date)
+
+# get the test dates, given a detect date and test_length
 get_test_dates(detect_date, test_length = 7)
-## For reference, but not usually needed in application:
-head(get_baseline_dates(detect_date, test_length = 7, baseline_length = 90, guard = 0))
+
+# get the baseline dates, given a detect date, test and baseline length
+get_baseline_dates(
+  detect_date,
+  test_length = 7,
+  baseline_length = 90,
+  guard = 0
+) |> head()
 ```
 
 ## Distance Structures for Geographic Scanning
@@ -100,7 +96,7 @@ The scanning process requires distances between locations to enable systematic s
 
 ### Full Distance Matrix Functions:
 
-The functions `tract_distance_matrix()`, `zip_distance_matrix()` and `county_distance_matrix()` provide full pairwise distance matrices, which may be sparse with many zeros, depending on the user data:
+The functions `tract_distance_matrix()`, `zip_distance_matrix()` and `county_distance_matrix()` provide full pairwise distance matrices (i.e. size `N x N`, where `N` is the number of locations, and each cell is the distance between the centroids of any paired locations:
 
 ```{r, echo=TRUE}
 zip_dm <- zip_distance_matrix("DC")
@@ -114,12 +110,11 @@ dim(county_dm$distance_matrix)
 
 ```{r, eval = FALSE, echo=TRUE}
 us_dm <- us_distance_matrix()
-dim(us_dm$distance_matrix)
 ```
 
 ### Limited Distance Lists
 
-For applications with many hundreds of locations, the package function `create_dist_list()` returns a sparse neighbor representation. The output of this function is a list of vectors containing the ***nearby*** neighbor locations for each data location, where "nearby" means within a user-provided threshold. The example below returns a list of all counties within 25 miles for every county in Rhode Island. This list is adequate for detection of clusters whose radius is at most 25 miles. For many outcomes, users do not seek clusters whose geographic extent exceed a threshold.
+For applications with many hundreds of locations, the above matrices may contain many location-pair estimations that are not needed because the distance between the locations exceeds the cluster radius that is appropriate. As a result, these matrices can be slower to compute and many of the cells are unnecessary. Therefore, we provide an alternate representation via the function `create_dist_list()` . The output of this function is a list of vectors containing the ***nearby*** neighbor locations for each data location, where "nearby" means within a user-provided threshold. The example below returns a list of all counties within 25 miles for every county in Rhode Island. This list is adequate for detection of clusters whose radius is at most 25 miles. For many outcomes, users do not seek clusters whose geographic extent exceed a threshold.
 
 In summary, the matrix functions return all pairwise distances in a large, square matrix, while `create_dist_list()` returns only a sparse list of within-threshold neighbors (sparse list). The sparse lists are often faster/lighter for large geographies.
 
@@ -156,11 +151,19 @@ dimnames(dm) <- list(locs, locs)
 
 ### Key Parameters in `find_clusters()`
 
+#### Required:
+
 | Parameter | Purpose | Comment |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `cases` | Input location-date-count data | Include only rows whose count is positive. |
 | `distance_matrix` | Named matrix (dense) or named list (sparse) of distances | Used for scanning to include progressively closer locations. |
 | `detect_date` | End date for the detection window | Function will return only clusters ending on this date. |
+
+
+#### Optional:
+
+| Parameter | Purpose | Comment |
+|------------------------|------------------------|------------------------|
 | `spline_lookup` | Spline threshold table (`NULL`, built-ins `"05"`, `"01"`, `"005"`, `"001"`, or custom frame) | Derived from SaTScan cluster output runs with p-values of 0.05, 0.01, 0.005, and 0.001, to emulate those sensitivity requirements |
 | `baseline_length` | Number of days in baseline period | Default is 90 days; can use larger intervals if available in `cases`. |
 | `max_test_window_days` | Maximum test window size (days) | Number of days that a cluster can include, i.e. max cylinder height. |
@@ -171,9 +174,13 @@ dimnames(dm) <- list(locs, locs)
 | `min_clust_cases` / `max_clust_cases` | Pre-compression observed-count filters | to put a minimum or maximum on number of cluster cases |
 | `return_interim` | Return intermediate objects for debugging/inspection | Lets user inspect intermediate data tables. |
 
+
+
 ## Running `find_clusters()`
 
-```{r}
+In the argument list below, cluster dimensions are limited to 15 miles from the cluster center and 7 days total including detection date, with a 90-day baseline interval. The baseline_adjustment option is set to "add_test" to include the 7-day test interval counts in the baseline, as in the SaTScan space-time permutation method. The default adjustment "add_one" excludes the test interval and adds one only when needed to avoid division by zero when calculating expected counts.
+
+```{r, echo = TRUE}
 clusters <- find_clusters(
   cases = cases,
   distance_matrix = dm,
@@ -181,14 +188,8 @@ clusters <- find_clusters(
   spline_lookup = "01",
   baseline_length = 90,
   max_test_window_days = 7,
-  guard_band = 0,
   distance_limit = 15,
-  baseline_adjustment = "add_one",
-  adj_constant = 1,
-  min_clust_cases = 0,
-  max_clust_cases = Inf,
-  use_fast = TRUE,
-  return_interim = FALSE
+  baseline_adjustment = "add_test",
 )
 ```
 
@@ -201,7 +202,7 @@ The package ships with spline lookup tables. For observed cluster counts, tables
 -   `spline_01`
 -   `spline_05`
 
-and demonstration data with tables of county and zip code locations and shape files:
+demonstration data, and tables of county and zip code locations (centroids):
 
 -   `example_count_data`
 -   `counties`
@@ -225,7 +226,9 @@ dd <- d[, max(date)]
 dm <- create_dist_list("county", st = "OH", threshold = 50, )
 cl <- find_clusters(d, dm, dd)
 
+
 # Join locations/clusters to tigris counties shape file
+
 # First get tigris based shape file
 oh <- data.table::setDT(
   tigris::counties("OH", cb = TRUE, class = "sf")
@@ -242,6 +245,7 @@ oh <- sf::st_as_sf(
 
 # Find the number of significant clusters
 n_groups <- nrow(cl$cluster_alert_table)
+
 # Get that number of shades of blue
 blue_vals <- setNames(
   colorRampPalette(c("lightblue", "darkblue"))(n_groups),
