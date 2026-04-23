@@ -38,17 +38,16 @@ There are two types of distance objects that can be passed to the `find_clusters
 
 If we have a set of locations among which we would like to identify clusters (say all the counties in Minnesota, or all the zipcodes in Maryland), we can create a matrix containing all the pairwise distances between the centroids of these locations. The package provides functions to do this for census tracts, zipcodes, and counties.
 
- - `county_distance_matrix()`
- - `zip_distance_matrix()`
- - `tract_distance_matrix()`
- 
-Each of these functions must be called with a state level parameter (`st`), to constrain to a particular state (To combine states, see the section on "Custom Distance Objects"). There is also a `unit` parameter, which takes a string: `"miles"` (default), `"kilometers"`, or "`meters"` to obtains the distance estimates in alternative units. 
+-   `county_distance_matrix()`
+-   `zip_distance_matrix()`
+-   `tract_distance_matrix()`
+
+Each of these functions must be called with a state level parameter (`st`), to constrain to a particular state (To combine states, see the section on "Custom Distance Objects"). There is also a `unit` parameter, which takes a string: `"miles"` (default), `"kilometers"`, or "`meters"` to obtains the distance estimates in alternative units.
 
 All of these functions return a two-element named list containing:
 
- - `loc_vec`: a vector containing the names of the `N` locations in the geographic target (e.g. "Minnesota")
- - `distance_matrix`: an `N x N` matrix containing the pairwise distances between all locations
-
+-   `loc_vec`: a vector containing the names of the `N` locations in the geographic target (e.g. "Minnesota")
+-   `distance_matrix`: an `N x N` matrix containing the pairwise distances between all locations
 
 ### Example: county distance matrix:
 
@@ -61,7 +60,7 @@ minnesota_counties$loc_vec |> head(10)
 
 # show the dimension and upper left section of the `distance_matrix`
 dim(minnesota_counties$distance_matrix)
-minnesota_counties$distance_matrix[1:5,1:5]
+minnesota_counties$distance_matrix[1:5, 1:5]
 ```
 
 ### Example: zipcode distance matrix:
@@ -75,14 +74,14 @@ maryland_zips$loc_vec |> head(10)
 
 # show the dimension and upper left section of the `distance_matrix`
 dim(maryland_zips$distance_matrix)
-maryland_zips$distance_matrix[1:5,1:5]
+maryland_zips$distance_matrix[1:5, 1:5]
 ```
 
 ### Example: tract distance matrix:
+
 The package also provides a function to generate distance matrices between census tracts. However, unlike at the zipcode and the county level, there is no built-in dataset that contains the centroids of these tracts across the United States. Therefore, to use the `tract_distance_matrix()` function, the user will need to have the package `tigris` installed. Also, in addition to the `st` and `unit` parameters, the user can also restrict the tracts within a state by providing a vector of 3-character fips codes in the `county` parameter. Furthermore, to prevent the `tigris` package from using a local cache (this has the benefit of speed for repeated calls), the user can turn this cache off using `use_cache = TRUE`
 
 ```{r echo=TRUE, eval=TRUE}
-
 cook_county_tracts <- tract_distance_matrix(
   st = "IL",
   county = "031" # the full 5-digit code for Cook County, IL is 17031
@@ -94,96 +93,99 @@ cook_county_tracts$loc_vec |> head(10)
 
 # show the dimension and upper left section of the `distance_matrix`
 dim(cook_county_tracts$distance_matrix)
-cook_county_tracts$distance_matrix[1:5,1:5]
-
+cook_county_tracts$distance_matrix[1:5, 1:5]
 ```
 
 As described above, the default unit for these objects is "miles". However, for all of these functions, one can also obtain distances in other units by passing "kilometers" or "meters" to the `unit` parameter.
 
 ```{r echo=TRUE, eval=FALSE}
-maryland_zip <- zip_distance_matrix(st="MD", unit="kilometers")
+maryland_zip <- zip_distance_matrix(st = "MD", unit = "kilometers")
 ```
 
 ## Custom Distance Matrices
+
 Notice that all of the above functions require the user to indicate a state parameter, `st`, thus restricting the output to a single state. We also provide a function `custom_distance_matrix()` to allow users to provide any type of geospatial unit. The function has a different set of parameters than the other functions described above:
 
- - `df`: This is a `data.frame` with one row per unit, a unique label, and columns containing the latitude and longitude of the centroid of each unit
- - `unit`: as before, this allows the user to obtain distances in miles, kilometers, or meters
- - `label_var`: this is the string name of the column containing the name/label of the unit
- - `lat_var`: the user must provide the name of the column containing the latitude of the centroid
- - `long_var`: the user must provide the name of the column containing the longitude of the centroid
+-   `df`: This is a `data.frame` with one row per unit, a unique label, and columns containing the latitude and longitude of the centroid of each unit
+-   `unit`: as before, this allows the user to obtain distances in miles, kilometers, or meters
+-   `label_var`: this is the string name of the column containing the name/label of the unit
+-   `lat_var`: the user must provide the name of the column containing the latitude of the centroid
+-   `long_var`: the user must provide the name of the column containing the longitude of the centroid
 
- Below, we demonstrate how this function could be used to get a pairwise distance matrix for a collection of contiguous states, in this case Maryland, Delaware, and Virginia
+Below, we demonstrate how this function could be used to get a pairwise distance matrix for a collection of contiguous states, in this case Maryland, Delaware, and Virginia
 
 ```{r echo=TRUE, eval=TRUE}
- 
- # Use the built-in-counties dataset to get a dataframe of counties in the states of interests
- states <- c("Delaware", "Maryland", "Virginia")
- delmarva_counties <- counties[state_name %in% states]
+# Use the built-in-counties dataset to get a dataframe of
+# counties in the states of interests
+states <- c("Delaware", "Maryland", "Virginia")
+delmarva_counties <- counties[state_name %in% states]
 
- head(delmarva_counties, 3)
+head(delmarva_counties, 3)
 
- # Use the custom function to get the distance matrix
- delmarva_dm <- custom_distance_matrix(
-  df = delmarva_counties, 
+# Use the custom function to get the distance matrix
+delmarva_dm <- custom_distance_matrix(
+  df = delmarva_counties,
   label_var = "fips",
   lat_var = "latitude",
   long_var = "longitude"
- )
+)
 ```
 
 The output structure of the `custom_distance_matrix()` function is the same as the other distance matrix functions.
 
 ```{r eval = TRUE, echo=TRUE}
-
 # show the length and first 10 values of the `loc_vec`
 length(delmarva_dm$loc_vec)
 delmarva_dm$loc_vec |> head(10)
 
 # show the dimension and upper left section of the `distance_matrix`
 dim(delmarva_dm$distance_matrix)
-delmarva_dm$distance_matrix[1:5,1:5]
-
+delmarva_dm$distance_matrix[1:5, 1:5]
 ```
 
 ## Distance Lists
 
-Notice that the square matrices in all the above examples are of size `N x N` where `N` is the number of unique locations in your target geography. These matrices can be come very large, and as they become large, they also become slower to calculate. Furthermore, many of the pairs are never really used in subsequent analyses, because the distance between them is larger than any typical radius constraint that a user might want to place on their cluster-finding technique (Again, see `vignette("basic_demo")` for more information on using the `find_clusters()` function and setting the maximum distance to consider when constructing clusters). 
+Notice that the square matrices in all the above examples are of size `N x N` where `N` is the number of unique locations in your target geography. These matrices can be come very large, and as they become large, they also become slower to calculate. Furthermore, many of the pairs are never really used in subsequent analyses, because the distance between them is larger than any typical radius constraint that a user might want to place on their cluster-finding technique (Again, see `vignette("basic_demo")` for more information on using the `find_clusters()` function and setting the maximum distance to consider when constructing clusters).
 
-For example, we typically recommend starting at 50 miles as the radius for county-level cluster finding, 15 miles for zip-level cluster finding, and 3 miles for tract-level cluster finding. Whatever the radius used, say `r`, in the square distance matrices above, none of the pairs where the distance between centroids exceeds `r` are needed for the calculation. 
+For example, we typically recommend starting at 50 miles as the radius for county-level cluster finding, 15 miles for zip-level cluster finding, and 3 miles for tract-level cluster finding. Whatever the radius used, say `r`, in the square distance matrices above, none of the pairs where the distance between centroids exceeds `r` are needed for the calculation.
 
 Therefore, we also a provide a way to construct distance objects for `find_clusters()` that only includes pairs where the centroid-to-centroid distance is within some threshold. These objects can be returned using a function `create_distance_list()` which has the following parameters:
 
- - `level`: this is the geographic level, one of "tract", "zip", or "county"
- - `threshold`: this is the threshold, in `unit` to constrain paired locations; for each location `x`, return a vector with only those locations `y1`, `y2`, `y3`, `...` where distance between `x` and `y_i` < `threshold`
- - `st`: this is a two character state abbreviation, which is required for `level="tract"`, but is otherwise optional. In the latter case (i.e. when `st` is not specified), the function will return distances of pairs within `threshold` for all zips or counties in the entire United States
- - `county`: like the `tract_distance_matrix()` function, the user can restrict the estimation of tract-to-tract distances to a vector of 3-character fips codes
- - `unit`: like other functions discussed above, the distance unit can be returned in `miles` (default), kilometers, or meters. The function assumes that `threshold` is always given in terms of `unit` (i.e. if `unit` is set to "kilometers", for example, be sure to express `threshold` in kilometers).
- 
+-   `level`: this is the geographic level, one of "tract", "zip", or "county"
+-   `threshold`: this is the threshold, in `unit` to constrain paired locations; for each location `x`, return a vector with only those locations `y1`, `y2`, `y3`, `...` where distance between `x` and `y_i` \< `threshold`
+-   `st`: this is a two character state abbreviation, which is required for `level="tract"`, but is otherwise optional. In the latter case (i.e. when `st` is not specified), the function will return distances of pairs within `threshold` for all zips or counties in the entire United States
+-   `county`: like the `tract_distance_matrix()` function, the user can restrict the estimation of tract-to-tract distances to a vector of 3-character fips codes
+-   `unit`: like other functions discussed above, the distance unit can be returned in `miles` (default), kilometers, or meters. The function assumes that `threshold` is always given in terms of `unit` (i.e. if `unit` is set to "kilometers", for example, be sure to express `threshold` in kilometers).
+
 The output structure of this function is a list of vectors. The list is of length `N` where `N` is the number of unique locations in the target geography. Each element of the list is a named vector of distances to the location(s) (i.e. the `y_i`) that are within `threshold` units of the current location. An example will help illustrate:
 
 ```{r echo=TRUE, eval=TRUE}
 maryland_zip_list <- create_dist_list(
-  level = "zip", 
-  threshold =  7, # using a small distance for zip code clustering for demo purposes
+  level = "zip",
+  # using a small distance for zip code clustering for demo purposes
+  threshold = 7,
   st = "MD"
 )
 
 # this returns a list
 class(maryland_zip_list)
 
-# the list is of length equal to the number of unique zip codes. Recall from above that we produced a 621 x 621 matrix; in this case, our list is of length 621
+# the list is of length equal to the number of unique zip codes.
+# Recall from above that we produced a 621 x 621 matrix; in this
+# case, our list is of length 621
 length(maryland_zip_list)
 
 # the names of the list are the locations
 names(maryland_zip_list) |> head(10)
 
-# each element of the list is a named vector with distances to those locations within threshold units
+# each element of the list is a named vector with distances to
+# those locations within threshold units
 maryland_zip_list |> tail(3)
 ```
-This approach is MUCH faster than the `<geolevel>_distance_matrix()` functions described above, when the number of locations is large, but only a few are used. A good example of this is obtaining the zip code level distance information for Texas. 
 
-```{r echo=TRUE, eval=FALSE}
+This approach is MUCH faster than the `<geolevel>_distance_matrix()` functions described above, when the number of locations is large, but only a few are used. A good example of this is obtaining the zip code level distance information for Texas.
+
+``` r
 system.time(texas_zip_dm <- zip_distance_matrix(st="TX"))
 
 user  system elapsed 
@@ -200,7 +202,6 @@ user  system elapsed
 As above, we provide a way to generate distance lists for custom location units. In this case, we use the function `create_custom_distance_list()`. Again, we can use the example of creating a distance list for the joint Maryland, Delaware, and Virginia region, but any user-defined data set can be used for this. The requirements are basically the same as the `custom_distance_matrix()` function, except that we additionally require a `threshold`.
 
 ```{r echo=TRUE, eval=TRUE}
-
 # As before, we use the built-in-counties dataset to get a dataframe of counties
 states <- c("Delaware", "Maryland", "Virginia")
 delmarva_counties <- counties[state_name %in% states]
@@ -209,7 +210,7 @@ head(delmarva_counties, 3)
 
 # Use the custom function to get the distance list
 delmarva_dl <- create_custom_dist_list(
-  df = delmarva_counties, 
+  df = delmarva_counties,
   label_var = "fips",
   lat_var = "latitude",
   long_var = "longitude",
@@ -224,13 +225,4 @@ length(delmarva_dl)
 
 # first three elements (i.e. locations) in this list
 delmarva_dl[1:3]
-
 ```
-
-
-
-
-
-
- 
- 
