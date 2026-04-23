@@ -2,9 +2,9 @@
 
 ## Authors
 
-- **Luke Mullany**. Author, maintainer.
+- **Luke C. Mullany**. Author, maintainer.
 
-- **Howard Burkom**. Author.
+- **Howard S. Burkom**. Author.
 
 ## Citation
 
@@ -17,7 +17,7 @@ Cluster Detection and Significance Classification*. R package version
 
     @Manual{,
       title = {gsClusterDetect: Utilities for Geo-Spatial Cluster Detection and Significance Classification},
-      author = {Luke Mullany and Howard Burkom},
+      author = {Luke C. Mullany and Howard S. Burkom},
       year = {2026},
       note = {R package version 1.0.1},
       url = {https://github.com/lmullany/gsClusterDetect},

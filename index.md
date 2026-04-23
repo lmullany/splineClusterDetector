@@ -97,8 +97,8 @@ clusters <- find_clusters(
 
 ### Contacts:
 
-- Luke Mullany <Luke.Mullany@jhuapl.edu>
-- Howard Burkom <Howard.Burkom@jhuapl.edu>
+- Luke C. Mullany, PhD <Luke.Mullany@jhuapl.edu>
+- Howard S. Burkom PhD <Howard.Burkom@jhuapl.edu>
 
 Copyright 2026 The Johns Hopkins University Applied Physics Laboratory
 LLC.

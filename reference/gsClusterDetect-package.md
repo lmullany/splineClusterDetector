@@ -19,8 +19,8 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Luke Mullany <luke.mullany@jhuapl.edu>
+**Maintainer**: Luke C. Mullany <luke.mullany@jhuapl.edu>
 
 Authors:
 
-- Howard Burkom
+- Howard S. Burkom
