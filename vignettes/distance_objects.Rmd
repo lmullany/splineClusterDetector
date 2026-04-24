@@ -49,6 +49,8 @@ All of these functions return a two-element named list containing:
 -   `loc_vec`: a vector containing the names of the `N` locations in the geographic target (e.g. "Minnesota")
 -   `distance_matrix`: an `N x N` matrix containing the pairwise distances between all locations
 
+For all of these function, locations in the rows and columns of the distance matrix have the same ordering as in the `loc_vec' vector.
+
 ### Example: county distance matrix:
 
 ```{r eval=TRUE, echo=TRUE}
@@ -145,14 +147,14 @@ delmarva_dm$distance_matrix[1:5, 1:5]
 
 ## Distance Lists
 
-Notice that the square matrices in all the above examples are of size `N x N` where `N` is the number of unique locations in your target geography. These matrices can be come very large, and as they become large, they also become slower to calculate. Furthermore, many of the pairs are never really used in subsequent analyses, because the distance between them is larger than any typical radius constraint that a user might want to place on their cluster-finding technique (Again, see `vignette("basic_demo")` for more information on using the `find_clusters()` function and setting the maximum distance to consider when constructing clusters).
+Notice that the square matrices in all the above examples are of size `N x N` where `N` is the number of unique locations in your target geography. These matrices can become very large, and as they become large, they also become slower to calculate. Furthermore, many of the pairs are never really used in subsequent analyses, because the distance between them is larger than any typical radius constraint that a user might want to place on their cluster-finding technique (Again, see `vignette("basic_demo")` for more information on using the `find_clusters()` function and setting the maximum distance to consider when constructing clusters).
 
 For example, we typically recommend starting at 50 miles as the radius for county-level cluster finding, 15 miles for zip-level cluster finding, and 3 miles for tract-level cluster finding. Whatever the radius used, say `r`, in the square distance matrices above, none of the pairs where the distance between centroids exceeds `r` are needed for the calculation.
 
 Therefore, we also a provide a way to construct distance objects for `find_clusters()` that only includes pairs where the centroid-to-centroid distance is within some threshold. These objects can be returned using a function `create_distance_list()` which has the following parameters:
 
 -   `level`: this is the geographic level, one of "tract", "zip", or "county"
--   `threshold`: this is the threshold, in `unit` to constrain paired locations; for each location `x`, return a vector with only those locations `y1`, `y2`, `y3`, `...` where distance between `x` and `y_i` \< `threshold`
+-   `threshold`: this is the threshold distance, expressed in units given by the `unit` argument, to constrain paired locations; for each location `x`, return a vector with only those locations `y1`, `y2`, `y3`, `...` where distance between `x_i` and `y_i` \< `threshold`
 -   `st`: this is a two character state abbreviation, which is required for `level="tract"`, but is otherwise optional. In the latter case (i.e. when `st` is not specified), the function will return distances of pairs within `threshold` for all zips or counties in the entire United States
 -   `county`: like the `tract_distance_matrix()` function, the user can restrict the estimation of tract-to-tract distances to a vector of 3-character fips codes
 -   `unit`: like other functions discussed above, the distance unit can be returned in `miles` (default), kilometers, or meters. The function assumes that `threshold` is always given in terms of `unit` (i.e. if `unit` is set to "kilometers", for example, be sure to express `threshold` in kilometers).
@@ -200,6 +202,8 @@ user  system elapsed
 ## Custom Distance Lists
 
 As above, we provide a way to generate distance lists for custom location units. In this case, we use the function `create_custom_distance_list()`. Again, we can use the example of creating a distance list for the joint Maryland, Delaware, and Virginia region, but any user-defined data set can be used for this. The requirements are basically the same as the `custom_distance_matrix()` function, except that we additionally require a `threshold`.
+
+An advantage of custom lists requiring thresholds is that if a user specifies non-contiguous states covering possibly large distances, distance lists limited by a reasonable threshold will avoid calculation of many long distances between faraway locations that would be omitted from clusters by the maximum cluster radius anyway.
 
 ```{r echo=TRUE, eval=TRUE}
 # As before, we use the built-in-counties dataset to get a dataframe of counties
