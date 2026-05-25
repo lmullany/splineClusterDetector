@@ -176,7 +176,7 @@ us_state_shape <- tigris::states()
 # reduce to only the fips latitude, and longitude
 states <- data.table::as.data.table(us_state_shape)
 
-states<- states[, list(
+states <- states[, list(
   state_name = NAME,
   state = STUSPS,
   state_fips = STATEFP,
