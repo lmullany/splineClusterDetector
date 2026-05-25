@@ -171,6 +171,10 @@ LLC.
   : Spline Lookup Table - 0.05
 - [`st_injects()`](https://lmullany.github.io/gsClusterDetect/reference/st_injects.md)
   : Add data counts for parameterized injected clusters
+- [`state_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/state_distance_matrix.md)
+  : Get distance matrix for states in the US
+- [`states`](https://lmullany.github.io/gsClusterDetect/reference/states.md)
+  : State Location Dataset
 - [`tract_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/tract_distance_matrix.md)
   : Build a Tract Distance Matrix for a State
 - [`tract_generator()`](https://lmullany.github.io/gsClusterDetect/reference/tract_generator.md)

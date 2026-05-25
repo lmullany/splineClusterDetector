@@ -12,6 +12,11 @@
   ([\#14](https://github.com/lmullany/gsClusterDetect/issues/14))
 - Vignette describing the creation of distance objects added
   ([\#28](https://github.com/lmullany/gsClusterDetect/issues/28))
+- Function
+  [`state_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/state_distance_matrix.md)
+  created and `"state"` added as allowed value in
+  [`create_dist_list()`](https://lmullany.github.io/gsClusterDetect/reference/create_dist_list.md)
+  ([\#30](https://github.com/lmullany/gsClusterDetect/issues/30))
 
 ## gsClusterDetect 1.0.0
 
