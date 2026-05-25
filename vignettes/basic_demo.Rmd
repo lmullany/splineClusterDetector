@@ -96,7 +96,7 @@ The scanning process requires distances between locations to enable systematic s
 
 ### Full Distance Matrix Functions:
 
-The functions `tract_distance_matrix()`, `zip_distance_matrix()` and `county_distance_matrix()` provide full pairwise distance matrices (i.e. size `N x N`, where `N` is the number of locations, and each cell is the distance between the centroids of any paired locations:
+The functions `tract_distance_matrix()`, `zip_distance_matrix()`, `county_distance_matrix()`, and `state_distance_matrix()` provide full pairwise distance matrices (i.e. size `N x N`, where `N` is the number of locations, and each cell is the distance between the centroids of any paired locations:
 
 ```{r, echo=TRUE}
 zip_dm <- zip_distance_matrix("DC")
