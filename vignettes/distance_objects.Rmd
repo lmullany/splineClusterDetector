@@ -36,7 +36,7 @@ There are two types of distance objects that can be passed to the `find_clusters
 
 ## Square pairwise distance matrices
 
-If we have a set of locations among which we would like to identify clusters (say all the counties in Minnesota, or all the zip codes in Maryland), we can create a matrix containing all the pairwise distances between the centroids of these locations. The package provides functions to do this for census tracts, zipc odes, and counties.
+If we have a set of locations among which we would like to identify clusters (say all the counties in Minnesota, or all the zip codes in Maryland), we can create a matrix containing all the pairwise distances between the centroids of these locations. The package provides functions to do this for census tracts, zipcodes, counties, and states.
 
 -   `county_distance_matrix()`
 -   `zip_distance_matrix()`
@@ -153,7 +153,7 @@ For example, we typically recommend starting at 50 miles as the radius for count
 
 Therefore, we also a provide a way to construct distance objects for `find_clusters()` that only includes pairs where the centroid-to-centroid distance is within some threshold. These objects can be returned using a function `create_distance_list()` which has the following parameters:
 
--   `level`: this is the geographic level, one of "tract", "zip", or "county"
+-   `level`: this is the geographic level, one of "tract", "zip", "county", or "state"
 -   `threshold`: this is the threshold distance, expressed in units given by the `unit` argument, to constrain paired locations; for each location `x`, return a vector with only those locations `y1`, `y2`, `y3`, `...` where distance between `x_i` and `y_i` \< `threshold`
 -   `st`: this is a two character state abbreviation, which is required for `level="tract"`, but is otherwise optional. In the latter case (i.e. when `st` is not specified), the function will return distances of pairs within `threshold` for all zips or counties in the entire United States
 -   `county`: like the `tract_distance_matrix()` function, the user can restrict the estimation of tract-to-tract distances to a vector of 3-character fips codes
@@ -233,4 +233,6 @@ delmarva_dl[1:3]
 
 ## Other Functions
 
-We also provide `us_distance_matrix()` which is a similar to the the other `<resolution>_distance_matrix()` functions except that it only takes the `unit` parameter. It returns a county level distance matrix (and vector) for all the counties in the US. In general, unless all pairwise distances are truly desired, we strongly recommend that users desiring national-level distance information pre-determine a threshold and use the `create_dist_list()` function leaving the `st` parameter as `NULL`, as that approach will be substantially faster. 
+1. We also provide `us_distance_matrix()` which is a similar to the the other `<resolution>_distance_matrix()` functions except that it only takes the `unit` parameter. It returns a county level distance matrix (and vector) for all the counties in the US. In general, unless all pairwise distances are truly desired, we strongly recommend that users desiring national-level distance information pre-determine a threshold and use the `create_dist_list()` function leaving the `st` parameter as `NULL`, as that approach will be substantially faster. 
+
+2. We provide a function `state_distance_matrix()` which acts identically to the other `<location>_distance_matrix()` functions, except that it doesn't take `st` parameter. This returns a distance matrix for all states in the US, and is included for completeness and convenience, even if its practical usage is limited. 
