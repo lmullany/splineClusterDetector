@@ -1,3 +1,18 @@
+#' State Location Dataset
+#'
+#' A data set that provides latitude and longitude for each
+#' state in the United Sates
+#'
+#' @format
+#' A data frame with 56 rows and 5 columns:
+#' \describe{
+#'   \item{state_name, state}{full and abbreviated names for states}
+#'   \item{state_fips}{state fips codes}
+#'   \item{longitude, latitude}{numeric coordinates for state fips}
+#' }
+#' @source `tigris` package
+"states"
+
 #' County Location Dataset
 #'
 #' A data set that provides latitude and longitude for each
