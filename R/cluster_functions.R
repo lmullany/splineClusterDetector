@@ -913,6 +913,8 @@ add_location_counts <- function(cluster_list, cases) {
     )
   }
 
+  # clean the cluster alert_table
+
   clusters <- list(
     cluster_alert_table = cluster_alert_table,
     cluster_location_counts = cluster_location_counts
@@ -923,6 +925,42 @@ add_location_counts <- function(cluster_list, cases) {
 
   clusters
 }
+
+#' Helper function to clean up the cluster alert table:
+#' @keywords internal
+.clean_up_alert_table <- function(at) {
+
+  # First drop some columns
+  columns_to_drop <- c(
+    "test_totals", "location", "base_clust_sums", "count",
+    "baseline_total", "min_dist", "id", "max_date"
+  )
+  at <- at[, .SD, .SDcols = -c(columns_to_drop)]
+
+  # Now rename some columns
+  data.table::setnames(
+    at,
+    old = c(
+      "target", "date", "distance_value", "count_sum", "detect_date", "nr_locs", "spl_thresh"
+    ),
+    new = c(
+      "cluster_center", "cluster_start_date", "cluster_max_distance", "cluster_center_observed",
+      "cluster_end_date", "n_cluster_locations", "threshold"
+    ) 
+  )
+
+  # reorder some columns
+  data.table::setcolorder(
+    at,neworder = c(
+      "cluster_center", "cluster_start_date", "cluster_end_date", "cluster_max_distance",
+      "cluster_center_observed", "observed", "expected", "log_obs_exp",
+      "threshold", "alert_gap", "alert_ratio", "n_cluster_locations"
+    )
+  )
+
+  at
+}
+ 
 #' Find clusters
 #'
 #' Function will return clusters, given a frame of case counts by location and
@@ -1142,6 +1180,11 @@ find_clusters <- function(
     return(report_error())
   }
 
+  # Final Clean Up
+  result[[1]] <- .clean_up_alert_table(result[[1]])
+  data.table::setnames(result[[2]],new = c("location", "count", "cluster_center"))
+
+  # Return either the full set with interim results, or the final result only
   if (return_interim == TRUE) {
     list(
       case_grid_info = case_grid_info,

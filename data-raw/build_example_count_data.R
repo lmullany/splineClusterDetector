@@ -532,7 +532,7 @@ location_lambda_week <- structure(list(location = c(
 dates <- structure(19997:20124, class = c("IDate", "Date"))
 
 data.table::setDT(location_lambda_week)
-example_count_data <- locations_lambda_week[dates_and_wk_counts[, list(week, ct)] |> unique(), on = "week"] |>
+example_count_data <- location_lambda_week[dates_and_wk_counts[, list(week, ct)] |> unique(), on = "week"] |>
   _[, .(count = rpois(ct, V1)), .(location, week)] |>
   _[, date := dates, location]
 
