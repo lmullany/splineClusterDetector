@@ -169,9 +169,28 @@ usethis::use_data(
   overwrite = TRUE
 )
 
+# Get the state latitude and longitude
+# get the use county shape file
+us_state_shape <- tigris::states()
+
+# reduce to only the fips latitude, and longitude
+states <- data.table::as.data.table(us_state_shape)
+
+states<- states[, list(
+  state_name = NAME,
+  state = STUSPS,
+  state_fips = STATEFP,
+  longitude = as.numeric(INTPTLON),
+  latitude = as.numeric(INTPTLAT)
+)][order(state_fips)]
+
+# USE THIS FOR USERS/EXPORT
+usethis::use_data(states, overwrite = TRUE)
+
 
 # USE THIS AS INTERNAL DATASETS
 usethis::use_data(
+  states,
   counties,
   zipcodes,
   spline_001, spline_005, spline_01, spline_05,
