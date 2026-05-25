@@ -1,4 +1,41 @@
 testthat::test_that(
+  "state_distance_matrix returns square non-negative symmetric matrix",
+  {
+    testthat::skip_if_not_installed("sf")
+
+    z <- gsClusterDetect::state_distance_matrix(unit = "miles")
+
+    testthat::expect_type(z, "list")
+    testthat::expect_true(all(c("loc_vec", "distance_matrix") %in% names(z)))
+    testthat::expect_gt(length(z[["loc_vec"]]), 0)
+    testthat::expect_equal(
+      dim(z[["distance_matrix"]]),
+      c(length(z[["loc_vec"]]), length(z[["loc_vec"]]))
+    )
+    testthat::expect_true(all(diag(z[["distance_matrix"]]) == 0))
+    testthat::expect_true(all(z[["distance_matrix"]] >= 0))
+
+    idx <- seq_len(min(25, nrow(z[["distance_matrix"]])))
+    testthat::expect_equal(
+      unname(z[["distance_matrix"]][idx, idx]),
+      unname(t(z[["distance_matrix"]][idx, idx])),
+      tolerance = 1e-8
+    )
+  }
+)
+
+testthat::test_that(
+  "state_distance_matrix validates arguments and state content",
+  {
+    testthat::expect_error(
+      gsClusterDetect::zip_distance_matrix(unit = "bad-unit"),
+      "arg"
+    )
+    testthat::expect_error(gsClusterDetect::state_distance_matrix("ZZ"))
+  }
+)
+
+testthat::test_that(
   "zip_distance_matrix returns square non-negative symmetric matrix",
   {
     testthat::skip_if_not_installed("sf")
