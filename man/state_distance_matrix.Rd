@@ -21,5 +21,5 @@ those states. leverages a built in dataset (`states`)
 }
 \examples{
 state_distance_matrix()
-state_distance_matrix(unit="kilometers")
+state_distance_matrix(unit = "kilometers")
 }

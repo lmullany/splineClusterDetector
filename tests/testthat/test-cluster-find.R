@@ -81,8 +81,8 @@ testthat::test_that("find_clusters smoke test returns cluster object", {
     all(out[["cluster_alert_table"]][["detect_date"]] == as.Date("2025-01-31"))
   )
   testthat::expect_setequal(
-    unique(out[["cluster_alert_table"]][["target"]]),
-    unique(out[["cluster_location_counts"]][["target"]])
+    unique(out[["cluster_alert_table"]][["cluster_center"]]),
+    unique(out[["cluster_location_counts"]][["cluster_center"]])
   )
 })
 
