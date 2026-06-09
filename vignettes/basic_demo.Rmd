@@ -258,7 +258,7 @@ blue_vals <- setNames(
 # filling with the target, and then coloring the fill-values
 # with the blue vals
 ggplot(oh) +
-  geom_sf(aes(fill = target), color = "black", linewidth = 0.2) +
+  geom_sf(aes(fill = cluster_center), color = "black", linewidth = 0.2) +
   scale_fill_manual(values = blue_vals, na.value = NA) +
   theme_void() +
   theme(legend.position = "none")
