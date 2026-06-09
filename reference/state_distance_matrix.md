@@ -491,7 +491,7 @@ state_distance_matrix()
 #> PR 2266.8456 2941.0976 7440.248 9387.5223 9271.0002    0.00000   96.20337
 #> VI 2310.5434 3003.7987 7536.166 9450.0440 9332.6130   96.20337    0.00000
 #> 
-state_distance_matrix(unit="kilometers")
+state_distance_matrix(unit = "kilometers")
 #> $loc_vec
 #>  [1] "AL" "AK" "AZ" "AR" "CA" "CO" "CT" "DE" "DC" "FL" "GA" "HI" "ID" "IL" "IN"
 #> [16] "IA" "KS" "KY" "LA" "ME" "MD" "MA" "MI" "MN" "MS" "MO" "MT" "NE" "NV" "NH"
