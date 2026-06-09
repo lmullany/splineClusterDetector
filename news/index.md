@@ -17,6 +17,10 @@
   created and `"state"` added as allowed value in
   [`create_dist_list()`](https://lmullany.github.io/gsClusterDetect/reference/create_dist_list.md)
   ([\#30](https://github.com/lmullany/gsClusterDetect/issues/30))
+- Output table from
+  [`find_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/find_clusters.md)
+  updated with more sensible column names
+  ([\#20](https://github.com/lmullany/gsClusterDetect/issues/20))
 
 ## gsClusterDetect 1.0.0
 
