@@ -190,7 +190,6 @@ get_point_data <- function(x, point_crs = NULL) {
 #'
 #' @export
 prepare_map_data <- function(cl, s, s_id, label_id = NULL, point_crs = NULL) {
-
   location <- cluster_start_date <- cluster_center_observed <- NULL
   cluster_center <- NULL
   validate_clusters(cl)
@@ -385,6 +384,12 @@ sf_to_plotly_polygons <- function(md) {
 #' @param s_id string unique identifier of `s`
 #' @param label_id string column of `s` that indicates display label for the row
 #'   in `s` (default is NULL)
+#' @param label for \code{engine = "ggplot"}, indicates which locations should
+#'   receive visible text labels. Valid choices are \code{"none"},
+#'   \code{"cluster_centers"}, \code{"cluster_locations"}, and \code{"all"}.
+#'   The default is \code{"none"}. This argument is ignored when
+#'   \code{engine = "plotly"} because plotly maps always include hover labels
+#'   for all locations.
 #' @param engine string label to indicate plotting engine; either "plotly"
 #'   (default) or "ggplot"
 #' @param point_crs optional coordinate reference system used to compute
@@ -399,11 +404,18 @@ map_clusters <- function(
   s,
   s_id,
   label_id = NULL,
+  label = c("none", "cluster_centers", "cluster_locations", "all"),
   engine = c("plotly", "ggplot"),
   point_crs = NULL
 ) {
   # get the plotting engine
   engine <- match.arg(engine)
+
+  # resolve engine based on available backends
+  engine <- resolve_plot_backend(engine, "map_clusters()")
+
+
+  label <- match.arg(label)
 
   # prepare the map data
   md <- prepare_map_data(cl, s, s_id, label_id, point_crs = point_crs)
@@ -412,7 +424,7 @@ map_clusters <- function(
   if (engine == "plotly") {
     map_clusters_plotly(md)
   } else {
-    map_clusters_ggplot(md)
+    map_clusters_ggplot(md, label = label)
   }
 }
 
@@ -424,30 +436,53 @@ map_clusters <- function(
 #' object, with clustered locations filled according to their cluster center.
 #'
 #' @param md named list as returned by \code{prepare_map_data()}.
+#' @param label choice for labeling (defaults to "none")
 #'
 #' @return A \pkg{ggplot2} object.
 #'
 #' @keywords internal
-map_clusters_ggplot <- function(md) {
+map_clusters_ggplot <- function(
+  md,
+  label = c("none", "cluster_centers", "cluster_locations", "all")
+) {
+  label <- match.arg(label)
 
   label_text <- hover_x <- hover_y <- cluster_center <- NULL
-  ggplot2::ggplot(md[["map_data"]]) +
+
+  p <- ggplot2::ggplot(md[["map_data"]]) +
     ggplot2::geom_sf(
       ggplot2::aes(fill = cluster_center),
       color = "black", linewidth = 0.2
     ) +
     ggplot2::scale_fill_manual(values = md[["color_values"]], na.value = NA) +
-    ggplot2::geom_text(
-      data = md[["point_data"]],
-      ggplot2::aes(
-        x = hover_x,
-        y = hover_y,
-        label = label_text
-      ),
-      size = 3
-    ) +
     ggplot2::theme_void() +
     ggplot2::theme(legend.position = "none")
+
+  # labeling
+  if (label != "none") {
+    ld <- md[["point_data"]]
+    # filter the point data, if label !="all"
+    if (label == "cluster_centers") {
+      ld <- ld[
+        !is.na(ld$cluster_center) & ld[[md[["id_col"]]]] == ld$cluster_center,
+      ]
+    }
+    if (label == "cluster_locations") {
+      ld <- ld[!is.na(ld$cluster_center), ]
+    }
+
+    p <- p +
+      ggplot2::geom_text(
+        data = ld,
+        ggplot2::aes(
+          x = hover_x,
+          y = hover_y,
+          label = label_text
+        ),
+        size = 3
+      )
+  }
+  p
 }
 
 #' Render Cluster Map with plotly

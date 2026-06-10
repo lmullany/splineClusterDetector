@@ -4,10 +4,15 @@
 \alias{map_clusters_ggplot}
 \title{Render Cluster Map with ggplot2}
 \usage{
-map_clusters_ggplot(md)
+map_clusters_ggplot(
+  md,
+  label = c("none", "cluster_centers", "cluster_locations", "all")
+)
 }
 \arguments{
 \item{md}{named list as returned by \code{prepare_map_data()}.}
+
+\item{label}{choice for labeling (defaults to "none")}
 }
 \value{
 A \pkg{ggplot2} object.

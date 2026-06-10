@@ -9,6 +9,7 @@ map_clusters(
   s,
   s_id,
   label_id = NULL,
+  label = c("none", "cluster_centers", "cluster_locations", "all"),
   engine = c("plotly", "ggplot"),
   point_crs = NULL
 )
@@ -22,6 +23,13 @@ map_clusters(
 
 \item{label_id}{string column of `s` that indicates display label for the row
 in `s` (default is NULL)}
+
+\item{label}{for \code{engine = "ggplot"}, indicates which locations should
+receive visible text labels. Valid choices are \code{"none"},
+\code{"cluster_centers"}, \code{"cluster_locations"}, and \code{"all"}.
+The default is \code{"none"}. This argument is ignored when
+\code{engine = "plotly"} because plotly maps always include hover labels
+for all locations.}
 
 \item{engine}{string label to indicate plotting engine; either "plotly"
 (default) or "ggplot"}
