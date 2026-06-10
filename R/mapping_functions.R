@@ -189,6 +189,27 @@ get_point_data <- function(x, point_crs = NULL) {
 
 #'
 #' @export
+#' @examplesIf requireNamespace("tigris", quietly = TRUE)
+#' # example code
+#' # get some data
+#' dd <- example_count_data[, max(date)]
+#' # get a distance matrix
+#' dm <- create_dist_list("county", 50, st = "OH")
+#' # find the clusters
+#' cl <- find_clusters(
+#'   cases = example_count_data,
+#'   detect_date = dd,
+#'   distance_matrix = dm
+#' )
+#' # get shape file
+#' ohio_shape <- tigris::counties("OH", cb=TRUE, class="sf")
+#'
+#' # prepare map data
+#' md <- prepare_map_data(cl, ohio_shape, "GEOID")
+#' md <- prepare_map_data(cl, ohio_shape, "GEOID", label_id = "NAME")
+
+
+#'
 prepare_map_data <- function(cl, s, s_id, label_id = NULL, point_crs = NULL) {
   location <- cluster_start_date <- cluster_center_observed <- NULL
   cluster_center <- NULL
@@ -386,10 +407,10 @@ sf_to_plotly_polygons <- function(md) {
 #'   in `s` (default is NULL)
 #' @param label for \code{engine = "ggplot"}, indicates which locations should
 #'   receive visible text labels. Valid choices are \code{"none"},
-#'   \code{"cluster_centers"}, \code{"cluster_locations"}, and \code{"all"}.
-#'   The default is \code{"none"}. This argument is ignored when
-#'   \code{engine = "plotly"} because plotly maps always include hover labels
-#'   for all locations.
+#'   \code{"cluster_centers"}, \code{"cluster_locations"}, and \code{"all"}. The
+#'   default is \code{"none"}. This argument is ignored when \code{engine =
+#'   "plotly"} because plotly maps always include hover labels for all
+#'   locations.
 #' @param engine string label to indicate plotting engine; either "plotly"
 #'   (default) or "ggplot"
 #' @param point_crs optional coordinate reference system used to compute
@@ -397,6 +418,25 @@ sf_to_plotly_polygons <- function(md) {
 #'   `NULL`, EPSG:3857 is used as a general-purpose fallback. The resulting
 #'   points are transformed back to the CRS of `s` before plotting
 #'
+#'
+#' @examplesIf requireNamespace("tigris", quietly = TRUE) && requireNamespace("ggplot2", quietly=TRUE)
+#'
+#' # example code
+#' # get some data
+#' dd <- example_count_data[, max(date)]
+#' # get a distance matrix
+#' dm <- create_dist_list("county", 50, st = "OH")
+#' # find the clusters
+#' cl <- find_clusters(
+#'   cases = example_count_data,
+#'   detect_date = dd,
+#'   distance_matrix = dm
+#' )
+#' # get shape file
+#' ohio_shape <- tigris::counties("OH", cb=TRUE, class="sf")
+#'
+#' # prepare map data
+#' md <- map_clusters(cl, ohio_shape, "GEOID")
 #' @export
 
 map_clusters <- function(

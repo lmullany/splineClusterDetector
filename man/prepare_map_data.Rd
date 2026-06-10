@@ -26,3 +26,24 @@ Function ingest an clusters object as returned by \code{find_clusters()}, a
 shape file, and a unique identifier for the locations in that shape file, and
 prepares these objects for mapping.
 }
+\examples{
+\dontshow{if (requireNamespace("tigris", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+# example code
+# get some data
+dd <- example_count_data[, max(date)]
+# get a distance matrix
+dm <- create_dist_list("county", 50, st = "OH")
+# find the clusters
+cl <- find_clusters(
+  cases = example_count_data,
+  detect_date = dd,
+  distance_matrix = dm
+)
+# get shape file
+ohio_shape <- tigris::counties("OH", cb=TRUE, class="sf")
+
+# prepare map data
+md <- prepare_map_data(cl, ohio_shape, "GEOID")
+md <- prepare_map_data(cl, ohio_shape, "GEOID", label_id = "NAME")
+\dontshow{\}) # examplesIf}
+}

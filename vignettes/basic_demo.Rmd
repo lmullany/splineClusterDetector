@@ -237,7 +237,7 @@ cl <- find_clusters(d, dm, dd)
 oh <- tigris::counties("OH", cb = TRUE, class = "sf")
 
 # Pass these to the map_clusters() function
-map_clusters(cl = cl, s=oh, s_id = "GEOID")
+map_clusters(cl = cl, s = oh, s_id = "GEOID")
 ```
 
 ## Summary and Plotting Utilities
