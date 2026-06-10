@@ -4,7 +4,7 @@
 \alias{prepare_map_data}
 \title{Prepare cluster result and shape file for mapping}
 \usage{
-prepare_map_data(cl, s, s_id, hover_crs = NULL)
+prepare_map_data(cl, s, s_id, label_id = NULL, point_crs = NULL)
 }
 \arguments{
 \item{cl}{an object of class "clusters" as returned by \code{find_clusters()}}
@@ -13,10 +13,13 @@ prepare_map_data(cl, s, s_id, hover_crs = NULL)
 
 \item{s_id}{string unique identifier of `s`}
 
-\item{hover_crs}{optional coordinate reference system used to compute
-representative hover points when `s` is in longitude/latitude coordinates.
+\item{label_id}{string column of `s` that indicates display label for the row
+in `s` (default is NULL)}
+
+\item{point_crs}{optional coordinate reference system used to compute
+representative points when `s` is in longitude/latitude coordinates.
 If `NULL`, EPSG:3857 is used as a general-purpose fallback. The resulting
-hover points are transformed back to the CRS of `s` before plotting}
+points are transformed back to the CRS of `s` before plotting}
 }
 \description{
 Function ingest an clusters object as returned by \code{find_clusters()}, a

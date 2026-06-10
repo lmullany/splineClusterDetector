@@ -4,15 +4,18 @@
 \alias{validate_sf_file}
 \title{Validates sf file}
 \usage{
-validate_sf_file(s, s_id)
+validate_sf_file(s, s_id, label_id = NULL)
 }
 \arguments{
 \item{s}{shape file; must be of class sf}
 
 \item{s_id}{string unique identifier of `s`}
+
+\item{label_id}{string column of `s` that indicates display label for the row
+in `s` (default is NULL)}
 }
 \description{
-Function ingests an object and check if this is of class
-sf, and has an unique identifer for its rows
+Function ingests an object and check if this is of class sf, and has an
+unique identifer for its rows
 }
 \keyword{internal}

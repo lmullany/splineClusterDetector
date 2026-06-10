@@ -4,7 +4,14 @@
 \alias{map_clusters}
 \title{Map Clusters}
 \usage{
-map_clusters(cl, s, s_id, hover_crs = NULL)
+map_clusters(
+  cl,
+  s,
+  s_id,
+  label_id = NULL,
+  engine = c("plotly", "ggplot"),
+  point_crs = NULL
+)
 }
 \arguments{
 \item{cl}{an object of class "clusters" as returned by \code{find_clusters()}}
@@ -13,16 +20,23 @@ map_clusters(cl, s, s_id, hover_crs = NULL)
 
 \item{s_id}{string unique identifier of `s`}
 
-\item{hover_crs}{optional coordinate reference system used to compute
-representative hover points when `s` is in longitude/latitude coordinates.
-If `NULL`, EPSG:3857 is used as a general-purpose fallback. The resulting
-hover points are transformed back to the CRS of `s` before plotting}
+\item{label_id}{string column of `s` that indicates display label for the row
+in `s` (default is NULL)}
+
+\item{engine}{string label to indicate plotting engine; either "plotly"
+(default) or "ggplot"}
+
+\item{point_crs}{optional coordinate reference system used to compute
+representative points when `s` is in longitude/latitude coordinates. If
+`NULL`, EPSG:3857 is used as a general-purpose fallback. The resulting
+points are transformed back to the CRS of `s` before plotting}
 }
 \description{
 Utility for mapping clusters. The function ingest an object `cl` as returned
 by \code{find_clusters()} and a shape file provisioned by the caller, along
 with a string name of a column in the shape file that uniquely defines the
 locations. Note that this column will be used to merge with the clusters and
-therefore must aligned with the labels in `cl` cluster locations. The function
-returns a basic plotly map object that can be further modified by the user
+therefore must aligned with the labels in `cl` cluster locations. The
+function returns a basic plotly map object that can be further modified by
+the user
 }

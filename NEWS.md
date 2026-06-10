@@ -6,6 +6,7 @@
 - Vignette describing the creation of distance objects added (#28)
 - Function `state_distance_matrix()` created and `"state"` added as allowed value in `create_dist_list()` (#30)
 - Output table from `find_clusters()` updated with more sensible column names (#20)
+- Adds basic mapping functionality using new function `map_clusters()` (#17)
 
 # gsClusterDetect 1.0.0
 
