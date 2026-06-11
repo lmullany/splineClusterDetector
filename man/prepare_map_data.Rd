@@ -40,7 +40,7 @@ cl <- find_clusters(
   distance_matrix = dm
 )
 # get shape file
-ohio_shape <- tigris::counties("OH", cb=TRUE, class="sf")
+ohio_shape <- tigris::counties("OH", cb = TRUE, class = "sf")
 
 # prepare map data
 md <- prepare_map_data(cl, ohio_shape, "GEOID")

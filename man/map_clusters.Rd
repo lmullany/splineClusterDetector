@@ -49,23 +49,24 @@ function returns a basic plotly map object that can be further modified by
 the user
 }
 \examples{
-\dontshow{if (requireNamespace("tigris", quietly = TRUE) && requireNamespace("ggplot2", quietly=TRUE)) withAutoprint(\{ # examplesIf}
+if (
+  requireNamespace("tigris", quietly = TRUE) &&
+    requireNamespace("ggplot2", quietly = TRUE)
+) {
+  # get some data
+  dd <- example_count_data[, max(date)]
+  # get a distance matrix
+  dm <- create_dist_list("county", 50, st = "OH")
+  # find the clusters
+  cl <- find_clusters(
+    cases = example_count_data,
+    detect_date = dd,
+    distance_matrix = dm
+  )
+  # get shape file
+  ohio_shape <- tigris::counties("OH", cb = TRUE, class = "sf")
 
-# example code
-# get some data
-dd <- example_count_data[, max(date)]
-# get a distance matrix
-dm <- create_dist_list("county", 50, st = "OH")
-# find the clusters
-cl <- find_clusters(
-  cases = example_count_data,
-  detect_date = dd,
-  distance_matrix = dm
-)
-# get shape file
-ohio_shape <- tigris::counties("OH", cb=TRUE, class="sf")
-
-# prepare map data
-md <- map_clusters(cl, ohio_shape, "GEOID")
-\dontshow{\}) # examplesIf}
+  # prepare map data
+  md <- map_clusters(cl, ohio_shape, "GEOID")
+}
 }

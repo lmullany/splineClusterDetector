@@ -202,12 +202,11 @@ get_point_data <- function(x, point_crs = NULL) {
 #'   distance_matrix = dm
 #' )
 #' # get shape file
-#' ohio_shape <- tigris::counties("OH", cb=TRUE, class="sf")
+#' ohio_shape <- tigris::counties("OH", cb = TRUE, class = "sf")
 #'
 #' # prepare map data
 #' md <- prepare_map_data(cl, ohio_shape, "GEOID")
 #' md <- prepare_map_data(cl, ohio_shape, "GEOID", label_id = "NAME")
-
 
 #'
 prepare_map_data <- function(cl, s, s_id, label_id = NULL, point_crs = NULL) {
@@ -419,24 +418,27 @@ sf_to_plotly_polygons <- function(md) {
 #'   points are transformed back to the CRS of `s` before plotting
 #'
 #'
-#' @examplesIf requireNamespace("tigris", quietly = TRUE) && requireNamespace("ggplot2", quietly=TRUE)
+#' @examples
+#' if (
+#'   requireNamespace("tigris", quietly = TRUE) &&
+#'     requireNamespace("ggplot2", quietly = TRUE)
+#' ) {
+#'   # get some data
+#'   dd <- example_count_data[, max(date)]
+#'   # get a distance matrix
+#'   dm <- create_dist_list("county", 50, st = "OH")
+#'   # find the clusters
+#'   cl <- find_clusters(
+#'     cases = example_count_data,
+#'     detect_date = dd,
+#'     distance_matrix = dm
+#'   )
+#'   # get shape file
+#'   ohio_shape <- tigris::counties("OH", cb = TRUE, class = "sf")
 #'
-#' # example code
-#' # get some data
-#' dd <- example_count_data[, max(date)]
-#' # get a distance matrix
-#' dm <- create_dist_list("county", 50, st = "OH")
-#' # find the clusters
-#' cl <- find_clusters(
-#'   cases = example_count_data,
-#'   detect_date = dd,
-#'   distance_matrix = dm
-#' )
-#' # get shape file
-#' ohio_shape <- tigris::counties("OH", cb=TRUE, class="sf")
-#'
-#' # prepare map data
-#' md <- map_clusters(cl, ohio_shape, "GEOID")
+#'   # prepare map data
+#'   md <- map_clusters(cl, ohio_shape, "GEOID")
+#' }
 #' @export
 
 map_clusters <- function(
