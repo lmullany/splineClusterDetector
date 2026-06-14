@@ -913,6 +913,14 @@ add_location_counts <- function(cluster_list, cases) {
     )
   }
 
+  # merge the actual cluster center observed counts
+  cluster_alert_table[, count_sum:=NULL]
+  cluster_alert_table <- merge(
+    cluster_alert_table,
+    cluster_location_counts[target==location, .(count_sum = count, target)],
+    by.x = "target", by.y="target"
+  )
+
   # clean the cluster alert_table
 
   clusters <- list(
