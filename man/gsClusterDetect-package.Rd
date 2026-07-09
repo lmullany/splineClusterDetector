@@ -22,7 +22,6 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Luke C. Mullany \email{luke.mullany@jhuapl.edu}
   \item Howard S. Burkom
 }
 
