@@ -50,6 +50,10 @@
   : Get nearby locations
 - [`get_test_dates()`](https://lmullany.github.io/gsClusterDetect/reference/get_test_dates.md)
   : Generate test dates vector
+- [`map_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/map_clusters.md)
+  : Map Clusters
+- [`prepare_map_data()`](https://lmullany.github.io/gsClusterDetect/reference/prepare_map_data.md)
+  : Prepare cluster result and shape file for mapping
 - [`reduce_clusters_to_min()`](https://lmullany.github.io/gsClusterDetect/reference/reduce_clusters_to_min.md)
   : Filter clusters on minimum overall count
 - [`spline_001`](https://lmullany.github.io/gsClusterDetect/reference/spline_001.md)

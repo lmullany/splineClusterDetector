@@ -21,6 +21,9 @@
   [`find_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/find_clusters.md)
   updated with more sensible column names
   ([\#20](https://github.com/lmullany/gsClusterDetect/issues/20))
+- Adds basic mapping functionality using new function
+  [`map_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/map_clusters.md)
+  ([\#17](https://github.com/lmullany/gsClusterDetect/issues/17))
 
 ## gsClusterDetect 1.0.0
 

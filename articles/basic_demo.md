@@ -296,12 +296,32 @@ These can be used directly in workflows, examples, and tests.
 
 ## Example Cluster Map
 
+The package provide basic mapping functionality, as long as the caller
+has one of the two supported engine types, plotly or ggplot2, available.
+To use this functionality, three inputs are required for
+[`map_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/map_clusters.md)
+function:
+
+- `cl`: This is the result of
+  [`find_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/find_clusters.md)
+
+- `s`: This is a shape that must be supplied by the user and must be of
+  class `sf`
+
+- `s_id`: This is the string name of the column in `s`that uniquely
+  identifies the rows in `s`and is aligned with the location identifies
+  used in the
+  [`find_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/find_clusters.md)
+  pipeline.
+
+Below is an example. See
+[`?map_clusters`](https://lmullany.github.io/gsClusterDetect/reference/map_clusters.md)
+for more information on options, labeling, and defaults
+
 ``` r
 
 library(gsClusterDetect)
-library(ggplot2)
 library(tigris)
-library(sf)
 
 options(tigris_use_cache = TRUE)
 
@@ -311,44 +331,12 @@ dd <- d[, max(date)]
 dm <- create_dist_list("county", st = "OH", threshold = 50, )
 cl <- find_clusters(d, dm, dd)
 
+# Get tigris based shape file
+oh <- tigris::counties("OH", cb = TRUE, class = "sf")
 
-# Join locations/clusters to tigris counties shape file
-
-# First get tigris based shape file
-oh <- data.table::setDT(
-  tigris::counties("OH", cb = TRUE, class = "sf")
-)
-#>   |                                                                              |                                                                      |   0%  |                                                                              |                                                                      |   1%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |===                                                                   |   4%  |                                                                              |===                                                                   |   5%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |=====                                                                 |   8%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  14%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |===============                                                       |  21%  |                                                                              |================                                                      |  23%  |                                                                              |=================                                                     |  25%  |                                                                              |==========================                                            |  38%  |                                                                              |================================                                      |  45%  |                                                                              |==================================                                    |  49%  |                                                                              |===========================================                           |  61%  |                                                                              |====================================================                  |  74%  |                                                                              |====================================================                  |  75%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  77%  |                                                                              |======================================================                |  78%  |                                                                              |=======================================================               |  79%  |                                                                              |=========================================================             |  81%  |                                                                              |===========================================================           |  85%  |                                                                              |============================================================          |  85%  |                                                                              |============================================================          |  86%  |                                                                              |==============================================================        |  88%  |                                                                              |===============================================================       |  90%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
-# left join on the cluster location counts, and convert back to sf object
-oh <- sf::st_as_sf(
-  merge(
-    oh,
-    cl$cluster_location_counts,
-    by.x = "GEOID", by.y = "location",
-    all.x = TRUE
-  )
-)
-
-# Find the number of significant clusters
-n_groups <- nrow(cl$cluster_alert_table)
-
-# Get that number of shades of blue
-blue_vals <- setNames(
-  colorRampPalette(c("lightblue", "darkblue"))(n_groups),
-  sort(unique(na.omit(oh$target)))
-)
-
-# Make a simple map of the shape file,
-# filling with the target, and then coloring the fill-values
-# with the blue vals
-ggplot(oh) +
-  geom_sf(aes(fill = cluster_center), color = "black", linewidth = 0.2) +
-  scale_fill_manual(values = blue_vals, na.value = NA) +
-  theme_void() +
-  theme(legend.position = "none")
+# Pass these to the map_clusters() function
+map_clusters(cl = cl, s = oh, s_id = "GEOID")
 ```
-
-![](basic_demo_files/figure-html/plotting%20clusters-1.png)
 
 ## Summary and Plotting Utilities
 
