@@ -1,8 +1,10 @@
 ---
-title: "Vignette 3: Accessing Interim Object from Cluster Estimation" output:
-rmarkdown::html_vignette vignette: > %\VignetteIndexEntry{Vignette 3: Accessing
-Interim Object from Cluster Estimation} %\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
+title: "Vignette 3: Accessing Interim Objects from Cluster Estimation" 
+output: rmarkdown::html_vignette
+vignette: > 
+  %\VignetteIndexEntry{Vignette 3: Accessing Interim Objects from Cluster Estimation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -74,25 +76,24 @@ See help via `?<function>` for further details on each of these above functions,
 
 Note: we set `return_interim` to `TRUE`
 
-```{r}
+```{r, echo=TRUE}
 result <- find_clusters(
   cases = example_count_data,
   distance_matrix = county_distance_matrix("OH")[["distance_matrix"]],
   detect_date = example_count_data[, max(date)],
-  distance_limit = 50, 
+  distance_limit = 50,
   return_interim = TRUE
 )
 
 # objects included in the output
-for(n in names(result)) {
+for (n in names(result)) {
   cat(
     "Name: ",
     n,
     "\nClass: ",
-    paste(class(result[[n]]),collapse = " "),
+    paste(class(result[[n]]), collapse = " "),
     "\n\n",
-    sep=""
+    sep = ""
   )
 }
-
 ```

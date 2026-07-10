@@ -834,6 +834,8 @@ compress_clusters_fast <- function(
 #'   cases = example_count_data
 #' )
 add_location_counts <- function(cluster_list, cases) {
+  count_sum <- NULL
+
   # check this is an object of class clusters
   if (!"clusters" %in% class(cluster_list)) {
     cli::cli_abort("Must pass an object of class 'clusters'")
@@ -918,11 +920,15 @@ add_location_counts <- function(cluster_list, cases) {
   }
 
   # merge the actual cluster center observed counts
-  cluster_alert_table[, count_sum:=NULL]
+  cluster_alert_table[, count_sum := NULL]
   cluster_alert_table <- merge(
     cluster_alert_table,
-    cluster_location_counts[target==location, .(count_sum = count, target)],
-    by.x = "target", by.y="target"
+    cluster_location_counts[
+      target == location,
+      list(count_sum = count, target)
+    ],
+    by.x = "target",
+    by.y = "target"
   )
 
   # clean the cluster alert_table
