@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster_functions.R
 \name{generate_case_grids}
 \alias{generate_case_grids}
-\title{Get candidate clusters and locations in baseline intervals}
+\title{Get test period and baseline period case counts}
 \usage{
 generate_case_grids(
   cases,
@@ -56,8 +56,9 @@ an object of class `CaseGrids` contain a list of items
 }
 }
 \description{
-Given raw case counts by location, and some dates and other params return
-candidate clusters and counts
+Given raw case counts by location, and some dates and other params return a
+list of frames and values that summarize the number or cases in the baseline
+and test period
 }
 \examples{
 dd <- example_count_data[, max(date)]

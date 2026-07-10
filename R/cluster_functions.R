@@ -1,7 +1,8 @@
-#' Get candidate clusters and locations in baseline intervals
+#' Get test period and baseline period case counts
 #'
-#' Given raw case counts by location, and some dates and other params return
-#' candidate clusters and counts
+#' Given raw case counts by location, and some dates and other params return a
+#' list of frames and values that summarize the number or cases in the baseline
+#' and test period
 #' @param cases frame of cases with counts, location(s) and dates
 #' @param detect_date date to end examination of detection of clusters
 #' @param baseline_length number of days (integer) used for baseline detection
