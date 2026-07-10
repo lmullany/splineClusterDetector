@@ -1,7 +1,8 @@
-#' Get candidate clusters and locations in baseline intervals
+#' Get test period and baseline period case counts
 #'
-#' Given raw case counts by location, and some dates and other params return
-#' candidate clusters and counts
+#' Given raw case counts by location, and some dates and other params return a
+#' list of frames and values that summarize the number or cases in the baseline
+#' and test period
 #' @param cases frame of cases with counts, location(s) and dates
 #' @param detect_date date to end examination of detection of clusters
 #' @param baseline_length number of days (integer) used for baseline detection
@@ -208,9 +209,9 @@ generate_case_grids <- function(
 #' case sums by location, and grid of test period cases by date and location,
 #' and given a distance limit, returns two frames: 1. A frame that has for each
 #' location, a list of nearby locations and the cumulative sum of cases from
-#' those locations (over increasing distance) 2. A frame that has for each
-#' location, a list of nearby locations and the observed cumulative sum of cases
-#' by date (over increasing distance)
+#' those locations (over increasing distance) in the baseline period 2. A frame
+#' that has for each location, a list of nearby locations and the observed
+#' cumulative sum of cases by date (over increasing distance) in the test period
 #' @param cg object of class `CaseGrids`, such as returned from the
 #'   \code{generate_case_grids()}
 #' @param distance_matrix a square distance matrix, named on both dimensions or
@@ -303,17 +304,20 @@ gen_nearby_case_info <- function(
 #' Generate the observed and expected information
 #'
 #' Function takes an object of class `NearbyClusterGrids`, as returned from
-#' \code{gen_nearby_case_info()}, and adds observed and expected information.
+#' \code{gen_nearby_case_info()}, and an object of class `CaseGrids`, as
+#' returned from \code{generate_case_grids()}, and adds observed and expected
+#' information.
 #' @param nearby_counts an object of class `NearbyClusterGrids`
 #' @param case_grid an object of class `CaseGrids`
-#' @param adjust boolean default TRUE, set to \code{FALSE} to avoid adding
-#' one to the expected when it is zero. Could result in errors.
+#' @param adjust boolean default TRUE, set to \code{FALSE} to avoid adding one
+#'   to the expected when it is zero. Could result in errors.
 #' @param adj_constant numeric (default=1.0); this is the constant to be added
 #'   if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 #'   'add_one'}
 #' @export
 #' @returns a dataframe of class `ObservedExpectedGrid`, which is simply a data
-#' frame with
+#'   frame with the observed and expected calculation incorporated for all
+#'   target locations
 #' @examples
 #' case_grid <- generate_case_grids(
 #'   example_count_data,
@@ -830,6 +834,8 @@ compress_clusters_fast <- function(
 #'   cases = example_count_data
 #' )
 add_location_counts <- function(cluster_list, cases) {
+  count_sum <- NULL
+
   # check this is an object of class clusters
   if (!"clusters" %in% class(cluster_list)) {
     cli::cli_abort("Must pass an object of class 'clusters'")
@@ -914,11 +920,15 @@ add_location_counts <- function(cluster_list, cases) {
   }
 
   # merge the actual cluster center observed counts
-  cluster_alert_table[, count_sum:=NULL]
+  cluster_alert_table[, count_sum := NULL]
   cluster_alert_table <- merge(
     cluster_alert_table,
-    cluster_location_counts[target==location, .(count_sum = count, target)],
-    by.x = "target", by.y="target"
+    cluster_location_counts[
+      target == location,
+      list(count_sum = count, target)
+    ],
+    by.x = "target",
+    by.y = "target"
   )
 
   # clean the cluster alert_table
