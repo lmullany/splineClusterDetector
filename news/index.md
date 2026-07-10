@@ -12,6 +12,10 @@
   ([\#14](https://github.com/lmullany/gsClusterDetect/issues/14))
 - Vignette describing the creation of distance objects added
   ([\#28](https://github.com/lmullany/gsClusterDetect/issues/28))
+- Vignette describing the use of the `return_interim` parameter in
+  [`find_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/find_clusters.md)
+  and the intermediate objects returned
+  ([\#32](https://github.com/lmullany/gsClusterDetect/issues/32))
 - Function
   [`state_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/state_distance_matrix.md)
   created and `"state"` added as allowed value in

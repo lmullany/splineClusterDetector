@@ -3,6 +3,8 @@
 Function takes an object of class \`NearbyClusterGrids\`, as returned
 from
 [`gen_nearby_case_info()`](https://lmullany.github.io/gsClusterDetect/reference/gen_nearby_case_info.md),
+and an object of class \`CaseGrids\`, as returned from
+[`generate_case_grids()`](https://lmullany.github.io/gsClusterDetect/reference/generate_case_grids.md),
 and adds observed and expected information.
 
 ## Usage
@@ -40,7 +42,8 @@ generate_observed_expected(
 ## Value
 
 a dataframe of class \`ObservedExpectedGrid\`, which is simply a data
-frame with
+frame with the observed and expected calculation incorporated for all
+target locations
 
 ## Examples
 

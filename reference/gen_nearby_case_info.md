@@ -5,8 +5,9 @@ period case sums by location, and grid of test period cases by date and
 location, and given a distance limit, returns two frames: 1. A frame
 that has for each location, a list of nearby locations and the
 cumulative sum of cases from those locations (over increasing distance)
-2. A frame that has for each location, a list of nearby locations and
-the observed cumulative sum of cases by date (over increasing distance)
+in the baseline period 2. A frame that has for each location, a list of
+nearby locations and the observed cumulative sum of cases by date (over
+increasing distance) in the test period
 
 ## Usage
 

@@ -30,7 +30,7 @@
 - [`gen_nearby_case_info()`](https://lmullany.github.io/gsClusterDetect/reference/gen_nearby_case_info.md)
   : Return baseline and test period case grids restricting by distance
 - [`generate_case_grids()`](https://lmullany.github.io/gsClusterDetect/reference/generate_case_grids.md)
-  : Get candidate clusters and locations in baseline intervals
+  : Get test period and baseline period case counts
 - [`generate_heatmap()`](https://lmullany.github.io/gsClusterDetect/reference/generate_heatmap.md)
   : Generate heatmap of data
 - [`generate_heatmap_data()`](https://lmullany.github.io/gsClusterDetect/reference/generate_heatmap_data.md)

@@ -1,7 +1,8 @@
-# Get candidate clusters and locations in baseline intervals
+# Get test period and baseline period case counts
 
 Given raw case counts by location, and some dates and other params
-return candidate clusters and counts
+return a list of frames and values that summarize the number or cases in
+the baseline and test period
 
 ## Usage
 
