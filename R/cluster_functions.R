@@ -209,9 +209,9 @@ generate_case_grids <- function(
 #' case sums by location, and grid of test period cases by date and location,
 #' and given a distance limit, returns two frames: 1. A frame that has for each
 #' location, a list of nearby locations and the cumulative sum of cases from
-#' those locations (over increasing distance) 2. A frame that has for each
-#' location, a list of nearby locations and the observed cumulative sum of cases
-#' by date (over increasing distance)
+#' those locations (over increasing distance) in the baseline period 2. A frame
+#' that has for each location, a list of nearby locations and the observed
+#' cumulative sum of cases by date (over increasing distance) in the test period
 #' @param cg object of class `CaseGrids`, such as returned from the
 #'   \code{generate_case_grids()}
 #' @param distance_matrix a square distance matrix, named on both dimensions or
@@ -304,17 +304,20 @@ gen_nearby_case_info <- function(
 #' Generate the observed and expected information
 #'
 #' Function takes an object of class `NearbyClusterGrids`, as returned from
-#' \code{gen_nearby_case_info()}, and adds observed and expected information.
+#' \code{gen_nearby_case_info()}, and an object of class `CaseGrids`, as
+#' returned from \code{generate_case_grids()}, and adds observed and expected
+#' information.
 #' @param nearby_counts an object of class `NearbyClusterGrids`
 #' @param case_grid an object of class `CaseGrids`
-#' @param adjust boolean default TRUE, set to \code{FALSE} to avoid adding
-#' one to the expected when it is zero. Could result in errors.
+#' @param adjust boolean default TRUE, set to \code{FALSE} to avoid adding one
+#'   to the expected when it is zero. Could result in errors.
 #' @param adj_constant numeric (default=1.0); this is the constant to be added
 #'   if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 #'   'add_one'}
 #' @export
 #' @returns a dataframe of class `ObservedExpectedGrid`, which is simply a data
-#' frame with
+#'   frame with the observed and expected calculation incorporated for all
+#'   target locations
 #' @examples
 #' case_grid <- generate_case_grids(
 #'   example_count_data,

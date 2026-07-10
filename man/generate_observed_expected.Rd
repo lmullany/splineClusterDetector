@@ -16,8 +16,8 @@ generate_observed_expected(
 
 \item{case_grid}{an object of class `CaseGrids`}
 
-\item{adjust}{boolean default TRUE, set to \code{FALSE} to avoid adding
-one to the expected when it is zero. Could result in errors.}
+\item{adjust}{boolean default TRUE, set to \code{FALSE} to avoid adding one
+to the expected when it is zero. Could result in errors.}
 
 \item{adj_constant}{numeric (default=1.0); this is the constant to be added
 if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
@@ -25,11 +25,14 @@ if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 }
 \value{
 a dataframe of class `ObservedExpectedGrid`, which is simply a data
-frame with
+  frame with the observed and expected calculation incorporated for all
+  target locations
 }
 \description{
 Function takes an object of class `NearbyClusterGrids`, as returned from
-\code{gen_nearby_case_info()}, and adds observed and expected information.
+\code{gen_nearby_case_info()}, and an object of class `CaseGrids`, as
+returned from \code{generate_case_grids()}, and adds observed and expected
+information.
 }
 \examples{
 case_grid <- generate_case_grids(
