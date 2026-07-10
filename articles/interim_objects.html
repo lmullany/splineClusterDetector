@@ -86,17 +86,19 @@ other package functions, and it calls the below functions, in order.
 When the user passes <code>interim_results=TRUE</code> the outputs of
 each of these functions are stored separately within an expanded output
 list.</p>
-<table class="table">
+<table style="width:100%;" class="table">
 <caption>Table: Functions called by
 <code><a href="../reference/find_clusters.html">find_clusters()</a></code>
 </caption>
 <colgroup>
 <col width="51%">
-<col width="48%">
+<col width="47%">
+<col width="0%">
 </colgroup>
 <thead><tr class="header">
 <th>Function</th>
 <th>Output</th>
+<th></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -105,23 +107,16 @@ list.</p>
 counts and the detect date (see <code><a href="../reference/generate_case_grids.html">?generate_case_grids</a></code> for
 more options) and separates out the counts by baseline and test date
 interval, and estimates cumulative sums of cases by location.</td>
-<td>
-<p>An object of class <code>CaseGrids</code>, which is a lit of
-items:</p>
-<ul>
-<li><p>baseline_counts_by_location: a dataframe of counts by location
-during the baseline interval</p></li>
-<li><p>case_grid: a frame of cases during the test period, with reverse
-cumulative counts within location, by date</p></li>
-<li><p>case_grid_totals_by_date: a frame of the reverse cumulative sum
-of counts over all locations, by date</p></li>
-<li><p>test_cases: a frame of cases during the test period, by and
-location</p></li>
-<li><p>detect_date: the detect date passed to this function</p></li>
-<li><p>baseline_total: the total number of cases over all locations and
-dates</p></li>
-</ul>
-</td>
+<td colspan="2">An object of class <code>CaseGrids</code>, which is a
+list of items: | - baseline_counts_by_location: a dataframe of counts by
+location during the baseline interval | | - case_grid: a frame of cases
+during the test period, with reverse cumulative counts within location,
+by date | | - case_grid_totals_by_date: a frame of the reverse
+cumulative sum of counts over all locations, by date | | - test_cases: a
+frame of cases during the test period, by and location | | -
+detect_date: the detect date passed to this function | | -
+baseline_total: the total number of cases over all locations and dates
+|</td>
 </tr>
 <tr class="even">
 <td>
@@ -140,6 +135,7 @@ counts</p></li>
 interval</p></li>
 </ul>
 </td>
+<td></td>
 </tr>
 <tr class="odd">
 <td>
@@ -150,6 +146,7 @@ for all target locations</td>
 <td>An object of class <code>ObservedExpectedGrid</code> , which is a
 frame that contains the observed and expected value for all target
 locations.</td>
+<td></td>
 </tr>
 <tr class="even">
 <td>
@@ -161,6 +158,7 @@ classification threshold</td>
 <td>An object of class <code>ClusterAlertTable</code> which is a
 dataframe of all target candidate clusters that are reduced to those
 meeting the spline threshold</td>
+<td></td>
 </tr>
 <tr class="odd">
 <td>
@@ -183,6 +181,7 @@ above) and containing a vector of locations that are included in that
 cluster.</p></li>
 </ul>
 </td>
+<td></td>
 </tr>
 <tr class="even">
 <td>
@@ -194,6 +193,7 @@ structure as above, but adds total number of locations to the first item
 (i.e. the table of identified clusters) and converts the second item
 from a list to a data frame that contains the sums for all locations
 within the clusters.</td>
+<td></td>
 </tr>
 </tbody>
 </table>

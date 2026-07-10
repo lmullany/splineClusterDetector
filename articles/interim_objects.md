@@ -26,7 +26,7 @@ separately within an expanded output list.
 
 Table: Functions called by
 [`find_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/find_clusters.md)
-{.table}
+{.table style="width:100%;"}
 
 See help via `?<function>` for further details on each of these above
 functions, including optional and required parameters and examples of
