@@ -23,4 +23,6 @@ Useful links:
 
 Authors:
 
+- Luke C. Mullany <luke.mullany@jhuapl.edu>
+
 - Howard S. Burkom
