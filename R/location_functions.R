@@ -372,6 +372,44 @@ county_distance_matrix <- function(
   }
 }
 
+#' Get distance matrix for states in the US
+#'
+#' Function returns a list of states and a matrix with the distance between
+#' those states. leverages a built in dataset (`states`)
+#' @param unit string, one of "miles" (default), "kilometers", or "meters".
+#'   Indicating the desired unit for the distances
+#' @export
+#' @returns a named list of length two; first element (`loc_vec`) is a vector of
+#' locations and the second element (`distance_matrix`) is a square matrix
+#' containing the pairwise distance (in the given `unit`) between all locations.
+#' @examples
+#' state_distance_matrix()
+#' state_distance_matrix(unit = "kilometers")
+state_distance_matrix <- function(
+  unit = c("miles", "kilometers", "meters")
+) {
+  unit <- match.arg(unit)
+
+  # global declarations to avoid check CMD errors
+  state <- longitude <- latitude <- NULL
+
+  # get the subset of the built in dataset for this state, limit rows, and only
+  # where lat/long available
+
+  mapping <- states[
+    !is.na(latitude) & !latitude == "NULL",
+    list("location" = state, latitude, longitude)
+  ]
+
+  mapping <- .numeric_location_coords(mapping)
+
+  .distance_result_from_coords(
+    loc_vec = mapping[["location"]],
+    coords = as.matrix(mapping[, list(longitude, latitude)]),
+    unit = unit
+  )
+}
+
 
 #' Get distance matrix for all counties in the US
 #'
@@ -425,15 +463,15 @@ us_distance_matrix <- function(
 #' a list of named vectors is returned, where there is one element in the list
 #' for each location, and each named vector holds the distance within
 #' `threshold` of the location.
-#' @param level string either "county", "zip", or "tract"
+#' @param level string either "state", "county", "zip", or "tract"
 #' @param threshold numeric value; include in each location-specific named
 #'   vector only those locations that a within `threshold` distance units of the
-#'   target. Reasonable thresholds might be 50 (miles), 15 (miles) and 3 (miles)
-#'   for county, zip, and tract, respectively, but these can be adjusted. Note
-#'   if a different unit other than miles is used, then the user should also
-#'   adjust this parameter appropriately
+#'   target. Reasonable thresholds might be 250 (miles), 50 (miles), 15 (miles)
+#'   and 3 (miles) for county, zip, and tract, respectively, but these can be
+#'   adjusted. Note if a different unit other than miles is used, then the user
+#'   should also adjust this parameter appropriately
 #' @param st string; optional to specify a state; if NULL distances are returned
-#'   for all zip codes or counties in the US
+#'   for all zip codes, counties, or states in the US
 #' @param county string vector of 3-fips to restrict within \code{st}; ignored
 #'   unless \code{level} is "tract"
 #' @param unit string one of miles (default), kilometers, or meters; this is the
@@ -463,7 +501,7 @@ create_dist_list <- function(
 ) {
   state <- zip_code <- latitude <- longitude <- fips <- NULL
 
-  level <- match.arg(level, c("county", "zip", "tract"))
+  level <- match.arg(level, c("state", "county", "zip", "tract"))
   unit <- match.arg(unit)
   factor <- .meters_per_unit(unit)
 
@@ -500,12 +538,14 @@ create_dist_list <- function(
     } else {
       locs <- zipcodes[, list(location = zip_code, latitude, longitude)]
     }
-  } else {
+  } else if (level == "county") {
     if (!is.null(st)) {
       locs <- counties[state == st, list(location = fips, latitude, longitude)]
     } else {
       locs <- counties[, list(location = fips, latitude, longitude)]
     }
+  } else {
+    locs <- states[, list(location = state, latitude, longitude)]
   }
 
   # convert within to meters

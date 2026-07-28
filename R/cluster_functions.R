@@ -1,7 +1,8 @@
-#' Get candidate clusters and locations in baseline intervals
+#' Get test period and baseline period case counts
 #'
-#' Given raw case counts by location, and some dates and other params return
-#' candidate clusters and counts
+#' Given raw case counts by location, and some dates and other params return a
+#' list of frames and values that summarize the number or cases in the baseline
+#' and test period
 #' @param cases frame of cases with counts, location(s) and dates
 #' @param detect_date date to end examination of detection of clusters
 #' @param baseline_length number of days (integer) used for baseline detection
@@ -208,9 +209,9 @@ generate_case_grids <- function(
 #' case sums by location, and grid of test period cases by date and location,
 #' and given a distance limit, returns two frames: 1. A frame that has for each
 #' location, a list of nearby locations and the cumulative sum of cases from
-#' those locations (over increasing distance) 2. A frame that has for each
-#' location, a list of nearby locations and the observed cumulative sum of cases
-#' by date (over increasing distance)
+#' those locations (over increasing distance) in the baseline period 2. A frame
+#' that has for each location, a list of nearby locations and the observed
+#' cumulative sum of cases by date (over increasing distance) in the test period
 #' @param cg object of class `CaseGrids`, such as returned from the
 #'   \code{generate_case_grids()}
 #' @param distance_matrix a square distance matrix, named on both dimensions or
@@ -303,17 +304,20 @@ gen_nearby_case_info <- function(
 #' Generate the observed and expected information
 #'
 #' Function takes an object of class `NearbyClusterGrids`, as returned from
-#' \code{gen_nearby_case_info()}, and adds observed and expected information.
+#' \code{gen_nearby_case_info()}, and an object of class `CaseGrids`, as
+#' returned from \code{generate_case_grids()}, and adds observed and expected
+#' information.
 #' @param nearby_counts an object of class `NearbyClusterGrids`
 #' @param case_grid an object of class `CaseGrids`
-#' @param adjust boolean default TRUE, set to \code{FALSE} to avoid adding
-#' one to the expected when it is zero. Could result in errors.
+#' @param adjust boolean default TRUE, set to \code{FALSE} to avoid adding one
+#'   to the expected when it is zero. Could result in errors.
 #' @param adj_constant numeric (default=1.0); this is the constant to be added
 #'   if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 #'   'add_one'}
 #' @export
 #' @returns a dataframe of class `ObservedExpectedGrid`, which is simply a data
-#' frame with
+#'   frame with the observed and expected calculation incorporated for all
+#'   target locations
 #' @examples
 #' case_grid <- generate_case_grids(
 #'   example_count_data,
@@ -830,6 +834,8 @@ compress_clusters_fast <- function(
 #'   cases = example_count_data
 #' )
 add_location_counts <- function(cluster_list, cases) {
+  count_sum <- NULL
+
   # check this is an object of class clusters
   if (!"clusters" %in% class(cluster_list)) {
     cli::cli_abort("Must pass an object of class 'clusters'")
@@ -913,6 +919,20 @@ add_location_counts <- function(cluster_list, cases) {
     )
   }
 
+  # merge the actual cluster center observed counts
+  cluster_alert_table[, count_sum := NULL]
+  cluster_alert_table <- merge(
+    cluster_alert_table,
+    cluster_location_counts[
+      target == location,
+      list(count_sum = count, target)
+    ],
+    by.x = "target",
+    by.y = "target"
+  )
+
+  # clean the cluster alert_table
+
   clusters <- list(
     cluster_alert_table = cluster_alert_table,
     cluster_location_counts = cluster_location_counts
@@ -923,6 +943,51 @@ add_location_counts <- function(cluster_list, cases) {
 
   clusters
 }
+
+#' Clean and finalize cluster alert table:
+#'
+#' Function takes the raw cluster alert table, and cleans it up, namely
+#' removing some columns that are not needed, renaming some columns, and
+#' setting the final order of columns
+#' @param clt cluster alert table holding the cluster specific information
+#' @returns data.table of cleaned up column names
+#' @keywords internal
+.clean_up_alert_table <- function(clt) {
+  # First drop some columns
+  columns_to_drop <- c(
+    "test_totals", "location", "base_clust_sums", "count",
+    "baseline_total", "min_dist", "id", "max_date"
+  )
+  clt <- clt[, .SD, .SDcols = -c(columns_to_drop)]
+
+  # Now rename some columns
+  data.table::setnames(
+    clt,
+    old = c(
+      "target", "date", "distance_value", "count_sum", "detect_date", "nr_locs",
+      "spl_thresh"
+    ),
+    new = c(
+      "cluster_center", "cluster_start_date", "cluster_max_distance",
+      "cluster_center_observed",
+      "cluster_end_date", "n_cluster_locations", "threshold"
+    )
+  )
+
+  # reorder some columns
+  data.table::setcolorder(
+    clt,
+    neworder = c(
+      "cluster_center", "cluster_start_date", "cluster_end_date",
+      "cluster_max_distance",
+      "cluster_center_observed", "observed", "expected", "log_obs_exp",
+      "threshold", "alert_gap", "alert_ratio", "n_cluster_locations"
+    )
+  )
+
+  clt
+}
+
 #' Find clusters
 #'
 #' Function will return clusters, given a frame of case counts by location and
@@ -958,15 +1023,10 @@ add_location_counts <- function(cluster_list, cases) {
 #' @param adj_constant numeric (default=1.0); this is the constant to be added
 #'   if \code{baseline_adjustment == 'add_one'} or \code{baseline_adjustment ==
 #'   'add_one'}
-#' @param min_clust_cases (default = 0); minimum number of cluster cases to
-#'   retain before compression
-#' @param max_clust_cases (default = Inf); maximum number of cluster cases to
-#'   retain before compression
-#' @param post_cluster_min_count (default=0); a second (or alternative) way to
-#'   limit cluster. This parameter can be set to a non-negative integer to
-#'   require that any final clusters (post compression from candidate rows) have
-#'   at least \code{post_cluster_min_count} cases, when aggregated over all
-#'   locations within the identified cluster
+#' @param min_clust_cases (default = 0); minimum number of case within a
+#'   returned cluster.
+#' @param max_clust_cases (default = Inf); maximum number of cases within a
+#'   returned cluster.
 #' @param use_fast boolean (default = TRUE) - set to TRUE to use the fast
 #'   version of the compress clusters function
 #' @param return_interim boolean (default = FALSE) - set to TRUE to return all
@@ -993,7 +1053,6 @@ find_clusters <- function(
   adj_constant = 1.0,
   min_clust_cases = 0,
   max_clust_cases = Inf,
-  post_cluster_min_count = 0,
   use_fast = TRUE,
   return_interim = FALSE
 ) {
@@ -1148,6 +1207,14 @@ find_clusters <- function(
     return(report_error())
   }
 
+  # Final Clean Up
+  result[[1]] <- .clean_up_alert_table(result[[1]])
+  data.table::setnames(
+    result[[2]],
+    new = c("location", "count", "cluster_center")
+  )
+
+  # Return either the full set with interim results, or the final result only
   if (return_interim == TRUE) {
     list(
       case_grid_info = case_grid_info,
@@ -1261,12 +1328,12 @@ reduce_clusters_to_min <- function(cl, minimum = 0) {
     # get the class
     clcl <- class(cl)
 
-    count <- v1 <- target <- NULL
-    targets <- cl[[2]][, list(v1 = sum(count, na.rm = TRUE)), target] |>
-      _[v1 >= minimum, target]
+    count <- v1 <- cluster_center <- NULL
+    targets <- cl[[2]][, list(v1 = sum(count, na.rm = TRUE)), cluster_center] |>
+      _[v1 >= minimum, cluster_center]
 
-    cl[[1]] <- cl[[1]][target %in% targets]
-    cl[[2]] <- cl[[2]][target %in% targets]
+    cl[[1]] <- cl[[1]][cluster_center %in% targets]
+    cl[[2]] <- cl[[2]][cluster_center %in% targets]
 
     class(cl) <- clcl
 

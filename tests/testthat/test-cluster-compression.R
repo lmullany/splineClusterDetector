@@ -235,13 +235,23 @@ testthat::test_that("reduce_clusters_to_min filters by summed cluster count", {
   )
   testthat::expect_equal(unchanged, with_counts)
 
+  with_counts[[1]] <- .clean_up_alert_table(with_counts[[1]])
+  with_counts[[2]] <- data.table::setnames(
+    with_counts[[2]],
+    c("location", "count", "cluster_center")
+  )
+
   reduced <- gsClusterDetect::reduce_clusters_to_min(
     with_counts,
     minimum = 20
   )
   testthat::expect_true("clusters" %in% class(reduced))
   if (nrow(reduced[[2]]) > 0) {
-    sums <- reduced[[2]][, .(total = sum(count, na.rm = TRUE)), by = target]
+    sums <- reduced[[2]][
+      ,
+      .(total = sum(count, na.rm = TRUE)),
+      by = cluster_center
+    ]
     testthat::expect_true(all(sums[["total"]] >= 20))
   }
 })

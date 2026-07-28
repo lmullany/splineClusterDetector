@@ -12,16 +12,18 @@ Provides utilities for manipulating time series of location-based counts of even
 Useful links:
 \itemize{
   \item \url{https://github.com/lmullany/gsClusterDetect}
+  \item \url{https://lmullany.github.io/gsClusterDetect/}
   \item Report bugs at \url{https://github.com/lmullany/gsClusterDetect/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Luke Mullany \email{luke.mullany@jhuapl.edu}
+\strong{Maintainer}: Luke C. Mullany \email{luke.mullany@jhuapl.edu}
 
 Authors:
 \itemize{
-  \item Howard Burkom
+  \item Luke C. Mullany \email{luke.mullany@jhuapl.edu}
+  \item Howard S. Burkom
 }
 
 }
