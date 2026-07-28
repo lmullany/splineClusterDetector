@@ -115,20 +115,19 @@ for (nm in c("county", "region_name")) {
 
 # update the latitude and longitude data so that these are numeric
 zipcodes[, let(
-  latitude=as.numeric(latitude),
-  longitude=as.numeric(longitude)
+  latitude = as.numeric(latitude),
+  longitude = as.numeric(longitude)
 )]
 
 zipcodes <- zipcodes[!is.na(latitude) & !is.na(longitude)]
 # add the full state name
 zipcode_names <- names(zipcodes)
-zipcodes <- merge(zipcodes, states[, .(state_name, state)], by="state")
+zipcodes <- merge(zipcodes, states[, .(state_name, state)], by = "state")
 zipcodes <- zipcodes[
   ,
   .SD,
   .SDcols = c(zipcode_names[1:3], "state_name", zipcode_names[4:11])
 ]
-
 
 usethis::use_data(zipcodes, overwrite = TRUE)
 
