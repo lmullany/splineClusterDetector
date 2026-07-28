@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/lmullany/gsClusterDetect/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/lmullany/gsClusterDetect/blob/v1.0.1/DESCRIPTION)
 
 Mullany L, Burkom H (2026). *gsClusterDetect: Utilities for Geo-Spatial
 Cluster Detection and Significance Classification*. R package version
