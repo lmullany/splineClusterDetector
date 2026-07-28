@@ -2,6 +2,8 @@
 
 ## gsClusterDetect 1.0.1
 
+CRAN release: 2026-07-27
+
 - Parameter `post_cluster_min_count` removed from
   [`find_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/find_clusters.md)
   as it was never implemented or used
