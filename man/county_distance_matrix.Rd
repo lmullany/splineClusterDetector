@@ -11,8 +11,9 @@ county_distance_matrix(
 )
 }
 \arguments{
-\item{st}{two-character string denoting a state, or "US". If "US", then this
-is equivalent to calling \code{us_distance_matrix()}.}
+\item{st}{vector of 2 character strings denoting a state (or set of states),
+or "US". If "US", then this is equivalent to calling
+\code{us_distance_matrix()}.}
 
 \item{unit}{string, one of "miles" (default), "kilometers", or "meters".
 Indicating the desired unit for the distances}

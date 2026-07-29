@@ -1,7 +1,7 @@
 Package: gsClusterDetect
 Type: Package
 Title: Utilities for Geo-Spatial Cluster Detection and Significance Classification
-Version: 1.0.1
+Version: 1.0.2
 Authors@R:
     c(
         person("Luke C.", "Mullany", email = "luke.mullany@jhuapl.edu", role = c("aut", "cre")),
