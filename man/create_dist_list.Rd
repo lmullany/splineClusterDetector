@@ -22,8 +22,9 @@ and 3 (miles) for county, zip, and tract, respectively, but these can be
 adjusted. Note if a different unit other than miles is used, then the user
 should also adjust this parameter appropriately}
 
-\item{st}{string; optional to specify a state; if NULL distances are returned
-for all zip codes, counties, or states in the US}
+\item{st}{string; optional to specify a state or vector of states (required
+for tract, and can only be one); if NULL distances are returned for all zip
+codes, counties, or states in the US}
 
 \item{county}{string vector of 3-fips to restrict within \code{st}; ignored
 unless \code{level} is "tract"}
@@ -44,12 +45,17 @@ for each location, and each named vector holds the distance within
 `threshold` of the location.
 }
 \examples{
-create_dist_list(
+md_tracts <- create_dist_list(
   level = "tract",
   threshold = 3,
-  st = "MD"
+  st = c("MD")
 )
-create_dist_list(
+md_va_zips <- create_dist_list(
+  level = "zip",
+  threshold = 15,
+  st = c("MD", "VA")
+)
+ca_counties <- create_dist_list(
   level = "county",
   threshold = 50,
   st = "CA",

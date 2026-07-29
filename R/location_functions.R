@@ -471,8 +471,9 @@ us_distance_matrix <- function(
 #'   and 3 (miles) for county, zip, and tract, respectively, but these can be
 #'   adjusted. Note if a different unit other than miles is used, then the user
 #'   should also adjust this parameter appropriately
-#' @param st string; optional to specify a state or vector of states; if NULL
-#'   distances are returned for all zip codes, counties, or states in the US
+#' @param st string; optional to specify a state or vector of states (required
+#'   for tract, and can only be one); if NULL distances are returned for all zip
+#'   codes, counties, or states in the US
 #' @param county string vector of 3-fips to restrict within \code{st}; ignored
 #'   unless \code{level} is "tract"
 #' @param unit string one of miles (default), kilometers, or meters; this is the
@@ -482,12 +483,17 @@ us_distance_matrix <- function(
 #'   named vector of distances that are within `threshold` `units` of the
 #'   target.
 #' @examples
-#' create_dist_list(
+#' md_tracts <- create_dist_list(
 #'   level = "tract",
 #'   threshold = 3,
+#'   st = c("MD")
+#' )
+#' md_va_zips <- create_dist_list(
+#'   level = "zip",
+#'   threshold = 15,
 #'   st = c("MD", "VA")
 #' )
-#' create_dist_list(
+#' ca_counties <- create_dist_list(
 #'   level = "county",
 #'   threshold = 50,
 #'   st = "CA",
@@ -513,7 +519,7 @@ create_dist_list <- function(
 
 
   if (level == "tract") {
-    if (is.null(st) || length(st)>1) {
+    if (is.null(st) || length(st) > 1) {
       cli::cli_abort(
         "Tract distance list can only be created for a
          single state, `st` must not be null"
@@ -541,12 +547,15 @@ create_dist_list <- function(
     }
   } else if (level == "county") {
     if (!is.null(st)) {
-      locs <- counties[state %chin% st, list(location = fips, latitude, longitude)]
+      locs <- counties[
+        state %chin% st,
+        list(location = fips, latitude, longitude)
+      ]
     } else {
       locs <- counties[, list(location = fips, latitude, longitude)]
     }
   } else {
-    if(!is.null(st)) {
+    if (!is.null(st)) {
       locs <- states[state %in% st, list(location = state, latitude, longitude)]
     } else {
       locs <- states[, list(location = state, latitude, longitude)]
@@ -846,4 +855,49 @@ custom_distance_matrix <- function(
     coords = coords,
     unit = unit
   )
+}
+
+#' Identify states from location frame
+#'
+#' Helper function to identify states represented in a location frame; this is
+#' helpful because the location functions are faster and more efficient when
+#' states are specified.
+#' @param df frame/data.table that contains a column of locations
+#' @param level string either "zip" (default) or "county"
+#' @param location string column identifying the location (default is
+#'   "location")
+#' @export
+#' @returns vector of state abbreviations
+#' @examples
+#' identify_states(example_count_data, level = "zip")
+#' identify_states(example_count_data, level = "county")
+identify_states <- function(
+  df,
+  level = c("zip", "county"),
+  location = "location"
+) {
+  level <- match.arg(level)
+  check_vars(df, location)
+  if (level == "zip") .identify_states_from_zips(df, location = location)
+  if (level == "county") {
+    .identify_states_from_counties(
+      df,
+      location = location
+    )
+  }
+}
+
+#' Identify states from zipcode location-date-count frame
+#' @keywords internal
+.identify_states_from_zips <- function(df, location = "location") {
+  state <- zip_code <- NULL
+  check_vars(df, location)
+  zipcodes[zip_code %in% unique(df[[location]]), unique(state)]
+}
+#' Identify states from county location-date-count frame
+#' @keywords internal
+.identify_states_from_counties <- function(df, location = "location") {
+  state <- fips <- NULL
+  check_vars(df, location)
+  counties[fips %in% unique(df[[location]]), unique(state)]
 }

@@ -246,6 +246,7 @@ gen_nearby_case_info <- function(
 
   # global declarations to avoid check CMD errors
   distance_value <- base_clust_sums <- base_loc_sums <- target <- NULL
+  values <- NULL
 
   baseline_loc_totals <- cg[["baseline_counts_by_location"]]
   cases_grid <- cg[["case_grid"]]
@@ -272,7 +273,7 @@ gen_nearby_case_info <- function(
         )
       }),
       idcol = "target"
-    )[values<=distance_limit]
+    )[values <= distance_limit]
   }
 
   data.table::setnames(wd, c("target", "distance_value", "location"))
