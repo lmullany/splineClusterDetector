@@ -272,7 +272,7 @@ gen_nearby_case_info <- function(
         )
       }),
       idcol = "target"
-    )
+    )[values<=distance_limit]
   }
 
   data.table::setnames(wd, c("target", "distance_value", "location"))
