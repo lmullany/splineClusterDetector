@@ -21,7 +21,7 @@ A data frame with 42,482 rows and 11 columns:
 
   5 digit string for zipcode
 
-- state:
+- state_name, state:
 
   state abbreviation
 
