@@ -9,7 +9,7 @@ those counties. leverages a built in dataset (`counties`)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">gsClusterDetect</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@ those counties. leverages a built in dataset (`counties`)."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get distance matrix for counties within a state</h1>
-      <small class="dont-index">Source: <a href="https://github.com/lmullany/gsClusterDetect/blob/v1.0.1/R/location_functions.R" class="external-link"><code>R/location_functions.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/lmullany/gsClusterDetect/blob/dev/R/location_functions.R" class="external-link"><code>R/location_functions.R</code></a></small>
       <div class="d-none name"><code>county_distance_matrix.Rd</code></div>
     </div>
 
@@ -60,8 +60,9 @@ those counties. leverages a built in dataset (`counties`).</p>
 
 
 <dl><dt id="arg-st">st<a class="anchor" aria-label="anchor" href="#arg-st"></a></dt>
-<dd><p>two-character string denoting a state, or "US". If "US", then this
-is equivalent to calling <code><a href="us_distance_matrix.html">us_distance_matrix()</a></code>.</p></dd>
+<dd><p>vector of 2 character strings denoting a state (or set of states),
+or "US". If "US", then this is equivalent to calling
+<code><a href="us_distance_matrix.html">us_distance_matrix()</a></code>.</p></dd>
 
 
 <dt id="arg-unit">unit<a class="anchor" aria-label="anchor" href="#arg-unit"></a></dt>

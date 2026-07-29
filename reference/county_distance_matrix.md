@@ -17,8 +17,8 @@ county_distance_matrix(
 
 - st:
 
-  two-character string denoting a state, or "US". If "US", then this is
-  equivalent to calling
+  vector of 2 character strings denoting a state (or set of states), or
+  "US". If "US", then this is equivalent to calling
   [`us_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/us_distance_matrix.md).
 
 - unit:

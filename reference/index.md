@@ -50,6 +50,8 @@
   : Get nearby locations
 - [`get_test_dates()`](https://lmullany.github.io/gsClusterDetect/reference/get_test_dates.md)
   : Generate test dates vector
+- [`identify_states()`](https://lmullany.github.io/gsClusterDetect/reference/identify_states.md)
+  : Identify states from location frame
 - [`map_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/map_clusters.md)
   : Map Clusters
 - [`prepare_map_data()`](https://lmullany.github.io/gsClusterDetect/reference/prepare_map_data.md)

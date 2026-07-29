@@ -22,6 +22,8 @@
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-clean_up_alert_table.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-distance_meters_from_coords.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-distance_result_from_coords.html</loc></url>
+<url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-identify_states_from_counties.html</loc></url>
+<url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-identify_states_from_zips.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-meters_per_unit.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-numeric_location_coords.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/dot-resolve_coord_var_names.html</loc></url>
@@ -45,6 +47,7 @@
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/get_test_dates.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/ggplot_heatmap.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/gsClusterDetect-package.html</loc></url>
+<url><loc>https://lmullany.github.io/gsClusterDetect/reference/identify_states.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/index.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/map_clusters.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/map_clusters_ggplot.html</loc></url>
