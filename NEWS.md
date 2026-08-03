@@ -1,3 +1,9 @@
+# gsClusterDetect 1.0.2
+
+- adds function `identify_states` that returns a vector of states given a frame of zip or county locations (#41)
+- aligns data types of built in zipcodes dataset with documentation (#40)
+- most location functions can now take multiple state (#41)
+
 # gsClusterDetect 1.0.1
 
 - Parameter `post_cluster_min_count` removed from `find_clusters()` as it was never implemented or used (#15)

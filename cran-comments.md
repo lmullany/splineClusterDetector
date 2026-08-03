@@ -1,12 +1,16 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-## Submission
+This is a routine update of the existing package to version 1.0.1
 
-This is a new release.
+The package was also checked successfully using R-hub on:
 
-## Notes
+- Ubuntu Linux
+- macOS Intel
+- Windows
+- Fedora Linux 42 with R-devel
 
-checking for future file timestamps ... NOTE
-  unable to verify current time
+## Reverse dependencies
+
+There are currently no downstream dependencies for this package.

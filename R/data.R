@@ -38,7 +38,7 @@
 #' \describe{
 #'   \item{id}{serial integer id (1, 2, 3, .. etc)}
 #'   \item{zip_code}{5 digit string for zipcode}
-#'   \item{state}{state abbreviation}
+#'   \item{state_name, state}{state abbreviation}
 #'   \item{county}{county name}
 #'   \item{region}{region name}
 #'   \item{region_id}{id for region}
