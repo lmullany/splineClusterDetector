@@ -3,6 +3,7 @@
 - adds function `identify_states` that returns a vector of states given a frame of zip or county locations (#41)
 - aligns data types of built in zipcodes dataset with documentation (#40)
 - most location functions can now take multiple state (#41)
+- Added a vignette to describe the use of the `inject_counts()` function for artificial signal generation (#31)
 
 # gsClusterDetect 1.0.1
 
