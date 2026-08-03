@@ -52,6 +52,8 @@
   : Generate test dates vector
 - [`identify_states()`](https://lmullany.github.io/gsClusterDetect/reference/identify_states.md)
   : Identify states from location frame
+- [`inject_counts()`](https://lmullany.github.io/gsClusterDetect/reference/inject_counts.md)
+  : Add data counts for parameterized injected clusters
 - [`map_clusters()`](https://lmullany.github.io/gsClusterDetect/reference/map_clusters.md)
   : Map Clusters
 - [`prepare_map_data()`](https://lmullany.github.io/gsClusterDetect/reference/prepare_map_data.md)
@@ -66,8 +68,6 @@
   : Spline Lookup Table - 0.01
 - [`spline_05`](https://lmullany.github.io/gsClusterDetect/reference/spline_05.md)
   : Spline Lookup Table - 0.05
-- [`st_injects()`](https://lmullany.github.io/gsClusterDetect/reference/st_injects.md)
-  : Add data counts for parameterized injected clusters
 - [`state_distance_matrix()`](https://lmullany.github.io/gsClusterDetect/reference/state_distance_matrix.md)
   : Get distance matrix for states in the US
 - [`states`](https://lmullany.github.io/gsClusterDetect/reference/states.md)

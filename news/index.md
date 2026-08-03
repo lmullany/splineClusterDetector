@@ -9,6 +9,10 @@
   ([\#40](https://github.com/lmullany/gsClusterDetect/issues/40))
 - most location functions can now take multiple state
   ([\#41](https://github.com/lmullany/gsClusterDetect/issues/41))
+- Added a vignette to describe the use of the
+  [`inject_counts()`](https://lmullany.github.io/gsClusterDetect/reference/inject_counts.md)
+  function for artificial signal generation
+  ([\#31](https://github.com/lmullany/gsClusterDetect/issues/31))
 
 ## gsClusterDetect 1.0.1
 

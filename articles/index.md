@@ -2,6 +2,8 @@
 
 ### All vignettes
 
+- [Vignette 4: Artificial Cluster
+  Injection](https://lmullany.github.io/gsClusterDetect/articles/artificial_cluster_injection.md):
 - [Vignette 1: Package
   Overview](https://lmullany.github.io/gsClusterDetect/articles/basic_demo.md):
 - [Vignette 2: Creating Distance

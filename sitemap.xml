@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://lmullany.github.io/gsClusterDetect/404.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/LICENSE.html</loc></url>
+<url><loc>https://lmullany.github.io/gsClusterDetect/articles/artificial_cluster_injection.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/articles/basic_demo.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/articles/distance_objects.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/articles/index.html</loc></url>
@@ -49,6 +50,7 @@
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/gsClusterDetect-package.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/identify_states.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/index.html</loc></url>
+<url><loc>https://lmullany.github.io/gsClusterDetect/reference/inject_counts.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/map_clusters.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/map_clusters_ggplot.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/map_clusters_plotly.html</loc></url>
@@ -60,7 +62,6 @@
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/spline_005.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/spline_01.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/spline_05.html</loc></url>
-<url><loc>https://lmullany.github.io/gsClusterDetect/reference/st_injects.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/state_distance_matrix.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/states.html</loc></url>
 <url><loc>https://lmullany.github.io/gsClusterDetect/reference/tract_distance_matrix.html</loc></url>
