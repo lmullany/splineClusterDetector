@@ -1,6 +1,6 @@
 #' Add data counts for parameterized injected clusters
 #'
-#' Function st_injects returns a list of two objects 1. a full dataset as a
+#' Function returns a list of two objects 1. a full dataset as a
 #' data.table with inject counts added according to design parameters. 2. a
 #' table of only the inject counts, locations, and dates.
 #' @param cases data frame of cases
@@ -18,7 +18,7 @@
 #' cases <- example_count_data
 #' dm <- county_distance_matrix("OH")
 #' target_loc <- "39175"
-#' scen1 <- st_injects(
+#' scen1 <- inject_counts(
 #'   cases = cases,
 #'   distance_matrix = dm[["distance_matrix"]],
 #'   target_loc = target_loc,
@@ -28,7 +28,7 @@
 #'   nr_days = 4,
 #'   end_date = "2025-02-05"
 #' )
-st_injects <- function(
+inject_counts <- function(
   cases,
   distance_matrix,
   target_loc,

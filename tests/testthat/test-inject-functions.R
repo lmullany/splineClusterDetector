@@ -52,7 +52,7 @@ testthat::test_that("get_nearby_locations handles edge and invalid center", {
 })
 
 testthat::test_that(
-  "st_injects adds exactly requested injections and valid dates",
+  "inject_counts adds exactly requested injections and valid dates",
   {
     if (!requireNamespace("withr", quietly = TRUE)) {
       testthat::skip("withr not available")
@@ -71,7 +71,7 @@ testthat::test_that(
     cases[, count := 2L]
 
     withr::local_seed(42)
-    out <- gsClusterDetect::st_injects(
+    out <- gsClusterDetect::inject_counts(
       cases = cases,
       distance_matrix = dm,
       target_loc = center,
@@ -113,7 +113,7 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("st_injects edge and error handling", {
+testthat::test_that("inject_counts edge and error handling", {
   dm <- gsClusterDetect::county_distance_matrix(
     st = "OH",
     unit = "miles",
@@ -126,7 +126,7 @@ testthat::test_that("st_injects edge and error handling", {
   base_cases <- data.table::CJ(location = locs, date = dates)
   base_cases[, count := 1L]
 
-  out0 <- gsClusterDetect::st_injects(
+  out0 <- gsClusterDetect::inject_counts(
     cases = data.table::copy(base_cases),
     distance_matrix = dm,
     target_loc = center,
@@ -146,7 +146,7 @@ testthat::test_that("st_injects edge and error handling", {
     testthat::skip("withr not available")
   }
   withr::local_seed(123)
-  out_rand <- gsClusterDetect::st_injects(
+  out_rand <- gsClusterDetect::inject_counts(
     cases = data.table::copy(base_cases),
     distance_matrix = dm,
     target_loc = NULL,
@@ -160,7 +160,7 @@ testthat::test_that("st_injects edge and error handling", {
 
   bad_cases <- data.table::copy(base_cases)[, .(location, date)]
   testthat::expect_error(
-    gsClusterDetect::st_injects(
+    gsClusterDetect::inject_counts(
       cases = bad_cases,
       distance_matrix = dm,
       target_loc = center,
@@ -176,7 +176,7 @@ testthat::test_that("st_injects edge and error handling", {
   bad_date_cases <- data.table::copy(base_cases)
   bad_date_cases[, date := as.character(date)]
   testthat::expect_error(
-    gsClusterDetect::st_injects(
+    gsClusterDetect::inject_counts(
       cases = bad_date_cases,
       distance_matrix = dm,
       target_loc = center,
