@@ -1,8 +1,8 @@
 ---
-title: "vignette1: basic_demo"
+title: "Vignette 4: Artificial Cluster Injection"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{basic_demo}
+  %\VignetteIndexEntry{Vignette 4: Artificial Cluster Injection}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
