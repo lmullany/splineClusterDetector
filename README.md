@@ -31,7 +31,9 @@ Install the development version from Github as follows:
 [![development branch checks (dev)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml/badge.svg?branch=dev&event=push)](https://github.com/lmullany/gsClusterDetect/actions/workflows/R-CMD-check.yaml)
 
 ```r
-devtools::install_github("lmullany/gsClusterDetect", branch = "dev")
+remotes::install_github("lmullany/gsClusterDetect", branch = "dev")
+# or
+pak::pak("lmullany/gsClusterDetect@dev")
 ```
 
 ### Getting Started:
