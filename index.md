@@ -33,7 +33,9 @@ Install the development version from Github as follows:
 
 ``` r
 
-devtools::install_github("lmullany/gsClusterDetect", branch = "dev")
+remotes::install_github("lmullany/gsClusterDetect", branch = "dev")
+# or
+pak::pak("lmullany/gsClusterDetect@dev")
 ```
 
 ### Getting Started:
