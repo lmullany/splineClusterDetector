@@ -2,11 +2,11 @@ pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
-  01-basic_demo: 01-basic_demo.html
-  02-distance_objects: 02-distance_objects.html
-  03-interim_objects: 03-interim_objects.html
-  04-artificial_cluster_injection: 04-artificial_cluster_injection.html
-last_built: 2026-08-05T19:35Z
+  01_basic_demo: 01_basic_demo.html
+  02_distance_objects: 02_distance_objects.html
+  03_interim_objects: 03_interim_objects.html
+  04_artificial_cluster_injection: 04_artificial_cluster_injection.html
+last_built: 2026-08-06T16:23Z
 urls:
   reference: https://lmullany.github.io/gsClusterDetect/reference
   article: https://lmullany.github.io/gsClusterDetect/articles
